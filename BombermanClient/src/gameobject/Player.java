@@ -3,13 +3,19 @@ package gameobject;
 import gameobject.attribute.GameObject;
 import gameobject.attribute.MovableObject;
 
+
+
 public class Player extends GameObject implements MovableObject{
 	private boolean alive;
-	private int speed;
+	private double speed;
 	//bomb spec
 	private int maxBomb;
 	private int currentBombNb;
 	private int bombRadius;
+
+	
+
+	
 	
 	public boolean isAlive() {
 		return alive;
@@ -17,7 +23,7 @@ public class Player extends GameObject implements MovableObject{
 	public void setAlive(boolean alive) {
 		this.alive = alive;
 	}
-	public int getSpeed() {
+	public double getSpeed() {
 		return speed;
 	}
 	public void setSpeed(int speed) {
@@ -41,6 +47,7 @@ public class Player extends GameObject implements MovableObject{
 	public void setBombRadius(int bombRadius) {
 		this.bombRadius = bombRadius;
 	}
+	
 	
 	
 }

@@ -5,6 +5,8 @@ import gameobject.attribute.GameObject;
 import gameobject.attribute.UnmovableObject;
 
 public class Bomb extends GameObject implements DestructableObject, UnmovableObject {
+	
+
 	private int timer;
 	private int radius;
 	
