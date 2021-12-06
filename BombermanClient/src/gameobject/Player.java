@@ -2,6 +2,8 @@ package gameobject;
 
 import gameobject.attribute.GameObject;
 import gameobject.attribute.MovableObject;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Pane;
 
 
 
@@ -48,6 +50,44 @@ public class Player extends GameObject implements MovableObject{
 		this.bombRadius = bombRadius;
 	}
 	
-	
+	public void move(KeyCode code) {
+		if (code ==KeyCode.UP)
+		{
+			if (this.getPosY()>0)
+			{
+				//if(player.getPosX()+player.fxLayer.getFitWidth()<wall1.getPosX() && player.getPosX()>wall1.getPosX()+wall1.fxLayer.getFitWidth())
+				{
+					//if(player.getPosY()>wall1.getPosY()+wall1.fxLayer.getFitHeight())
+						this.setPosY(this.getPosY()-this.getSpeed());
+
+						
+				}
+			}
+		}
+		
+		if (code==KeyCode.DOWN)
+		{
+			double prefHeight = ((Pane) this.fxLayer.getParent()).getPrefHeight();
+
+			if (prefHeight-this.getPosY()>this.fxLayer.getFitHeight())
+				this.setPosY(this.getPosY()+this.getSpeed());
+		}
+		
+		if (code==KeyCode.LEFT)
+		{
+			if (this.getPosX()>0)
+				this.setPosX((this.getPosX()-this.getSpeed()));
+		}
+		
+		if (code==KeyCode.RIGHT)
+		{
+			double prefWidth = ((Pane) this.fxLayer.getParent()).getPrefWidth();
+
+			if (prefWidth-this.getPosX()>this.fxLayer.getFitWidth())
+			{
+				this.setPosX(this.getPosX()+this.getSpeed());
+			}
+		}
+	}
 	
 }
