@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import gameobject.Bomb;
 import gameobject.Player;
 import gameobject.Wall;
 
@@ -12,16 +13,20 @@ public class MainController {
 
 	@FXML 
 	private ImageView playerLayout;
-	@FXML
-	private ImageView wall1Layout;
+
+	@FXML 
+	private ImageView bombLayout;
+	
 	
 	@FXML 
 	private Pane RBox;
 	
-	//Déclaration des objets de base 
+	//Dï¿½claration des objets de base 
 	
 	Player player = new Player();
 	Wall wall1 = new Wall();
+	Wall wall2 = new Wall(50.0,100.0);
+	Bomb bomb = new Bomb();
 	
     // Add a public no-args constructor
     public MainController() 
@@ -34,18 +39,26 @@ public class MainController {
     	//Liaison des objets avec leurs visuel 
     	player.fxLayer = playerLayout;
     	player.setSpeed(5);
-    	wall1.fxLayer = wall1Layout;
-    	wall1.setPosX(wall1.fxLayer.getLayoutX());
-    	wall1.setPosY(wall1.fxLayer.getLayoutY());
+    	
+    	//placer les objets fx
+    	RBox.getChildren().add(wall1.fxLayer);
+    	RBox.getChildren().add(wall2.fxLayer);
+    	bomb.fxLayer = bombLayout;
+    	bomb.fxLayer.setVisible(false);
     }
     
-  //Gestion des saisies clavier pour déplacements personnage
+  //Gestion des saisies clavier pour dï¿½placements personnage
     
 	@FXML
 	private void moving(KeyEvent event) {			
 		player.move(event.getCode());
+		player.placeBomb(bomb, event.getCode());
 	}
 
+	@FXML
+	private void placeBombImage() {
+		
+	}
      
     // location and resources will be automatically injected by the FXML loader 
     @FXML

@@ -90,4 +90,13 @@ public class Player extends GameObject implements MovableObject{
 		}
 	}
 	
+	public void placeBomb(Bomb bomb, KeyCode code) {
+		if (code==KeyCode.SPACE)
+		{
+			bomb.setPosX(this.getPosX());
+			bomb.setPosY(this.getPosY());
+			bomb.startBomb();
+		}
+	}
+	
 }

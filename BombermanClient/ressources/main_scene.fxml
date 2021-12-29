@@ -41,19 +41,14 @@
 <Pane fx:id="RBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#moving" prefHeight="579.0" prefWidth="973.0" style="-fx-background-color: WHITE;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
    <children>
       <MeshView />
-      <ImageView fx:id="playerLayout" fitHeight="49.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="playerLayout" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@hero.jpg" />
          </image>
       </ImageView>
-      <ImageView fx:id="bombLayout" fitHeight="49.0" fitWidth="48.0" layoutX="0.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="bombLayout" fitHeight="50.0" fitWidth="50.0" layoutX="0.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@bomb.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="wall1Layout" fitHeight="64.0" fitWidth="62.0" layoutX="67.0" layoutY="62.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@wall.jpg" />
          </image>
       </ImageView>
    </children>
