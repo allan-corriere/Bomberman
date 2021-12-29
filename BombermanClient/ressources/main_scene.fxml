@@ -46,6 +46,11 @@
             <Image url="@hero.jpg" />
          </image>
       </ImageView>
+      <ImageView fx:id="bombLayout" fitHeight="49.0" fitWidth="48.0" layoutX="0.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@bomb.png" />
+         </image>
+      </ImageView>
       <ImageView fx:id="wall1Layout" fitHeight="64.0" fitWidth="62.0" layoutX="67.0" layoutY="62.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@wall.jpg" />
