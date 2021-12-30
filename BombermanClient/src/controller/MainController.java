@@ -9,6 +9,7 @@ import javafx.scene.layout.Pane;
 
 import gameobject.*;
 import gameobject.attribute.GameObject;
+import gamescene.Level;
 
 
 
@@ -21,16 +22,8 @@ public class MainController {
 	public List<GameObject> gameObjectList = new ArrayList<GameObject>();
 	
 	public Player player = new Player();
-	Wall wall1 = new Wall();
-	Wall wall2 = new Wall(50.0,100.0);
-	Wall wall3 = new Wall(150.0,0.0);
-	Wall wall4 = new Wall(150.0,0.0);
-	Wall wall5 = new Wall(150.0,50.0);
-	Wall wall6 = new Wall(150.0,150.0);
-	Wall wall7 = new Wall(100.0,150.0);
-	Wall wall8 = new Wall(50.0,150.0);
-	Wall wall9 = new Wall(00.0,150.0);
-	
+	public Level masterLevel = new Level();
+	int[][] level = masterLevel.loadLevel01(); 
     // Add a public no-args constructor
     public MainController() 
     {
@@ -39,31 +32,29 @@ public class MainController {
     @FXML
     private void initialize() 
     {
-    	//ajout des gameopbject à la liste
+    	//parcours du level
+    	
+    	//ajout des gameobject à la liste
+    	player.setPosX(50.0);
+    	player.setPosY(50.0);
     	gameObjectList.add(player);
-    	gameObjectList.add(wall1);
-    	gameObjectList.add(wall2);
-    	gameObjectList.add(wall3);
-    	gameObjectList.add(wall4);
-    	gameObjectList.add(wall5);
-    	gameObjectList.add(wall6);
-    	gameObjectList.add(wall7);
-    	gameObjectList.add(wall8);
-    	gameObjectList.add(wall9);
+    	//gameObjectList.add(wall1);
+    	int column = level.length;
+    	for(int y =0; y < column; y++) {
+    		for(int x=0; x < level[y].length; x++) {
+    			if(level[y][x] == 1) {
+    				gameObjectList.add(new Wall(x*50.0,y*50));
+    			}
+    		}
+    	}
     	
     	player.setSpeed(5);
-    	System.out.println(RBox);
     	//placer les objets fx
-    	RBox.getChildren().add(player.fxLayer);
-    	RBox.getChildren().add(wall1.fxLayer);
-    	RBox.getChildren().add(wall2.fxLayer);
-    	RBox.getChildren().add(wall3.fxLayer);
-    	RBox.getChildren().add(wall4.fxLayer);
-    	RBox.getChildren().add(wall5.fxLayer);
-    	RBox.getChildren().add(wall6.fxLayer);
-    	RBox.getChildren().add(wall7.fxLayer);
-    	RBox.getChildren().add(wall8.fxLayer);
-    	RBox.getChildren().add(wall9.fxLayer);
+    	for (GameObject object : gameObjectList) {
+    		RBox.getChildren().add(object.fxLayer);
+    	}
+    	//RBox.getChildren().add(wall1.fxLayer);
+    
 
     }
     
