@@ -1,6 +1,7 @@
 package gameobject;
 
 import java.io.File;
+import java.util.List;
 
 import gameobject.actions.ThreadBomb;
 import gameobject.attribute.DestructableObject;
@@ -24,8 +25,8 @@ private Image image = new Image(new File("ressources/bomb.png").toURI().toString
 		fxLayer.setFitWidth(50.0);
 	}
 	
-	public void startBomb(){
-		ThreadBomb b1 = new ThreadBomb(this);
+	public void startBomb(List<GameObject> gameObjectList){
+		ThreadBomb b1 = new ThreadBomb(this, gameObjectList);
 		b1.start();
 		
 	}

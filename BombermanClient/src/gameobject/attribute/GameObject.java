@@ -1,13 +1,16 @@
 package gameobject.attribute;
 import javafx.scene.image.ImageView;
 
-public class GameObject {
+public class GameObject extends Object {
 	private double posX;
 	private double posY;
 	private double height;
 	private double width;
 	public ImageView fxLayer;
 	
+	public GameObject() {
+		
+	}
 	
 	public void setHeight(double Height)
 	{
