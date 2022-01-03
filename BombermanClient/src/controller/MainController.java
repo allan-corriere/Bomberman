@@ -45,6 +45,9 @@ public class MainController {
     			if(level[y][x] == 1) {
     				gameObjectList.add(new Wall(x*50.0,y*50));
     			}
+    			if(level[y][x] == 2) {
+    				gameObjectList.add(new Brick(x*50.0,y*50));
+    			}
     		}
     	}
     	
