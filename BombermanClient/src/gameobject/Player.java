@@ -135,8 +135,32 @@ public class Player extends GameObject implements MovableObject{
 		if (code==KeyCode.SPACE)
 		{
 			Bomb bomb = new Bomb();
-			bomb.setPosX(this.getPosX());
-			bomb.setPosY(this.getPosY());
+			//place bomb in the good place
+			int nbSquareX = (int) (this.getPosX() / 50.0);
+			double deltaX = this.getPosX() % 50.0;
+			int nbSquareY = (int) (this.getPosY() / 50.0);
+			double deltaY = this.getPosY() % 50.0;
+			System.out.println("square X "+nbSquareX);
+			System.out.println("square Y "+nbSquareY);
+			System.out.println(deltaX);
+			System.out.println(deltaY);
+			
+			if(deltaX == 0 && deltaY == 0) {
+				bomb.setPosX(this.getPosX());
+				bomb.setPosY(this.getPosY());
+			}
+			else {
+				if(deltaX > 50.0/2.0) {
+					nbSquareX += 1;
+				}
+				if(deltaY > 50.0/2.0) {
+					nbSquareY += 1;
+				}
+				bomb.setPosX(nbSquareX*50.0);
+				bomb.setPosY(nbSquareY*50.0);
+				
+			}
+
 			gameObjectList.add(bomb);
 			bomb.fxLayer.setVisible(false);
 			RBox.getChildren().add(bomb.fxLayer);

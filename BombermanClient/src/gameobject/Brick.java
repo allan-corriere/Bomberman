@@ -12,7 +12,7 @@ import javafx.scene.image.ImageView;
 
 
 public class Brick extends GameObject implements DestructableObject, UnmovableObject {
-	private Image image = new Image(new File("ressources/wall.jpg").toURI().toString());
+	private Image image = new Image(new File("ressources/breakable_brick.png").toURI().toString());
 	private Bonus brickBonus;
 
 	public Brick() {
