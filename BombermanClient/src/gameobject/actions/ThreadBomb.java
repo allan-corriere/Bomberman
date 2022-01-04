@@ -22,7 +22,6 @@ public class ThreadBomb extends Thread {
 		catch (Exception e) {
 			System.out.println("failed to start bomb");
 		}
-		System.out.println(gameObjectList.size());
 		bomb.explode(gameObjectList);
 		bomb.fxLayer.setVisible(false);
 		gameObjectList.remove(bomb);

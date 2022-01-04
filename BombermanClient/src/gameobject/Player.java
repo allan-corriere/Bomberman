@@ -66,25 +66,22 @@ public class Player extends GameObject implements MovableObject{
 		
 		if (code==KeyCode.S)
 		{
-			double prefHeight = ((Pane) this.fxLayer.getParent()).getPrefHeight();
-			//check sortie de page
-			if (prefHeight-this.getPosY()>this.fxLayer.getFitHeight()) {
-				//check si un object ne bloque pas le passage
-				for (GameObject object : gameObjectList) {
-					if(System.identityHashCode(object) != System.identityHashCode(this)) {
-						double top = object.getPosY();
-						double left = object.getPosX();
-						double right = object.getPosX()+50.00;
-						
-						if(top <= (playerBottom+this.getSpeed()) && top > playerBottom && left < playerLeft && right >= playerLeft || top <= (playerBottom+this.getSpeed()) && top > playerBottom && left < playerRight && right >= playerRight) {
-							moveOk = false;
-						}
+			//check si un object ne bloque pas le passage
+			for (GameObject object : gameObjectList) {
+				if(System.identityHashCode(object) != System.identityHashCode(this)) {
+					double top = object.getPosY();
+					double left = object.getPosX();
+					double right = object.getPosX()+50.00;
+					
+					if(top <= (playerBottom+this.getSpeed()) && top > playerBottom && left < playerLeft && right >= playerLeft || top <= (playerBottom+this.getSpeed()) && top > playerBottom && left < playerRight && right >= playerRight) {
+						moveOk = false;
 					}
 				}
 			}
-			if(moveOk == true) {
-				this.setPosY(this.getPosY()+this.getSpeed());
-			}
+
+		if(moveOk == true) {
+			this.setPosY(this.getPosY()+this.getSpeed());
+		}
 
 		}
 		
@@ -140,15 +137,13 @@ public class Player extends GameObject implements MovableObject{
 			double deltaX = this.getPosX() % 50.0;
 			int nbSquareY = (int) (this.getPosY() / 50.0);
 			double deltaY = this.getPosY() % 50.0;
-			System.out.println("square X "+nbSquareX);
-			System.out.println("square Y "+nbSquareY);
-			System.out.println(deltaX);
-			System.out.println(deltaY);
 			
+			//player on square
 			if(deltaX == 0 && deltaY == 0) {
 				bomb.setPosX(this.getPosX());
 				bomb.setPosY(this.getPosY());
 			}
+			//adjust bomb position to the nearest square
 			else {
 				if(deltaX > 50.0/2.0) {
 					nbSquareX += 1;

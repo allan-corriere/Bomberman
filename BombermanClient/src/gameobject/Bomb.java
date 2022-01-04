@@ -24,6 +24,7 @@ private Image image = new Image(new File("ressources/bomb.png").toURI().toString
 		this.setPosY(0.0);
 		fxLayer.setFitHeight(50.0);
 		fxLayer.setFitWidth(50.0);
+		radius = 2;
 	}
 	
 	public void startBomb(List<GameObject> gameObjectList){
@@ -34,33 +35,56 @@ private Image image = new Image(new File("ressources/bomb.png").toURI().toString
 	
 	public void explode(List<GameObject> gameObjectList) {
 		List<GameObject> objectToRemove = new ArrayList<GameObject>();
-			for (GameObject object : gameObjectList) { //decremental to avoid error when removing
+		boolean blockedXplus = false;
+		boolean blockedXminus = false;
+		boolean blockedYplus = false;
+		boolean blockedYminus = false;
+		for(int i = 1; i <= radius; i++) {
+			for (GameObject object : gameObjectList) {
 				if(object instanceof DestructableObject && !(object instanceof Bomb)) {
 					//same pos
 					if(object.getPosX() == this.getPosX() && object.getPosY() == this.getPosY()) {
 						objectToRemove.add(object);
 					}
 					// X plus
-					else if(object.getPosX() == (this.getPosX()+50.0) && object.getPosY() == this.getPosY()) {
+					else if(object.getPosX() == (this.getPosX()+50.0*i) && object.getPosY() == this.getPosY() && blockedXplus == false) {
 						objectToRemove.add(object);
 					}
 					// X minus
-					else if(object.getPosX() == (this.getPosX()-50.0) && object.getPosY() == this.getPosY()) {
+					else if(object.getPosX() == (this.getPosX()-50.0*i) && object.getPosY() == this.getPosY() && blockedXminus == false) {
 						objectToRemove.add(object);
 					}
 					// Y plus
-					else if(object.getPosX() == this.getPosX() && (object.getPosY() == this.getPosY()+50.0)) {
+					else if(object.getPosX() == this.getPosX() && (object.getPosY() == this.getPosY()+50.0*i) && blockedYplus == false) {
 						objectToRemove.add(object);
 					}
 					// Y minus
-					else if(object.getPosX() == this.getPosX() && (object.getPosY() == this.getPosY()-50.0)) {
+					else if(object.getPosX() == this.getPosX() && (object.getPosY() == this.getPosY()-50.0*i) && blockedYminus == false) {
 						objectToRemove.add(object);
 					} 
 				}
-			
+				//check for blocking object in field
+				else if(!(object instanceof DestructableObject)) {
+					// X plus
+					if(object.getPosX() == (this.getPosX()+50.0*i) && object.getPosY() == this.getPosY()) {
+						blockedXplus = true;
+					}
+					// X minus
+					else if(object.getPosX() == (this.getPosX()-50.0*i) && object.getPosY() == this.getPosY()) {
+						blockedXminus = true;
+					}
+					// Y plus
+					else if(object.getPosX() == this.getPosX() && (object.getPosY() == this.getPosY()+50.0*i)) {
+						blockedXplus = true;
+					}
+					// Y minus
+					else if(object.getPosX() == this.getPosX() && (object.getPosY() == this.getPosY()-50.0*i)) {
+						blockedXminus = true;
+					} 
+				}
+			}
 		}
 		for(GameObject object : objectToRemove) {
-			System.out.println(object);
 			object.fxLayer.setVisible(false);
 			gameObjectList.remove(object);
 		}
