@@ -1,6 +1,9 @@
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.ConnectException;
+import java.net.Socket;
 
 import gameobject.Player;
 import javafx.application.Application;
@@ -8,21 +11,27 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import socket.SocketReader;
+import socket.SocketWriter;
 	
 public class Main extends Application {
 	
 	public static void main(String[] args) {
-		Connection conn = new Connection(65432, "localhost", "Osloh");
+		//Connection conn = new Connection(65432, "localhost", "Osloh");
 		
-		try {
-			conn.connect();
-			conn.sendPositionData(100, 100);
-			conn.sendPositionData(100, 102);
-			conn.sendPositionData(100, 104);
-			conn.closeConnection();
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
-		}
+		try { 
+		      // instantiation 1 a Socket , and specify the server address and port  
+		      Socket client = new Socket("localhost", 65432); 
+		      // Start two threads, 1 The individual is responsible for reading, 1 Responsible for writing  
+		      new Thread(new SocketReader(client)).start(); 
+		      new Thread(new SocketWriter(client)).start(); 
+		    } catch (ConnectException e) {
+		    	System.out.println("Unable to connect to server");
+		    } catch (EOFException e) {
+		    	System.out.println("Server connection lost");
+		    } catch (Exception e) { 
+		      e.printStackTrace(); 
+		    }
         Application.launch(args);
 	}
 	
