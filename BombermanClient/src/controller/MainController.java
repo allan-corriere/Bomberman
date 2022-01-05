@@ -23,7 +23,7 @@ public class MainController {
 	
 	public Player player = new Player();
 	public Level masterLevel = new Level();
-	int[][] level = masterLevel.loadLevel01(); 
+	int[][] level = masterLevel.loadLevel02(); 
     // Add a public no-args constructor
     public MainController() 
     {
@@ -56,22 +56,22 @@ public class MainController {
     	for (GameObject object : gameObjectList) {
     		RBox.getChildren().add(object.fxLayer);
     	}
-    	//RBox.getChildren().add(wall1.fxLayer);
-    
+    	
 
     }
     
   //Gestion des saisies clavier pour d�placements personnage
     
 	@FXML
-	private void moving(KeyEvent event) {			
+	private void moving(KeyEvent event) {
+		System.out.println(event.getCode());
 		player.move(event.getCode(), gameObjectList);
 		player.placeBomb(event.getCode(),RBox,gameObjectList);
 	}
 
 	@FXML
 	private void placeBombImage() {
-		
+		System.out.println("franc");
 	}
      
     // location and resources will be automatically injected by the FXML loader 

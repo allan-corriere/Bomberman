@@ -63,24 +63,24 @@ private Image image = new Image(new File("ressources/bomb.png").toURI().toString
 						objectToRemove.add(object);
 					} 
 				}
-				//check for blocking object in field
-				else if(!(object instanceof DestructableObject)) {
-					// X plus
-					if(object.getPosX() == (this.getPosX()+50.0*i) && object.getPosY() == this.getPosY()) {
-						blockedXplus = true;
-					}
-					// X minus
-					else if(object.getPosX() == (this.getPosX()-50.0*i) && object.getPosY() == this.getPosY()) {
-						blockedXminus = true;
-					}
-					// Y plus
-					else if(object.getPosX() == this.getPosX() && (object.getPosY() == this.getPosY()+50.0*i)) {
-						blockedXplus = true;
-					}
-					// Y minus
-					else if(object.getPosX() == this.getPosX() && (object.getPosY() == this.getPosY()-50.0*i)) {
-						blockedXminus = true;
-					} 
+				//check for blocking object in field including brick to ndo't break next object
+				if(!(object instanceof DestructableObject) || object instanceof Brick) {
+				// X plus
+				if(object.getPosX() == (this.getPosX()+50.0*i) && object.getPosY() == this.getPosY()) {
+					blockedXplus = true;
+				}
+				// X minus
+				else if(object.getPosX() == (this.getPosX()-50.0*i) && object.getPosY() == this.getPosY()) {
+					blockedXminus = true;
+				}
+				// Y plus
+				else if(object.getPosX() == this.getPosX() && (object.getPosY() == this.getPosY()+50.0*i)) {
+					blockedYplus = true;
+				}
+				// Y minus
+				else if(object.getPosX() == this.getPosX() && (object.getPosY() == this.getPosY()-50.0*i)) {
+					blockedYminus = true;
+				} 
 				}
 			}
 		}
