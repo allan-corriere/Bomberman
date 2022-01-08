@@ -18,10 +18,10 @@ public class MainController {
 	@FXML 
 	private Pane RBox;
 	
+	public Timer gameTimer = new Timer();
 	//Déclaration des objets de base 
 	public List<GameObject> gameObjectList = new ArrayList<GameObject>();
-	
-	public Player player = new Player();
+	public Player player = new Player(gameTimer);
 	public Level masterLevel = new Level();
 	int[][] level = masterLevel.loadLevel02(); 
     // Add a public no-args constructor
@@ -56,6 +56,20 @@ public class MainController {
     	for (GameObject object : gameObjectList) {
     		RBox.getChildren().add(object.fxLayer);
     	}
+    	
+    	
+    	TimerTask task = new TimerTask()
+    	{
+
+    	    @Override
+    	    public void run()
+    	    {
+    	    	System.out.println(java.time.LocalTime.now());  
+    	    
+    	    }
+    	};
+    	//gameTimer.scheduleAtFixedRate(task,0, 10);
+    	
     	
 
     }

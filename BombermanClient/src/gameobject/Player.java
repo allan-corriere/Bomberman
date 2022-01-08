@@ -20,9 +20,10 @@ public class Player extends GameObject implements MovableObject{
 	private int currentBombNb;
 	private int bombRadius;
 	private Image image = new Image(new File("ressources/hero.jpg").toURI().toString());
+
 	
-	
-	public Player() {
+	public Player(Timer gameTimer) {
+		this.gameTimer = gameTimer;
 		fxLayer = new ImageView(image);
 		this.setPosX(0.0);
 		this.setPosY(0.0);
@@ -131,7 +132,7 @@ public class Player extends GameObject implements MovableObject{
 	public void placeBomb(KeyCode code, Pane RBox, List<GameObject> gameObjectList) {
 		if (code==KeyCode.SPACE)
 		{
-			Bomb bomb = new Bomb();
+			Bomb bomb = new Bomb(this.gameTimer);
 			//place bomb in the good place
 			int nbSquareX = (int) (this.getPosX() / 50.0);
 			double deltaX = this.getPosX() % 50.0;
