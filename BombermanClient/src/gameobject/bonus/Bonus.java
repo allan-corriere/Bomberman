@@ -16,7 +16,7 @@ import javafx.scene.image.Image;
 public class Bonus extends GameObject implements UnmovableObject, Crossable, DestructableObject {
 	protected Image image;
 	
-	public Bonus(Timer gameTimer, double posX, double posY) {
+	public Bonus(double posX, double posY) {
 
 	}
 

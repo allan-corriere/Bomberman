@@ -86,17 +86,16 @@ public class Brick extends GameObject implements DestructableObject, UnmovableOb
 	    if(choice == 0) {
 	    	brickBonus = null;
 	    }
-	    if(choice == 1) {
-	    	brickBonus = new PlayerSpeedBonus(gameTimer, this.getPosX(), this.getPosY());
+	    else if(choice == 1) {
+	    	brickBonus = new PlayerSpeedBonus(this.getPosX(), this.getPosY());
 	    }
-	    if(choice == 2) {
-	    	brickBonus = new BombPowerBonus(gameTimer, this.getPosX(), this.getPosY());
+	    else if(choice == 2) {
+	    	brickBonus = new BombPowerBonus(this.getPosX(), this.getPosY());
 	    }
-	    if(choice == 3) {
-	    	brickBonus = new BombNumberBonus(gameTimer, this.getPosX(), this.getPosY());
+	    else if(choice == 3) {
+	    	brickBonus = new BombNumberBonus(this.getPosX(), this.getPosY());
 	    }
 
-	    System.out.println(choice);
 	}
 	
 	public Bonus getBrickBonus() {

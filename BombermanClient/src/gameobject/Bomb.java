@@ -21,14 +21,14 @@ public class Bomb extends GameObject implements UnmovableObject {
 private Image image = new Image(new File("ressources/bomb.png").toURI().toString());
 	
 	
-	public Bomb(Timer gameTimer) {
+	public Bomb(Timer gameTimer,int radius) {
 		this.gameTimer = gameTimer;
 		fxLayer = new ImageView(image);
+		this.radius = radius;
 		this.setPosX(0.0);
 		this.setPosY(0.0);
 		fxLayer.setFitHeight(50.0);
 		fxLayer.setFitWidth(50.0);
-		radius = 2;
 	}
 	
 	public void startBomb(List<GameObject> gameObjectList){
@@ -96,10 +96,8 @@ private Image image = new Image(new File("ressources/bomb.png").toURI().toString
 				if(((Brick) object).brickBonus != null) {
 					Bonus bonus = ((Brick) object).brickBonus;
 					gameObjectList.remove(object);
-					bonus.fxLayer.setVisible(true);
-					
+					bonus.fxLayer.setVisible(true);		
 					gameObjectList.add(bonus);
-					System.out.println("BONUSSSSSSSSSSSS");
 				}
 				else {
 					gameObjectList.remove(object);
@@ -108,11 +106,11 @@ private Image image = new Image(new File("ressources/bomb.png").toURI().toString
 			else {
 				gameObjectList.remove(object);
 			}
-			System.out.println("removed!: "+object);
+			
 			
 			
 		}
-		System.out.println(gameObjectList.size());
+		
 	}
 	
 	public int getTimer() {

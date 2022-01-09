@@ -51,6 +51,8 @@ public class MainController {
     	}
     	
     	player.setSpeed(5);
+    	player.setMaxBomb(1);
+    	player.setBombRadius(1);
     	player.fxLayer.toFront();
     	//placer les objets fx
     	for (GameObject object : gameObjectList) {

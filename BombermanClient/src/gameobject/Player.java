@@ -3,10 +3,14 @@ package gameobject;
 import java.io.File;
 import java.util.*;
 
+
 import gameobject.attribute.Crossable;
 import gameobject.attribute.GameObject;
 import gameobject.attribute.MovableObject;
+import gameobject.bonus.BombNumberBonus;
+import gameobject.bonus.BombPowerBonus;
 import gameobject.bonus.Bonus;
+import gameobject.bonus.PlayerSpeedBonus;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -25,6 +29,7 @@ public class Player extends GameObject implements MovableObject{
 
 	
 	public Player(Timer gameTimer) {
+		this.currentBombNb = 0;
 		this.gameTimer = gameTimer;
 		fxLayer = new ImageView(image);
 		this.setPosX(0.0);
@@ -131,7 +136,6 @@ public class Player extends GameObject implements MovableObject{
 							double bottom = object.getPosY()+50.0;						
 							if(left <= (playerRight+this.getSpeed()) && left > playerRight && top < playerTop && bottom >= playerTop || left <= (playerRight+this.getSpeed()) && left > playerRight && top < playerBottom && bottom >= playerBottom) {
 								moveOk = false;
-								System.out.println(object);
 							}
 						}
 					}
@@ -147,9 +151,10 @@ public class Player extends GameObject implements MovableObject{
 	}
 	
 	public void placeBomb(KeyCode code, Pane RBox, List<GameObject> gameObjectList) {
-		if (code==KeyCode.SPACE)
+		if (code==KeyCode.SPACE && maxBomb > currentBombNb )
 		{
-			Bomb bomb = new Bomb(this.gameTimer);
+			Bomb bomb = new Bomb(this.gameTimer, bombRadius);
+			currentBombNb +=1;
 			//place bomb in the good place
 			int nbSquareX = (int) (this.getPosX() / 50.0);
 			double deltaX = this.getPosX() % 50.0;
@@ -178,7 +183,19 @@ public class Player extends GameObject implements MovableObject{
 			bomb.fxLayer.setVisible(false);
 			RBox.getChildren().add(bomb.fxLayer);
 			bomb.startBomb(gameObjectList);
-			System.out.println(gameObjectList.size());
+			
+			//task to decount the bomb once explode
+			TimerTask task = new TimerTask()
+	    	{
+
+	    	    @Override
+	    	    public void run()
+	    	    {
+	    	    	currentBombNb -= 1;
+	    	    
+	    	    }
+	    	};
+			gameTimer.schedule(task, 3000);
 		}
 	}
 	
@@ -195,7 +212,6 @@ public class Player extends GameObject implements MovableObject{
 				if(object instanceof Bonus){
 					if(object.getPosX() == nbSquareX*50.0 && object.getPosY() == nbSquareY*50.0) {
 						selectedBonus = ((Bonus) object);
-						System.out.println("player on bonus");
 					}
 				}
 			}
@@ -213,7 +229,6 @@ public class Player extends GameObject implements MovableObject{
 				if(object instanceof Bonus){
 					if(object.getPosX() == nbSquareX*50.0 && object.getPosY() == nbSquareY*50.0) {
 						selectedBonus = ((Bonus) object);
-						System.out.println("player almost on bonus");
 					}
 				}
 			}
@@ -222,7 +237,53 @@ public class Player extends GameObject implements MovableObject{
 		
 		//apply bonus to player
 		if(selectedBonus != null) {
-			
+			//speed
+			if(selectedBonus instanceof PlayerSpeedBonus) {
+				speed += 5;
+				TimerTask SpeedTask = new TimerTask()
+		    	{
+
+		    	    @Override
+		    	    public void run()
+		    	    {
+		    	    	speed -= 5;
+		    	    }
+		    	};
+				gameTimer.schedule(SpeedTask, 5000);
+				
+			}
+			//bomb number
+			else if(selectedBonus instanceof BombNumberBonus) {
+				maxBomb += 1;
+				TimerTask NumberTask = new TimerTask()
+		    	{
+
+		    	    @Override
+		    	    public void run()
+		    	    {
+		    	    	maxBomb -= 1;   	    
+		    	    }
+		    	};
+				gameTimer.schedule(NumberTask, 5000);
+				
+			}
+			//bomb power
+			else if(selectedBonus instanceof BombPowerBonus) {
+				bombRadius += 1;
+				TimerTask PowerTask = new TimerTask()
+		    	{
+
+		    	    @Override
+		    	    public void run()
+		    	    {
+		    	    	bombRadius -= 1;		    	    
+		    	    }
+		    	};
+				gameTimer.schedule(PowerTask, 5000);
+				
+			}
+			selectedBonus.fxLayer.setVisible(false);
+			gameObjectList.remove(selectedBonus);
 		}
 	}
 	
