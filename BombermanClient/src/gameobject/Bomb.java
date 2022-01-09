@@ -5,14 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
+
 import gameobject.actions.ThreadBomb;
 import gameobject.attribute.DestructableObject;
 import gameobject.attribute.GameObject;
 import gameobject.attribute.UnmovableObject;
+import gameobject.bonus.Bonus;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class Bomb extends GameObject implements DestructableObject, UnmovableObject {
+public class Bomb extends GameObject implements UnmovableObject {
 	private int timer;
 	private int radius;
 	
@@ -44,7 +46,7 @@ private Image image = new Image(new File("ressources/bomb.png").toURI().toString
 		boolean blockedYminus = false;
 		for(int i = 1; i <= radius; i++) {
 			for (GameObject object : gameObjectList) {
-				if(object instanceof DestructableObject && !(object instanceof Bomb)) {
+				if(object instanceof DestructableObject) {
 					//same pos
 					if(radius == 1 && object.getPosX() == this.getPosX() && object.getPosY() == this.getPosY()) {
 						objectToRemove.add(object);
@@ -89,8 +91,28 @@ private Image image = new Image(new File("ressources/bomb.png").toURI().toString
 		}
 		for(GameObject object : objectToRemove) {
 			object.fxLayer.setVisible(false);
-			gameObjectList.remove(object);
+			
+			if(object instanceof Brick) { //prompt when  bonus
+				if(((Brick) object).brickBonus != null) {
+					Bonus bonus = ((Brick) object).brickBonus;
+					gameObjectList.remove(object);
+					bonus.fxLayer.setVisible(true);
+					
+					gameObjectList.add(bonus);
+					System.out.println("BONUSSSSSSSSSSSS");
+				}
+				else {
+					gameObjectList.remove(object);
+				}
+			}
+			else {
+				gameObjectList.remove(object);
+			}
+			System.out.println("removed!: "+object);
+			
+			
 		}
+		System.out.println(gameObjectList.size());
 	}
 	
 	public int getTimer() {
