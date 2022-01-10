@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import gamescene.GenerateMap;
 import socket.SocketReader;
 import socket.SocketWriter;
 
@@ -14,6 +15,9 @@ public class Connection {
 		
 		Socket clients[] = new Socket[4];
 		int numberOfClient = 0;
+		
+		GenerateMap map = new GenerateMap();
+		System.out.println(map.getMap());
 		
 		SocketWriter sw = new SocketWriter(clients);
 		
@@ -25,7 +29,7 @@ public class Connection {
 	    		if(client != null) {
 	    			System.out.println("Client " + client.getInetAddress() + " connected with id " + numberOfClient);
 	    			clients[numberOfClient] = client;
-	    			new Thread(new SocketReader(clients[numberOfClient], numberOfClient, sw)).start();  
+	    			new Thread(new SocketReader(clients[numberOfClient], numberOfClient, sw, map.getMap())).start();  
 	    	        //new Thread(new SocketWriter(clients[numberOfClient])).start();
 	    			numberOfClient++;
 	    		}

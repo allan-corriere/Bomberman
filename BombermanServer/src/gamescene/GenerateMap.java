@@ -35,7 +35,7 @@ public class GenerateMap {
     		}
     	}
     	
-    	System.out.println(mapToSend);
+    	//System.out.println(mapToSend);
 	}
 	
 	//to generate random
@@ -85,5 +85,9 @@ public class GenerateMap {
 	    return choice;
 	   
 
+	}
+	
+	public String getMap() {
+		return this.mapToSend;
 	}
 }
