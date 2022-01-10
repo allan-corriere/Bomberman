@@ -3,28 +3,32 @@ package gameobject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+
 
 import gameobject.actions.ThreadBomb;
 import gameobject.attribute.DestructableObject;
 import gameobject.attribute.GameObject;
 import gameobject.attribute.UnmovableObject;
+import gameobject.bonus.Bonus;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class Bomb extends GameObject implements DestructableObject, UnmovableObject {
+public class Bomb extends GameObject implements UnmovableObject {
 	private int timer;
 	private int radius;
 	
 private Image image = new Image(new File("ressources/bomb.png").toURI().toString());
 	
 	
-	public Bomb() {
+	public Bomb(Timer gameTimer,int radius) {
+		this.gameTimer = gameTimer;
 		fxLayer = new ImageView(image);
+		this.radius = radius;
 		this.setPosX(0.0);
 		this.setPosY(0.0);
 		fxLayer.setFitHeight(50.0);
 		fxLayer.setFitWidth(50.0);
-		radius = 2;
 	}
 	
 	public void startBomb(List<GameObject> gameObjectList){
@@ -32,6 +36,7 @@ private Image image = new Image(new File("ressources/bomb.png").toURI().toString
 		b1.start();
 		
 	}
+
 	
 	public void explode(List<GameObject> gameObjectList) {
 		List<GameObject> objectToRemove = new ArrayList<GameObject>();
@@ -41,9 +46,9 @@ private Image image = new Image(new File("ressources/bomb.png").toURI().toString
 		boolean blockedYminus = false;
 		for(int i = 1; i <= radius; i++) {
 			for (GameObject object : gameObjectList) {
-				if(object instanceof DestructableObject && !(object instanceof Bomb)) {
+				if(object instanceof DestructableObject) {
 					//same pos
-					if(object.getPosX() == this.getPosX() && object.getPosY() == this.getPosY()) {
+					if(radius == 1 && object.getPosX() == this.getPosX() && object.getPosY() == this.getPosY()) {
 						objectToRemove.add(object);
 					}
 					// X plus
@@ -86,8 +91,26 @@ private Image image = new Image(new File("ressources/bomb.png").toURI().toString
 		}
 		for(GameObject object : objectToRemove) {
 			object.fxLayer.setVisible(false);
-			gameObjectList.remove(object);
+			
+			if(object instanceof Brick) { //prompt when  bonus
+				if(((Brick) object).brickBonus != null) {
+					Bonus bonus = ((Brick) object).brickBonus;
+					gameObjectList.remove(object);
+					bonus.fxLayer.setVisible(true);		
+					gameObjectList.add(bonus);
+				}
+				else {
+					gameObjectList.remove(object);
+				}
+			}
+			else {
+				gameObjectList.remove(object);
+			}
+			
+			
+			
 		}
+		
 	}
 	
 	public int getTimer() {

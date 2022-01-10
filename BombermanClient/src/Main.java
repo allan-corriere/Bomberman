@@ -1,12 +1,7 @@
-import java.io.EOFException;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.ConnectException;
-import java.net.Socket;
 
-import controller.MenuController;
-import gameobject.Player;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,25 +14,26 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import socket.SocketReader;
 import socket.SocketWriter;
+
 	
 public class Main extends Application {
 	
 	public static void main(String[] args) {
 		//Connection conn = new Connection(65432, "localhost", "Osloh");
 		
-		try { 
-		      // instantiation 1 a Socket , and specify the server address and port  
-		      Socket client = new Socket("localhost", 65432); 
-		      // Start two threads, 1 The individual is responsible for reading, 1 Responsible for writing  
-		      new Thread(new SocketReader(client)).start(); 
-		      new Thread(new SocketWriter(client)).start(); 
-		    } catch (ConnectException e) {
-		    	System.out.println("Unable to connect to server");
-		    } catch (EOFException e) {
-		    	System.out.println("Server connection lost");
-		    } catch (Exception e) { 
-		      e.printStackTrace(); 
-		    }
+//		try { 
+//		      // instantiation 1 a Socket , and specify the server address and port  
+//		      //GameClient client = new GameClient("localhost", 65432, "Osloh"); 
+//		      // Start two threads, 1 The individual is responsible for reading, 1 Responsible for writing  
+//		      //new Thread(new SocketReader(client)).start(); 
+//		      //new Thread(new SocketWriter(client)).start(); 
+//		    } catch (ConnectException e) {
+//		    	System.out.println("Unable to connect to server");
+//		    } catch (EOFException e) {
+//		    	System.out.println("Server connection lost");
+//		    } catch (Exception e) { 
+//		      e.printStackTrace(); 
+//		    }
         Application.launch(args);
 	}
 	

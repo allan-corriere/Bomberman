@@ -1,4 +1,5 @@
 //import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.IOException;
 //import java.io.InputStreamReader;
 import java.net.ServerSocket;
@@ -11,15 +12,29 @@ public class Connection {
 	public static void main(String[] args) {
 		final int port = 65432;
 		
+		Socket clients[] = new Socket[4];
+		int numberOfClient = 0;
+		
+		SocketWriter sw = new SocketWriter(clients);
+		
 		ServerSocket serverSocket = null; 
 	    try {  
-	      serverSocket = new ServerSocket(port);  
-	      while (true) {  
-	        Socket client = serverSocket.accept();  
-	        //1 Two client connections on account opening handle reads and writes   
-	        new Thread(new SocketReader(client)).start();  
-	        new Thread(new SocketWriter(client)).start();  
-	      }  
+	    	serverSocket = new ServerSocket(port); 
+	    	while(numberOfClient != 4) {
+	    		Socket client = serverSocket.accept();
+	    		if(client != null) {
+	    			System.out.println("Client " + client.getInetAddress() + " connected with id " + numberOfClient);
+	    			clients[numberOfClient] = client;
+	    			new Thread(new SocketReader(clients[numberOfClient], numberOfClient, sw)).start();  
+	    	        //new Thread(new SocketWriter(clients[numberOfClient])).start();
+	    			numberOfClient++;
+	    		}
+	    	}
+//	        Socket client = serverSocket.accept();
+//	        new Thread(new SocketReader(client)).start();  
+//	        new Thread(new SocketWriter(client)).start();
+	    } catch (EOFException e) {
+	    	System.out.println("Client disconnected");
 	    } catch (Exception e) {  
 	      e.printStackTrace();  
 	    } finally{ 
@@ -27,28 +42,12 @@ public class Connection {
 	        if(serverSocket != null){ 
 	          serverSocket.close(); 
 	        } 
+	      }catch (EOFException e) {
+	    	  System.out.println("Client disconnected");
 	      } catch (IOException e) { 
 	        e.printStackTrace(); 
-	      } 
-	    } 
+	      }
+	    }
+	    
 	  }  
-		
-//		try (ServerSocket socketServeur = new ServerSocket(port)) {
-//			System.out.println("Lancement du serveur");
-//			while (true) {
-//				try (
-//					Socket socketClient = socketServeur.accept();
-//					BufferedReader in = new BufferedReader(
-//							new InputStreamReader(socketClient.getInputStream())
-//					);
-//				) {
-//					System.out.println("Connexion avec : " + socketClient.getInetAddress());
-//					String message = in.readLine();
-//					System.out.println(message);
-//				}
-//			}
-//		} catch (IOException e) {
-//			System.out.println("Erreur sur le port " + port + " ou erreur de connexion");
-//		}
-//	}
 }
