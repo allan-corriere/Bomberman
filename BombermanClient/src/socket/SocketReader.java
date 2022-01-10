@@ -2,13 +2,12 @@ package socket;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.net.Socket;
 
 public class SocketReader implements Runnable{
 	
-	private Socket client;
+	private GameClient client;
 	
-	public SocketReader(Socket client) {
+	public SocketReader(GameClient client) {
 		this.client = client;
 	}
 
@@ -19,7 +18,7 @@ public class SocketReader implements Runnable{
 			while(true) {
 				dis = new DataInputStream(client.getInputStream());
 				String receive = dis.readUTF();
-				System.out.println("Server responded with : " + receive);
+				System.out.println(receive);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

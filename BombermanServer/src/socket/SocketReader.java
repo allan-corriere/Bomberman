@@ -7,9 +7,13 @@ import java.net.Socket;
 public class SocketReader implements Runnable{
 	
 	private Socket client;
+	private int identifier;
+	private SocketWriter sw;
 	
-	public SocketReader(Socket client) {
+	public SocketReader(Socket client, int id, SocketWriter sw) {
 		this.client = client;
+		this.identifier = id;
+		this.sw = sw;
 	}
 
 	@Override
@@ -19,7 +23,10 @@ public class SocketReader implements Runnable{
 			while(true) {
 				dis = new DataInputStream(client.getInputStream());
 				String receive = dis.readUTF();
-				System.out.println("Client responded with : " + receive);
+				if(receive != null) {
+					//System.out.println(this.identifier+":"+receive);
+					this.sw.send(this.identifier+":"+receive, this.identifier);
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

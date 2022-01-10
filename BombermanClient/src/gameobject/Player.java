@@ -9,10 +9,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import socket.GameClient;
+import socket.SocketReader;
+import socket.SocketWriter;
 
 
 
 public class Player extends GameObject implements MovableObject{
+	private SocketWriter sw;
 	private boolean alive;
 	private double speed;
 	//bomb spec
@@ -22,17 +26,33 @@ public class Player extends GameObject implements MovableObject{
 	private Image image = new Image(new File("ressources/hero.jpg").toURI().toString());
 	
 	
-	public Player() {
+	public Player(){
 		fxLayer = new ImageView(image);
 		this.setPosX(0.0);
 		this.setPosY(0.0);
 		fxLayer.setFitHeight(50.0);
 		fxLayer.setFitWidth(50.0);
+		
+		try {
+			GameClient client = new GameClient("localhost", 65432, "Osloh");
+			new Thread(new SocketReader(client)).start();
+			
+			this.sw = new SocketWriter(client);
+			new Thread(this.sw).start();
+			
+			//this.sw = new TestSW(client);
+			//this.sw.run();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void sendPositionToServer() {
+		this.sw.send(this.getPosX()+":"+this.getPosY());
 	}
 
 	public void move(KeyCode code, List<GameObject> gameObjectList) {
 		boolean moveOk = true;
-		System.out.println("joueur x:"+this.getPosX()+" y:"+this.getPosY());
 		double playerTop = this.getPosY()+0.1;
 		double playerBottom = this.getPosY()+49.99;
 		double playerLeft = this.getPosX()+0.1;
@@ -125,6 +145,9 @@ public class Player extends GameObject implements MovableObject{
 					this.setPosX(this.getPosX()+this.getSpeed());
 				}
 			}
+		}
+		if(moveOk) {
+			this.sendPositionToServer();
 		}
 	}
 	

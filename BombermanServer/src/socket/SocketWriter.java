@@ -1,48 +1,36 @@
 package socket;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Socket;
 
 public class SocketWriter implements Runnable{
 	
-	private Socket client;
+	//private Socket client;
 	
-	public SocketWriter(Socket client) {
-		this.client = client;
+	private Socket[] clients;
+	
+	public SocketWriter(Socket[] clients) {
+		this.clients = clients;
+	}
+
+	public void send(String string, int id) {
+		for(int i = 0; i<this.clients.length; i++) {
+			if(clients[i] != null && id != i) {
+				Socket client = clients[i];
+				try {
+					DataOutputStream dos = new DataOutputStream(client.getOutputStream());
+					dos.writeUTF(string);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	@Override
 	public void run() {
-		DataOutputStream dos = null;
-		BufferedReader br = null;
-		try {
-			while(true) {
-				dos = new DataOutputStream(client.getOutputStream());
-				System.out.println("Sent to the client : ");
-				br = new BufferedReader(new InputStreamReader(System.in));
-				String send = br.readLine();
-				dos.writeUTF(send);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try{ 
-				if(dos != null){ 
-		          dos.close(); 
-		        } 
-		        if(br != null){ 
-		          br.close(); 
-		        } 
-		        if(client != null){ 
-		          client = null; 
-		        } 
-		      }catch(Exception e){ 
-		        e.printStackTrace(); 
-		      } 
-		}
+		System.out.println("SocketWriter is running");
 	}
+
 
 }
