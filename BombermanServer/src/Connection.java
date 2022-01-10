@@ -17,6 +17,9 @@ public class Connection {
 		int numberOfClient = 0;
 		
 		GenerateMap map = new GenerateMap();
+
+		System.out.println(map.getMap());
+
 		
 		SocketWriter sw = new SocketWriter(clients);
 		
@@ -28,7 +31,7 @@ public class Connection {
 	    		if(client != null) {
 	    			System.out.println("Client " + client.getInetAddress() + " connected with id " + numberOfClient);
 	    			clients[numberOfClient] = client;
-	    			new Thread(new SocketReader(clients[numberOfClient], numberOfClient, sw)).start();  
+	    			new Thread(new SocketReader(clients[numberOfClient], numberOfClient, sw, map.getMap())).start();  
 	    	        //new Thread(new SocketWriter(clients[numberOfClient])).start();
 	    			numberOfClient++;
 	    		}

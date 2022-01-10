@@ -5,8 +5,6 @@ import java.net.Socket;
 
 public class SocketWriter implements Runnable{
 	
-	//private Socket client;
-	
 	private Socket[] clients;
 	
 	public SocketWriter(Socket[] clients) {
@@ -24,6 +22,15 @@ public class SocketWriter implements Runnable{
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+	
+	public void sendMap(String string, Socket client) {
+		try {
+			DataOutputStream dos = new DataOutputStream(client.getOutputStream());
+			dos.writeUTF(string);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

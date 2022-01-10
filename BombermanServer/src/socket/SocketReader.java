@@ -10,10 +10,11 @@ public class SocketReader implements Runnable{
 	private int identifier;
 	private SocketWriter sw;
 	
-	public SocketReader(Socket client, int id, SocketWriter sw) {
+	public SocketReader(Socket client, int id, SocketWriter sw, String map) {
 		this.client = client;
 		this.identifier = id;
 		this.sw = sw;
+		this.sw.sendMap(map, client);
 	}
 
 	@Override
