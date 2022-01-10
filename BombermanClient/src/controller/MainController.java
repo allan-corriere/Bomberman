@@ -84,9 +84,15 @@ public class MainController {
   //Gestion des saisies clavier pour d�placements personnage
     
 	@FXML
-	private void moving(KeyEvent event) {
-		System.out.println(event.getCode());
+	private void KeyPressed(KeyEvent event) {
+		System.out.println("pressed"+event.getCode());
 		player.move(event.getCode(), RBox, gameObjectList);
+		
+	}
+	
+	@FXML
+	private void KeyReleased(KeyEvent event) {
+		System.out.println("relaché"+event.getCode());
 		player.placeBomb(event.getCode(),RBox,gameObjectList);
 	}
 
