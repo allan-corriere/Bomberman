@@ -5,12 +5,18 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.Socket;
 
+import controller.MenuController;
 import gameobject.Player;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import socket.SocketReader;
 import socket.SocketWriter;
 	
@@ -56,6 +62,21 @@ public class Main extends Application {
         // Set the Title to the Stage
         stage.setTitle("Main Scene");
         // Display the Stage
+        
+        //Création et affichage de la  fenêtre de menu
+        
+        FXMLLoader fxmlLoader2 = new FXMLLoader(new File("ressources/menu.fxml").toURI().toURL());     
+        VBox root1 = (VBox) fxmlLoader2.load();
+        Stage stage2 = new Stage();
+        Scene scene2 = new Scene(root1);
+        stage2.setScene(scene2);
+        stage2.initModality(Modality.APPLICATION_MODAL);
+        stage2.initStyle(StageStyle.UNDECORATED);
+        stage2.setTitle("Bomberman Menu");
+        scene2.getRoot().requestFocus();
+        stage2.showAndWait();
+        
+
         stage.show();
         scene.getRoot().requestFocus();
     	}
