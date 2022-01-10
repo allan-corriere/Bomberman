@@ -1,4 +1,6 @@
 package gameobject.attribute;
+import java.util.Timer;
+
 import javafx.scene.image.ImageView;
 
 public class GameObject extends Object {
@@ -7,6 +9,7 @@ public class GameObject extends Object {
 	private double height;
 	private double width;
 	public ImageView fxLayer;
+	public Timer gameTimer = new Timer();
 	
 	public GameObject() {
 		
