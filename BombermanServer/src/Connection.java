@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import gamescene.GenerateMap;
 import socket.SocketReader;
 import socket.SocketWriter;
 
@@ -14,6 +15,8 @@ public class Connection {
 		
 		Socket clients[] = new Socket[4];
 		int numberOfClient = 0;
+		
+		GenerateMap map = new GenerateMap();
 		
 		SocketWriter sw = new SocketWriter(clients);
 		

@@ -38,7 +38,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.MeshView?>
 
-<Pane fx:id="RBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyReleased="#KeyReleased" onKeyPressed="#KeyPressed" prefHeight="579.0" prefWidth="973.0" style="-fx-background-color: WHITE;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
+<Pane fx:id="RBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyReleased="#KeyReleased" onKeyPressed="#KeyPressed" prefHeight="750.0" prefWidth="750.0" style="-fx-background-color: WHITE;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
    <children>
       <MeshView />
    
