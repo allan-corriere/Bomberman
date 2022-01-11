@@ -43,6 +43,24 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException
     {
     	try {
+        
+        
+        //Crï¿½ation et affichage de la  fenï¿½tre de menu
+        
+        FXMLLoader fxmlLoader2 = new FXMLLoader(new File("ressources/menu.fxml").toURI().toURL());     
+        VBox root1 = (VBox) fxmlLoader2.load();
+        Stage stage2 = new Stage();
+        Scene scene2 = new Scene(root1);
+        stage2.setScene(scene2);
+        stage2.initModality(Modality.APPLICATION_MODAL);
+        stage2.initStyle(StageStyle.UNDECORATED);
+        stage2.setTitle("Bomberman Menu");
+        scene2.getRoot().requestFocus();
+        stage2.showAndWait();
+        
+
+        stage.show();
+        
         // Create the FXMLLoader 
         FXMLLoader loader = new FXMLLoader(new File("ressources/main_scene.fxml").toURI().toURL());
         // Path to the FXML File
@@ -59,22 +77,9 @@ public class Main extends Application {
         stage.setTitle("Main Scene");
         // Display the Stage
         
-        //Création et affichage de la  fenêtre de menu
-        
-        FXMLLoader fxmlLoader2 = new FXMLLoader(new File("ressources/menu.fxml").toURI().toURL());     
-        VBox root1 = (VBox) fxmlLoader2.load();
-        Stage stage2 = new Stage();
-        Scene scene2 = new Scene(root1);
-        stage2.setScene(scene2);
-        stage2.initModality(Modality.APPLICATION_MODAL);
-        stage2.initStyle(StageStyle.UNDECORATED);
-        stage2.setTitle("Bomberman Menu");
-        scene2.getRoot().requestFocus();
-        stage2.showAndWait();
-        
-
-        stage.show();
         scene.getRoot().requestFocus();
+        
+        
     	}
     	
     	catch (IOException e) {

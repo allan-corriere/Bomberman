@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import socket.GameClient;
+import socket.MessageReceived;
 import socket.SocketReader;
 import socket.SocketWriter;
 import gameobject.*;
@@ -24,6 +25,7 @@ import gamescene.Level;
 public class MainController {
 	
 	private SocketWriter sw;
+	private MessageReceived messageReceived = new MessageReceived();
 
 	@FXML 
 	private Pane RBox;
@@ -42,10 +44,12 @@ public class MainController {
     @FXML
     private void initialize() 
     {
+    	System.out.println("yess");
     	// Connexion au serveur
     	try {
 			GameClient client = new GameClient("localhost", 65432, "Osloh");
-			new Thread(new SocketReader(client)).start();
+			
+			new Thread(new SocketReader(client, messageReceived)).start();
 			
 			this.sw = new SocketWriter(client);
 			new Thread(this.sw).start();
@@ -64,15 +68,16 @@ public class MainController {
     	player.setPosY(50.0);
     	gameObjectList.add(player);
     	//gameObjectList.add(wall1);
-    	
+    	while(!(messageReceived.getMessage().startsWith("map("))){
+    		;
+    	}
     	//traitement des données level envoyés par le serveur
-    	String receivedMessage = "map(15,15):1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,2,2,2,3,2,2,2,2,2,0,0,1,1,0,1,2,1,2,1,2,1,2,1,4,1,0,1,1,2,2,5,2,2,2,2,3,2,2,2,2,2,1,1,2,1,2,1,2,1,2,1,4,1,2,1,4,1,1,2,2,2,2,3,2,2,2,2,2,2,5,3,1,1,3,1,2,1,2,1,3,1,2,1,2,1,2,1,1,3,2,5,4,2,4,2,5,5,2,4,2,2,1,1,2,1,2,1,2,1,2,1,2,1,2,1,5,1,1,2,2,3,2,2,2,2,4,2,2,2,5,2,1,1,5,1,2,1,2,1,2,1,2,1,2,1,2,1,1,2,2,4,3,2,2,2,2,2,3,2,4,2,1,1,0,1,2,1,5,1,2,1,2,1,4,1,0,1,1,0,0,2,3,2,2,2,2,2,2,4,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,";
+    	String receivedMessage = messageReceived.getMessage();
     	if(receivedMessage.startsWith("map(")){
     		String mapSizeText = receivedMessage.substring(receivedMessage.indexOf("(") + 1, receivedMessage.indexOf(")"));
     		int [] mapSize = Arrays.stream(mapSizeText.split(",")).mapToInt(Integer::parseInt).toArray();
     		String dataText = receivedMessage.split(":")[1];
     		int [] level = Arrays.stream(dataText.substring(0, dataText.length() - 1).split(",")).mapToInt(Integer::parseInt).toArray();
-    		System.out.println(level.length);
     		int totalRow = mapSize[0];
     		int totalColumn = mapSize[1];
     		int currentRow = 0;
@@ -98,8 +103,6 @@ public class MainController {
     				
     				
     			}
-    			System.out.println(currentRow);
-    			System.out.println(currentColumn);
     			currentRow ++;
     			if(currentRow >= totalRow) {
     				currentRow = 0;
@@ -148,6 +151,7 @@ public class MainController {
 	private void KeyPressed(KeyEvent event) {
 		System.out.println("pressed"+event.getCode());
 		player.move(event.getCode(), RBox, gameObjectList);
+		player.resetLayer(event.getCode());
 		
 	}
 	
@@ -155,7 +159,7 @@ public class MainController {
 	private void KeyReleased(KeyEvent event) {
 		System.out.println("relaché"+event.getCode());
 		player.placeBomb(event.getCode(),RBox,gameObjectList);
-		player.resetLayer(event.getCode());
+		
 	}
 
 	@FXML

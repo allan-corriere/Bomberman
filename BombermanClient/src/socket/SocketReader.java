@@ -6,9 +6,11 @@ import java.io.IOException;
 public class SocketReader implements Runnable{
 	
 	private GameClient client;
+	private MessageReceived messageReceived;
 	
-	public SocketReader(GameClient client) {
+	public SocketReader(GameClient client,MessageReceived messageReceived) {
 		this.client = client;
+		this.messageReceived = messageReceived;
 	}
 
 	@Override
@@ -17,8 +19,8 @@ public class SocketReader implements Runnable{
 		try {
 			while(true) {
 				dis = new DataInputStream(client.getInputStream());
-				String receive = dis.readUTF();
-				System.out.println(receive);
+				messageReceived.setMessage(dis.readUTF());
+				System.out.println(messageReceived.getMessage());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -35,5 +37,8 @@ public class SocketReader implements Runnable{
 			}
 		}
 	}
+
+	
+	
 
 }
