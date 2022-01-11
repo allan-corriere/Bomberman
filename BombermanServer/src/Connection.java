@@ -18,7 +18,7 @@ public class Connection {
 		
 		GenerateMap map = new GenerateMap();
 
-		System.out.println(map.getMap());
+		//System.out.println(map.getMap());
 
 		
 		SocketWriter sw = new SocketWriter(clients);

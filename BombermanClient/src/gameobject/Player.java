@@ -30,7 +30,7 @@ public class Player extends GameObject implements MovableObject{
 	private int currentBombNb;
 	private int bombRadius;
 	
-	//Chargement des frames de déplacement
+	//Chargement des frames de dï¿½placement
 	
 	private Image face0 = new Image(new File("ressources/Hero/face0.png").toURI().toString());
 	private Image face1 = new Image(new File("ressources/Hero/face1.png").toURI().toString());
@@ -54,7 +54,7 @@ public class Player extends GameObject implements MovableObject{
 	
 	private boolean left_right;
 
-	public Player(Timer gameTimer) {
+	public Player(Timer gameTimer, SocketWriter sw) {
 		this.currentBombNb = 0;
 		this.gameTimer = gameTimer;
 		fxLayer = new ImageView(face0);
@@ -62,19 +62,20 @@ public class Player extends GameObject implements MovableObject{
 		this.setPosY(0.0);
 		fxLayer.setFitHeight(50.0);
 		fxLayer.setFitWidth(50.0);
+		this.sw = sw;
 		
-		try {
-			GameClient client = new GameClient("localhost", 65432, "Osloh");
-			new Thread(new SocketReader(client)).start();
-			
-			this.sw = new SocketWriter(client);
-			new Thread(this.sw).start();
-			
-			//this.sw = new TestSW(client);
-			//this.sw.run();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			GameClient client = new GameClient("localhost", 65432, "Osloh");
+//			new Thread(new SocketReader(client)).start();
+//			
+//			this.sw = new SocketWriter(client);
+//			new Thread(this.sw).start();
+//			
+//			//this.sw = new TestSW(client);
+//			//this.sw.run();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	public void sendPositionToServer() {

@@ -8,7 +8,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-
+import socket.GameClient;
+import socket.SocketReader;
+import socket.SocketWriter;
 import gameobject.*;
 import gameobject.attribute.GameObject;
 import gameobject.bonus.BombNumberBonus;
@@ -20,6 +22,8 @@ import gamescene.Level;
 
 
 public class MainController {
+	
+	private SocketWriter sw;
 
 	@FXML 
 	private Pane RBox;
@@ -27,7 +31,7 @@ public class MainController {
 	public Timer gameTimer = new Timer();
 	//Déclaration des objets de base 
 	public List<GameObject> gameObjectList = new ArrayList<GameObject>();
-	public Player player = new Player(gameTimer);
+	public Player player;// = new Player(gameTimer, sw);
 	public Level masterLevel = new Level();
 	int[][] level = masterLevel.loadLevel02(); 
     // Add a public no-args constructor
@@ -38,6 +42,22 @@ public class MainController {
     @FXML
     private void initialize() 
     {
+    	// Connexion au serveur
+    	try {
+			GameClient client = new GameClient("localhost", 65432, "Osloh");
+			new Thread(new SocketReader(client)).start();
+			
+			this.sw = new SocketWriter(client);
+			new Thread(this.sw).start();
+			
+			//this.sw = new TestSW(client);
+			//this.sw.run();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	
+    	this.player = new Player(gameTimer, sw);
+    	
     	//parcours du level
     	//ajout des gameobject à la liste
     	player.setPosX(50.0);
