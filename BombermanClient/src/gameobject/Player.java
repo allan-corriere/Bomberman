@@ -2,7 +2,7 @@ package gameobject;
 
 import java.io.File;
 import java.util.*;
-
+import java.util.concurrent.TimeUnit;
 
 import gameobject.attribute.Crossable;
 import gameobject.attribute.GameObject;
@@ -54,7 +54,6 @@ public class Player extends GameObject implements MovableObject{
 	
 	private boolean left_right;
 
-	
 	public Player(Timer gameTimer) {
 		this.currentBombNb = 0;
 		this.gameTimer = gameTimer;
@@ -109,10 +108,11 @@ public class Player extends GameObject implements MovableObject{
 			}
 				//if(player.getPosX()+player.fxLayer.getFitWidth()<wall1.getPosX() && player.getPosX()>wall1.getPosX()+wall1.fxLayer.getFitWidth())
 			if(moveOk == true){
-				this.setPosY(this.getPosY()-this.getSpeed());	
 				
+				this.setPosY(this.getPosY()-this.getSpeed());
+				this.fxLayer.toBack();   /// Garder les bombes visibles 
 
-				//Animations du personnage 
+				//Animations du personnage //////////////
 							
 				if (!(this.fxLayer.getImage().equals(back1)||this.fxLayer.getImage().equals(back2))){
 						
@@ -141,6 +141,8 @@ public class Player extends GameObject implements MovableObject{
 				}
 				countBack +=1 ;
 				}
+			
+			
 			//check for bonus
 			PlayerOnBonus(RBox, gameObjectList);
 			}
@@ -164,9 +166,11 @@ public class Player extends GameObject implements MovableObject{
 
 		if(moveOk == true) {
 			this.setPosY(this.getPosY()+this.getSpeed());
+			this.fxLayer.toBack();   /// Garder les bombes visibles 
+
 			
 			
-			//Animations du personnage 
+			//Animations du personnage //////////////////
 						
 			if (!(this.fxLayer.getImage().equals(face1)||this.fxLayer.getImage().equals(face2))){
 					
@@ -223,8 +227,10 @@ public class Player extends GameObject implements MovableObject{
 				if(moveOk == true) {
 					
 					this.setPosX(this.getPosX()-this.getSpeed());
+					this.fxLayer.toBack();   /// Garder les bombes visibles 
+
 					
-					//Animations du personnage 
+					//Animations du personnage ////////////////////
 					
 					if (!(this.fxLayer.getImage().equals(left1)||this.fxLayer.getImage().equals(left2))){
 							
@@ -257,6 +263,7 @@ public class Player extends GameObject implements MovableObject{
 	
 				}
 			}
+			
 			//check for bonus
 			PlayerOnBonus(RBox, gameObjectList);
 		}
@@ -282,8 +289,10 @@ public class Player extends GameObject implements MovableObject{
 				}
 				if(moveOk == true) {
 					this.setPosX(this.getPosX()+this.getSpeed());
+					this.fxLayer.toBack();   /// Garder les bombes visibles 
+
 					
-					//Animations du personnage 
+					//Animations du personnage ////////////////::
 					
 					if (!(this.fxLayer.getImage().equals(right1)||this.fxLayer.getImage().equals(right2))){
 							
@@ -302,7 +311,7 @@ public class Player extends GameObject implements MovableObject{
 			
 							
 							if (this.fxLayer.getImage().equals(right2)){
-								this.fxLayer.setImage(back1);
+								this.fxLayer.setImage(right1);
 							}
 							
 							else if (this.fxLayer.getImage().equals(right1)){
@@ -313,6 +322,7 @@ public class Player extends GameObject implements MovableObject{
 					countRight +=1 ;
 				}
 			}
+			
 			//check for bonus
 			PlayerOnBonus(RBox, gameObjectList);
 			
@@ -349,6 +359,7 @@ public class Player extends GameObject implements MovableObject{
 		if (code==KeyCode.SPACE && maxBomb > currentBombNb )
 		{
 			Bomb bomb = new Bomb(this.gameTimer, bombRadius);
+			bomb.fxLayer.toFront();
 			currentBombNb +=1;
 			//place bomb in the good place
 			int nbSquareX = (int) (this.getPosX() / 50.0);
