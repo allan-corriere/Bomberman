@@ -25,7 +25,8 @@ import gamescene.Level;
 public class MainController {
 	
 	private SocketWriter sw;
-	private MessageReceived messageReceived = new MessageReceived();
+	private MessageReceived messageReceivedMap = new MessageReceived();
+	private MessageReceived messageReceivedId = new MessageReceived();
 
 	@FXML 
 	private Pane RBox;
@@ -49,7 +50,7 @@ public class MainController {
     	try {
 			GameClient client = new GameClient("localhost", 65432, "Osloh");
 			
-			new Thread(new SocketReader(client, messageReceived)).start();
+			new Thread(new SocketReader(client, messageReceivedMap, messageReceivedId)).start();
 			
 			this.sw = new SocketWriter(client);
 			new Thread(this.sw).start();
@@ -61,25 +62,28 @@ public class MainController {
 		}
     	
     	this.player = new Player(gameTimer, sw);
-    	
+    
     	//parcours du level
     	//ajout des gameobject à la liste
-    	player.setPosX(50.0);
-    	player.setPosY(50.0);
+//    	player.setPosX(50.0);
+//    	player.setPosY(50.0);
     	gameObjectList.add(player);
     	//gameObjectList.add(wall1);
-    	while(!(messageReceived.getMessage().startsWith("map("))){
-    		;
+    	int totalRow = 0;
+    	int totalColumn = 0;
+    	while(messageReceivedMap.getMessage() == "") {
+    		continue;
+    	}
+    	while(messageReceivedId.getMessage() == "") {
+    		continue;
     	}
     	//traitement des données level envoyés par le serveur
-    	String receivedMessage = messageReceived.getMessage();
-    	if(receivedMessage.startsWith("map(")){
-    		String mapSizeText = receivedMessage.substring(receivedMessage.indexOf("(") + 1, receivedMessage.indexOf(")"));
+    		String mapSizeText = messageReceivedMap.getMessage().substring(messageReceivedMap.getMessage().indexOf("(") + 1, messageReceivedMap.getMessage().indexOf(")"));
     		int [] mapSize = Arrays.stream(mapSizeText.split(",")).mapToInt(Integer::parseInt).toArray();
-    		String dataText = receivedMessage.split(":")[1];
+    		String dataText = messageReceivedMap.getMessage().split(":")[1];
     		int [] level = Arrays.stream(dataText.substring(0, dataText.length() - 1).split(",")).mapToInt(Integer::parseInt).toArray();
-    		int totalRow = mapSize[0];
-    		int totalColumn = mapSize[1];
+    		totalRow = mapSize[0];
+    		totalColumn = mapSize[1];
     		int currentRow = 0;
     		int currentColumn = 0;
     		
@@ -111,7 +115,25 @@ public class MainController {
     			
     		}
     		
-    	}
+    	
+    	
+    	//traitement de l'id
+    		int id = Integer.parseInt(messageReceivedId.getMessage().split(":")[1]);
+    		System.out.println("Test lol "+id);
+    		if(id==0) {
+    			player.setPosX(50);
+    			player.setPosY(50);
+    		} else if(id==1) {
+    			player.setPosX((totalColumn*50)-100);
+    			player.setPosY(50);
+    		} else if(id==2) {
+    			player.setPosX(50);
+    			player.setPosY((totalRow*50)-100);
+    		} else if(id==3) {
+    			player.setPosX((totalColumn*50)-100);
+    			player.setPosY((totalRow*50)-100);
+    		}
+    	
     	
     	
     	player.setSpeed(5);

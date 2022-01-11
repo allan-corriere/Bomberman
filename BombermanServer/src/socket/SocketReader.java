@@ -15,6 +15,7 @@ public class SocketReader implements Runnable{
 		this.identifier = id;
 		this.sw = sw;
 		this.sw.sendMap(map, client);
+		this.sw.sendIndex(id, client);
 	}
 
 	@Override
