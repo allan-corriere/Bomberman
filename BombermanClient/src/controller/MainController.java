@@ -181,7 +181,7 @@ public class MainController {
 	private void KeyReleased(KeyEvent event) {
 		System.out.println("relaché"+event.getCode());
 		player.placeBomb(event.getCode(),RBox,gameObjectList);
-		
+		player.resetLayer(event.getCode());		
 	}
 
 	@FXML
