@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
-
 import gameobject.actions.ThreadBomb;
 import gameobject.attribute.DestructableObject;
 import gameobject.attribute.GameObject;
@@ -110,6 +109,9 @@ private Image image = new Image(new File("ressources/bomb.png").toURI().toString
 			
 			
 		}
+		
+		
+		
 		
 	}
 	

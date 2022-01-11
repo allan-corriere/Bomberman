@@ -29,13 +29,36 @@ public class Player extends GameObject implements MovableObject{
 	private int maxBomb;
 	private int currentBombNb;
 	private int bombRadius;
-	private Image image = new Image(new File("ressources/hero.png").toURI().toString());
+	
+	//Chargement des frames de déplacement
+	
+	private Image face0 = new Image(new File("ressources/Hero/face0.png").toURI().toString());
+	private Image face1 = new Image(new File("ressources/Hero/face1.png").toURI().toString());
+	private Image face2 = new Image(new File("ressources/Hero/face2.png").toURI().toString());
+	private double countFace;
+
+	private Image back0 = new Image(new File("ressources/Hero/back0.png").toURI().toString());
+	private Image back1 = new Image(new File("ressources/Hero/back1.png").toURI().toString());
+	private Image back2 = new Image(new File("ressources/Hero/back2.png").toURI().toString());
+	private double countBack;
+	
+	private Image right0 = new Image(new File("ressources/Hero/right0.png").toURI().toString());
+	private Image right1 = new Image(new File("ressources/Hero/right1.png").toURI().toString());
+	private Image right2 = new Image(new File("ressources/Hero/right2.png").toURI().toString());
+	private double countRight;
+
+	private Image left0 = new Image(new File("ressources/Hero/left0.png").toURI().toString());
+	private Image left1 = new Image(new File("ressources/Hero/left1.png").toURI().toString());
+	private Image left2 = new Image(new File("ressources/Hero/left2.png").toURI().toString());
+	private double countLeft;
+	
+	private boolean left_right;
 
 	
 	public Player(Timer gameTimer) {
 		this.currentBombNb = 0;
 		this.gameTimer = gameTimer;
-		fxLayer = new ImageView(image);
+		fxLayer = new ImageView(face0);
 		this.setPosX(0.0);
 		this.setPosY(0.0);
 		fxLayer.setFitHeight(50.0);
@@ -86,7 +109,37 @@ public class Player extends GameObject implements MovableObject{
 			}
 				//if(player.getPosX()+player.fxLayer.getFitWidth()<wall1.getPosX() && player.getPosX()>wall1.getPosX()+wall1.fxLayer.getFitWidth())
 			if(moveOk == true){
-						this.setPosY(this.getPosY()-this.getSpeed());			
+				this.setPosY(this.getPosY()-this.getSpeed());	
+				
+
+				//Animations du personnage 
+							
+				if (!(this.fxLayer.getImage().equals(back1)||this.fxLayer.getImage().equals(back2))){
+						
+						if (left_right == true ) {
+							this.fxLayer.setImage(back1);
+							left_right = false;
+						}
+						else {
+							this.fxLayer.setImage(back2);
+							left_right=true;
+						}
+					}
+				
+				else {
+					if (countBack%3 == 0) {
+		
+						
+						if (this.fxLayer.getImage().equals(back2)){
+							this.fxLayer.setImage(back1);
+						}
+						
+						else if (this.fxLayer.getImage().equals(back1)){
+								this.fxLayer.setImage(back2);
+							}
+						}
+				}
+				countBack +=1 ;
 				}
 			//check for bonus
 			PlayerOnBonus(RBox, gameObjectList);
@@ -111,14 +164,48 @@ public class Player extends GameObject implements MovableObject{
 
 		if(moveOk == true) {
 			this.setPosY(this.getPosY()+this.getSpeed());
-		}
+			
+			
+			//Animations du personnage 
+						
+			if (!(this.fxLayer.getImage().equals(face1)||this.fxLayer.getImage().equals(face2))){
+					
+					if (left_right == true ) {
+						this.fxLayer.setImage(face1);
+						left_right = false;
+					}
+					else {
+						this.fxLayer.setImage(face2);
+						left_right=true;
+					}
+				}
+			
+			else {
+				if (countFace%3 == 0) {
+	
+					
+					if (this.fxLayer.getImage().equals(face2)){
+						this.fxLayer.setImage(face1);
+					}
+					
+					else if (this.fxLayer.getImage().equals(face1)){
+							this.fxLayer.setImage(face2);
+						}
+					}
+			}
+			countFace +=1 ; 
+			}
+		
+		
+		
 		//check for bonus
 		PlayerOnBonus(RBox, gameObjectList);
-
+		
 		}
 		
 		if (code==KeyCode.Q)
 		{
+			
 			if (this.getPosX()>0) {
 				//check si un object ne bloque pas le passage
 				for (GameObject object : gameObjectList) {
@@ -134,7 +221,40 @@ public class Player extends GameObject implements MovableObject{
 					}
 				}
 				if(moveOk == true) {
+					
 					this.setPosX(this.getPosX()-this.getSpeed());
+					
+					//Animations du personnage 
+					
+					if (!(this.fxLayer.getImage().equals(left1)||this.fxLayer.getImage().equals(left2))){
+							
+							if (left_right == true ) {
+								this.fxLayer.setImage(left1);
+								left_right = false;
+							}
+							else {
+								this.fxLayer.setImage(left2);
+								left_right=true;
+							}
+						}
+					
+					else {
+						if (countLeft%3 == 0) {
+			
+							
+							if (this.fxLayer.getImage().equals(left2)){
+								this.fxLayer.setImage(left1);
+							}
+							
+							else if (this.fxLayer.getImage().equals(left1)){
+									this.fxLayer.setImage(left2);
+								}
+							}
+					}
+					countLeft +=1 ;
+					
+			
+	
 				}
 			}
 			//check for bonus
@@ -162,6 +282,35 @@ public class Player extends GameObject implements MovableObject{
 				}
 				if(moveOk == true) {
 					this.setPosX(this.getPosX()+this.getSpeed());
+					
+					//Animations du personnage 
+					
+					if (!(this.fxLayer.getImage().equals(right1)||this.fxLayer.getImage().equals(right2))){
+							
+							if (left_right == true ) {
+								this.fxLayer.setImage(right1);
+								left_right = false;
+							}
+							else {
+								this.fxLayer.setImage(right2);
+								left_right=true;
+							}
+						}
+					
+					else {
+						if (countRight%3 == 0) {
+			
+							
+							if (this.fxLayer.getImage().equals(right2)){
+								this.fxLayer.setImage(back1);
+							}
+							
+							else if (this.fxLayer.getImage().equals(right1)){
+									this.fxLayer.setImage(right2);
+								}
+							}
+					}
+					countRight +=1 ;
 				}
 			}
 			//check for bonus
@@ -172,6 +321,29 @@ public class Player extends GameObject implements MovableObject{
 			this.sendPositionToServer();
 		}
 	}
+	
+	//Retour de l'image de base lors du relachement de la touche
+	
+	public void resetLayer(KeyCode code) {
+		
+		if (code==KeyCode.S) {
+			this.fxLayer.setImage(face0);
+			countFace=0;
+		}
+		if (code==KeyCode.Q) {
+			this.fxLayer.setImage(left0);
+			countLeft=0;
+		}
+		if (code==KeyCode.D) {
+			this.fxLayer.setImage(right0);
+			countRight=0;
+		}
+		if (code==KeyCode.Z) {
+			this.fxLayer.setImage(back0);
+			countBack=0;
+		}
+	}
+	
 	
 	public void placeBomb(KeyCode code, Pane RBox, List<GameObject> gameObjectList) {
 		if (code==KeyCode.SPACE && maxBomb > currentBombNb )

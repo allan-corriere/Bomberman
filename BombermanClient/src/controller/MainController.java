@@ -1,8 +1,11 @@
 package controller;
+import java.io.File;
 import java.net.URL;
 import java.util.*;
 
 import javafx.fxml.FXML;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 
@@ -94,8 +97,20 @@ public class MainController {
 	private void KeyReleased(KeyEvent event) {
 		System.out.println("relaché"+event.getCode());
 		player.placeBomb(event.getCode(),RBox,gameObjectList);
+		player.resetLayer(event.getCode());
 	}
 
+	@FXML
+	private void explosion() {
+		//Animation de l'explosion : 
+		Image explosionImage1 = new Image(new File("ressources/Bombes/fire1.png").toURI().toString());
+
+		ImageView Explode = new ImageView(explosionImage1);
+		GameObject randomObject = gameObjectList.get(0);
+		Pane root = (Pane) randomObject.fxLayer.getParent();
+		root.getChildren().add(Explode);
+
+	}
 	@FXML
 	private void placeBombImage() {
 		System.out.println("franc");
