@@ -61,4 +61,11 @@ public class GameObject extends Object {
 		posY = PosY;
 		fxLayer.setLayoutY(PosY);
 	}
+	
+	public void setPosition(double PosX, double PosY) {
+		this.posX = PosX;
+		this.fxLayer.setLayoutX(PosX);
+		this.posY = PosY;
+		this.fxLayer.setLayoutY(PosY);
+	}
 }

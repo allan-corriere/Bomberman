@@ -64,7 +64,9 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		fxLayer.setFitHeight(50.0);
 		fxLayer.setFitWidth(50.0);
 		this.sw = sw;
-		
+		this.setSpeed(5);
+		this.setMaxBomb(1);
+		this.setBombRadius(1);
 //		try {
 //			GameClient client = new GameClient("localhost", 65432, "Osloh");
 //			new Thread(new SocketReader(client)).start();
@@ -96,7 +98,8 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		this.fxLayer.toFront();
 		
 		if (code ==KeyCode.Z)
-		{				
+		{
+			System.out.println("ca bouge");
 			if (this.getPosY()>0)
 			{
 			//check si un object ne bloque pas le passage

@@ -18,20 +18,16 @@ public class SocketReader implements Runnable{
 	private MessageReceived messageReceivedMap;
 	private MessageReceived messageReceivedId;
 	private List<GameObject> gameObjectList;
-	private GameObject enemy1;
-	private GameObject enemy2;
-	private GameObject enemy3;
+	private GameObject [] enemys = new GameObject[3];
 	private Timer gameTimer;
 	private Pane RBox;
 	
-	public SocketReader(GameClient client, List<GameObject> gameObjectList, MessageReceived messageReceivedMap, MessageReceived messageReceivedId, GameObject enemy1, GameObject enemy2, GameObject enemy3, Timer gameTimer, Pane RBox) {
+	public SocketReader(GameClient client, List<GameObject> gameObjectList, MessageReceived messageReceivedMap, MessageReceived messageReceivedId, GameObject [] enemys, Timer gameTimer, Pane RBox) {
 		this.client = client;
 		this.messageReceivedMap = messageReceivedMap;
 		this.messageReceivedId = messageReceivedId;
 		this.gameObjectList = gameObjectList;
-		this.enemy1 = enemy1;
-		this.enemy2 = enemy2;
-		this.enemy3 = enemy3;
+		this.enemys = enemys;
 		this.gameTimer = gameTimer;
 		this.RBox = RBox;
 	}
@@ -79,25 +75,44 @@ public class SocketReader implements Runnable{
 	}
 	
 	public void moveEnemies(String message) {
+		int idPlayer = Integer.parseInt(messageReceivedId.getMessage().split(":")[1]);
 		message = message.substring(message.indexOf(":") + 1);
 		double [] parsedMessage = Arrays.stream(message.split(":")).mapToDouble(Double::parseDouble).toArray();
 		int id = (int)parsedMessage[0];
 		double x = parsedMessage[1];
 		double y = parsedMessage[2];
-		
-		if(id == 0) {
-			this.enemy1.setPosX(x);
-			this.enemy1.setPosY(y);
-		}
-		
-		if(id == 1) {
-			this.enemy2.setPosX(x);
-			this.enemy2.setPosY(y);
-		}
-		
-		if(id == 2) {
-			this.enemy3.setPosX(x);
-			this.enemy3.setPosY(y);
+		if(idPlayer == 0) {
+			if(id == 1) {
+				enemys[0].setPosition(x,y);
+			}else if(id == 2) {
+				enemys[1].setPosition(x,y);
+			}else if(id == 3) {
+				enemys[2].setPosition(x,y);
+			}
+		}else if(idPlayer == 1) {
+			if(id == 0) {
+				 enemys[0].setPosition(x,y);
+			}else if(id == 2) {
+				enemys[1].setPosition(x,y);
+			}else if(id == 3) {
+				enemys[2].setPosition(x,y);
+			}
+		}else if(idPlayer == 2) {
+			if(id == 0) {
+				 enemys[0].setPosition(x,y);
+			}else if(id == 1) {
+				enemys[1].setPosition(x,y);
+			}else if(id == 3) {
+				enemys[2].setPosition(x,y);
+			}
+		}else if(idPlayer == 3) {
+			if(id == 0) {
+				 enemys[0].setPosition(x,y);
+			}else if(id == 1) {
+				enemys[1].setPosition(x,y);
+			}else if(id == 2) {
+				enemys[2].setPosition(x,y);
+			}
 		}
 		//System.out.println("id->"+id+" x->"+x+" y->"+y);
 		
