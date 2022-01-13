@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import gameobject.attribute.Crossable;
+import gameobject.attribute.DestructableObject;
 import gameobject.attribute.GameObject;
 import gameobject.attribute.MovableObject;
 import gameobject.bonus.BombNumberBonus;
@@ -21,7 +22,7 @@ import socket.SocketWriter;
 
 
 
-public class Player extends GameObject implements MovableObject{
+public class Player extends GameObject implements MovableObject, DestructableObject{
 	private SocketWriter sw;
 	private boolean alive;
 	private double speed;

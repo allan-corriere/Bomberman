@@ -214,11 +214,7 @@ public class MainController {
 		root.getChildren().add(Explode);
 
 	}
-	@FXML
-	private void placeBombImage() {
-		System.out.println("franc");
-	}
-     
+
     // location and resources will be automatically injected by the FXML loader 
     @FXML
     private URL location;

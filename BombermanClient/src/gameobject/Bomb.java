@@ -45,44 +45,67 @@ private Image image = new Image(new File("ressources/bomb.png").toURI().toString
 		boolean blockedYminus = false;
 		for(int i = 1; i <= radius; i++) {
 			for (GameObject object : gameObjectList) {
+				//get the approximation of position
+				double objectPosX = (int) (object.getPosX() / 50.0);
+				double deltaX = object.getPosX() % 50.0;
+				double objectPosY = (int) (object.getPosY() / 50.0);
+				double deltaY = object.getPosY() % 50.0;
+
+				//player on square
+				if(deltaX == 0 && deltaY == 0) {
+					objectPosX = object.getPosX();
+					objectPosY = object.getPosY();
+				}
+				//adjust bomb position to the nearest square
+				else {
+					if(deltaX > 50.0/2.0) {
+						objectPosX += 1;
+					
+					}
+					if(deltaY > 50.0/2.0) {
+						objectPosY += 1;
+					}
+					objectPosX *= 50.0;
+					objectPosY *= 50.0;
+				}
 				if(object instanceof DestructableObject) {
 					//same pos
-					if(radius == 1 && object.getPosX() == this.getPosX() && object.getPosY() == this.getPosY()) {
+					if(radius == 1 && objectPosX == this.getPosX() && objectPosY == this.getPosY()) {
 						objectToRemove.add(object);
 					}
 					// X plus
-					else if(object.getPosX() == (this.getPosX()+50.0*i) && object.getPosY() == this.getPosY() && blockedXplus == false) {
+					else if(objectPosX == (this.getPosX()+50.0*i) && objectPosY == this.getPosY() && blockedXplus == false) {
 						objectToRemove.add(object);
 					}
 					// X minus
-					else if(object.getPosX() == (this.getPosX()-50.0*i) && object.getPosY() == this.getPosY() && blockedXminus == false) {
+					else if(objectPosX == (this.getPosX()-50.0*i) && objectPosY == this.getPosY() && blockedXminus == false) {
 						objectToRemove.add(object);
 					}
 					// Y plus
-					else if(object.getPosX() == this.getPosX() && (object.getPosY() == this.getPosY()+50.0*i) && blockedYplus == false) {
+					else if(objectPosX == this.getPosX() && (objectPosY == this.getPosY()+50.0*i) && blockedYplus == false) {
 						objectToRemove.add(object);
 					}
 					// Y minus
-					else if(object.getPosX() == this.getPosX() && (object.getPosY() == this.getPosY()-50.0*i) && blockedYminus == false) {
+					else if(objectPosX == this.getPosX() && (objectPosY == this.getPosY()-50.0*i) && blockedYminus == false) {
 						objectToRemove.add(object);
 					} 
 				}
 				//check for blocking object in field including brick to ndo't break next object
 				if(!(object instanceof DestructableObject) || object instanceof Brick) {
 				// X plus
-				if(object.getPosX() == (this.getPosX()+50.0*i) && object.getPosY() == this.getPosY()) {
+				if(objectPosX == (this.getPosX()+50.0*i) && objectPosY == this.getPosY()) {
 					blockedXplus = true;
 				}
 				// X minus
-				else if(object.getPosX() == (this.getPosX()-50.0*i) && object.getPosY() == this.getPosY()) {
+				else if(objectPosX == (this.getPosX()-50.0*i) && objectPosY == this.getPosY()) {
 					blockedXminus = true;
 				}
 				// Y plus
-				else if(object.getPosX() == this.getPosX() && (object.getPosY() == this.getPosY()+50.0*i)) {
+				else if(objectPosX == this.getPosX() && (objectPosY == this.getPosY()+50.0*i)) {
 					blockedYplus = true;
 				}
 				// Y minus
-				else if(object.getPosX() == this.getPosX() && (object.getPosY() == this.getPosY()-50.0*i)) {
+				else if(objectPosX == this.getPosX() && (objectPosY == this.getPosY()-50.0*i)) {
 					blockedYminus = true;
 				} 
 				}
