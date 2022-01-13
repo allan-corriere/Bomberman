@@ -31,6 +31,17 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 	private int currentBombNb;
 	private int bombRadius;
 	
+	//deplacement
+	private boolean zPressed = false;
+	private boolean qPressed = false;
+	private boolean sPressed = false;
+	private boolean dPressed = false;
+	
+	private boolean movingUp = false;
+	private boolean movingDown = false;
+	private boolean movingLeft = false;
+	private boolean movingRight = false;
+	private ArrayList<String> keyPressed = new ArrayList<>();
 	//Chargement des frames de d�placement
 	
 	private Image face0 = new Image(new File("ressources/Hero/face0.png").toURI().toString());
@@ -53,7 +64,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 	private Image left2 = new Image(new File("ressources/Hero/left2.png").toURI().toString());
 	private double countLeft;
 	
-	private boolean left_right;
+	private boolean left_right;;
 
 	public Player(Timer gameTimer, SocketWriter sw) {
 		this.currentBombNb = 0;
@@ -67,18 +78,8 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		this.setSpeed(5);
 		this.setMaxBomb(1);
 		this.setBombRadius(1);
-//		try {
-//			GameClient client = new GameClient("localhost", 65432, "Osloh");
-//			new Thread(new SocketReader(client)).start();
-//			
-//			this.sw = new SocketWriter(client);
-//			new Thread(this.sw).start();
-//			
-//			//this.sw = new TestSW(client);
-//			//this.sw.run();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		this.alive = true;
+
 	}
 	
 	public void sendPositionToServer() {
@@ -89,255 +90,65 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		this.sw.send("bomb:"+bomb.getPosX()+":"+bomb.getPosY()+":"+this.bombRadius);
 	}
 
-	public void move(KeyCode code,Pane RBox, List<GameObject> gameObjectList) {
-		boolean moveOk = true;
-		double playerTop = this.getPosY()+0.1;
-		double playerBottom = this.getPosY()+49.99;
-		double playerLeft = this.getPosX()+0.1;
-		double playerRight = this.getPosX()+49.00;
-		this.fxLayer.toFront();
-		
-		if (code ==KeyCode.Z)
-		{
-			System.out.println("ca bouge");
-			if (this.getPosY()>0)
-			{
-			//check si un object ne bloque pas le passage
-			for (GameObject object : gameObjectList) {
-				if(System.identityHashCode(object) != System.identityHashCode(this)) {
-					if(!(object instanceof Crossable)) {
-						double bottom = object.getPosY()+50.00;
-						double left = object.getPosX();
-						double right = object.getPosX()+50.00;
-						if(bottom >= (playerTop-this.getSpeed()) && bottom < playerTop && left < playerLeft && right >= playerLeft || bottom >= (playerTop-this.getSpeed()) && bottom < playerTop && left < playerRight && right >= playerRight) {
-							moveOk = false;
-						}
-					}
-				}
+	public void movePress(KeyCode code,Pane RBox, List<GameObject> gameObjectList) {
+		if (code==KeyCode.Z) {
+			if(!zPressed) {
+				keyPressed.add("up");
 			}
-				//if(player.getPosX()+player.fxLayer.getFitWidth()<wall1.getPosX() && player.getPosX()>wall1.getPosX()+wall1.fxLayer.getFitWidth())
-			if(moveOk == true){
-				
-				this.setPosY(this.getPosY()-this.getSpeed());
-				this.fxLayer.toBack();   /// Garder les bombes visibles 
-
-				//Animations du personnage //////////////
-							
-				if (!(this.fxLayer.getImage().equals(back1)||this.fxLayer.getImage().equals(back2))){
-						
-						if (left_right == true ) {
-							this.fxLayer.setImage(back1);
-							left_right = false;
-						}
-						else {
-							this.fxLayer.setImage(back2);
-							left_right=true;
-						}
-					}
-				
-				else {
-					if (countBack%3 == 0) {
-		
-						
-						if (this.fxLayer.getImage().equals(back2)){
-							this.fxLayer.setImage(back1);
-						}
-						
-						else if (this.fxLayer.getImage().equals(back1)){
-								this.fxLayer.setImage(back2);
-							}
-						}
-				}
-				countBack +=1 ;
-				}
-			
-			
-			//check for bonus
-			PlayerOnBonus(RBox, gameObjectList);
+			zPressed = true;
+		}else if (code==KeyCode.Q) {
+			if(!qPressed) {
+				keyPressed.add("left");
 			}
+			qPressed = true;
+		}		
+		else if (code==KeyCode.S) {
+			if(!sPressed) {
+				keyPressed.add("down");
+			}
+			sPressed = true;
+		}
+		else if (code==KeyCode.D) {
+			if(!dPressed) {
+				keyPressed.add("right");
+			}
+			dPressed = true;
 		}
 		
-		if (code==KeyCode.S)
-		{
-			//check si un object ne bloque pas le passage
-			for (GameObject object : gameObjectList) {
-				if(System.identityHashCode(object) != System.identityHashCode(this)) {
-					if(!(object instanceof Crossable)) {
-						double top = object.getPosY();
-						double left = object.getPosX();
-						double right = object.getPosX()+50.00;
-						if(top <= (playerBottom+this.getSpeed()) && top > playerBottom && left < playerLeft && right >= playerLeft || top <= (playerBottom+this.getSpeed()) && top > playerBottom && left < playerRight && right >= playerRight) {
-							moveOk = false;
-						}
-					}
-				}
-			}
 
-		if(moveOk == true) {
-			this.setPosY(this.getPosY()+this.getSpeed());
-			this.fxLayer.toBack();   /// Garder les bombes visibles 
-
-			
-			
-			//Animations du personnage //////////////////
-						
-			if (!(this.fxLayer.getImage().equals(face1)||this.fxLayer.getImage().equals(face2))){
-					
-					if (left_right == true ) {
-						this.fxLayer.setImage(face1);
-						left_right = false;
-					}
-					else {
-						this.fxLayer.setImage(face2);
-						left_right=true;
-					}
-				}
-			
-			else {
-				if (countFace%3 == 0) {
+	}
 	
-					
-					if (this.fxLayer.getImage().equals(face2)){
-						this.fxLayer.setImage(face1);
-					}
-					
-					else if (this.fxLayer.getImage().equals(face1)){
-							this.fxLayer.setImage(face2);
-						}
-					}
+	public void movingRelease(KeyCode code) {
+		if (code==KeyCode.Z) {
+			if(zPressed) {
+				System.out.println(keyPressed.size());
+				keyPressed.remove("up");
+				System.out.println(keyPressed.size());
 			}
-			countFace +=1 ; 
+			zPressed = false;
+		}else if (code==KeyCode.Q) {
+			if(qPressed) {
+				System.out.println(keyPressed.size());
+				keyPressed.remove("left");
+				System.out.println(keyPressed.size());
 			}
-		
-		
-		
-		//check for bonus
-		PlayerOnBonus(RBox, gameObjectList);
-		
+			qPressed = false;
 		}
-		
-		if (code==KeyCode.Q)
-		{
-			
-			if (this.getPosX()>0) {
-				//check si un object ne bloque pas le passage
-				for (GameObject object : gameObjectList) {
-					if(System.identityHashCode(object) != System.identityHashCode(this)) {
-						if(!(object instanceof Crossable)) {
-							double right = object.getPosX()+50.00;
-							double top = object.getPosY();
-							double bottom = object.getPosY()+50.0;
-							if(right >= (playerLeft-this.getSpeed()) && right < playerLeft && top < playerTop && bottom >= playerTop || right >= (playerLeft-this.getSpeed()) && right < playerLeft && top < playerBottom && bottom >= playerBottom) {
-								moveOk = false;
-							}
-						}
-					}
-				}
-				if(moveOk == true) {
-					
-					this.setPosX(this.getPosX()-this.getSpeed());
-					this.fxLayer.toBack();   /// Garder les bombes visibles 
-
-					
-					//Animations du personnage ////////////////////
-					
-					if (!(this.fxLayer.getImage().equals(left1)||this.fxLayer.getImage().equals(left2))){
-							
-							if (left_right == true ) {
-								this.fxLayer.setImage(left1);
-								left_right = false;
-							}
-							else {
-								this.fxLayer.setImage(left2);
-								left_right=true;
-							}
-						}
-					
-					else {
-						if (countLeft%3 == 0) {
-			
-							
-							if (this.fxLayer.getImage().equals(left2)){
-								this.fxLayer.setImage(left1);
-							}
-							
-							else if (this.fxLayer.getImage().equals(left1)){
-									this.fxLayer.setImage(left2);
-								}
-							}
-					}
-					countLeft +=1 ;
-					
-			
-	
-				}
+		else if (code==KeyCode.S) {
+			if(sPressed) {
+				System.out.println(keyPressed.size());
+				keyPressed.remove("down");
+				System.out.println(keyPressed.size());
 			}
-			
-			//check for bonus
-			PlayerOnBonus(RBox, gameObjectList);
+			sPressed = false;
 		}
-		
-		if (code==KeyCode.D)
-		{
-			double prefWidth = ((Pane) this.fxLayer.getParent()).getPrefWidth();
-			if (prefWidth-this.getPosX()>this.fxLayer.getFitWidth()){
-				
-				//check si un object ne bloque pas le passage
-				for (GameObject object : gameObjectList) {
-					if(System.identityHashCode(object) != System.identityHashCode(this)) {
-						if(!(object instanceof Crossable)) {
-							
-							double left = object.getPosX();
-							double top = object.getPosY();
-							double bottom = object.getPosY()+50.0;						
-							if(left <= (playerRight+this.getSpeed()) && left > playerRight && top < playerTop && bottom >= playerTop || left <= (playerRight+this.getSpeed()) && left > playerRight && top < playerBottom && bottom >= playerBottom) {
-								moveOk = false;
-							}
-						}
-					}
-				}
-				if(moveOk == true) {
-					this.setPosX(this.getPosX()+this.getSpeed());
-					this.fxLayer.toBack();   /// Garder les bombes visibles 
-
-					
-					//Animations du personnage ////////////////::
-					
-					if (!(this.fxLayer.getImage().equals(right1)||this.fxLayer.getImage().equals(right2))){
-							
-							if (left_right == true ) {
-								this.fxLayer.setImage(right1);
-								left_right = false;
-							}
-							else {
-								this.fxLayer.setImage(right2);
-								left_right=true;
-							}
-						}
-					
-					else {
-						if (countRight%3 == 0) {
-			
-							
-							if (this.fxLayer.getImage().equals(right2)){
-								this.fxLayer.setImage(right1);
-							}
-							
-							else if (this.fxLayer.getImage().equals(right1)){
-									this.fxLayer.setImage(right2);
-								}
-							}
-					}
-					countRight +=1 ;
-				}
+		else if (code==KeyCode.D) {
+			if(dPressed) {
+				System.out.println(keyPressed.size());
+				keyPressed.remove("right");
+				System.out.println(keyPressed.size());
 			}
-			
-			//check for bonus
-			PlayerOnBonus(RBox, gameObjectList);
-			
-		}
-		if(moveOk) {
-			this.sendPositionToServer();
+			dPressed = false;
 		}
 	}
 	
@@ -532,5 +343,78 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 	}
 	public void setBombRadius(int bombRadius) {
 		this.bombRadius = bombRadius;
+	}
+
+	public boolean iszPressed() {
+		return zPressed;
+	}
+
+	public void setzPressed(boolean zPressed) {
+		this.zPressed = zPressed;
+	}
+
+	public boolean isqPressed() {
+		return qPressed;
+	}
+
+	public void setqPressed(boolean qPressed) {
+		this.qPressed = qPressed;
+	}
+
+	public boolean issPressed() {
+		return sPressed;
+	}
+
+	public void setsPressed(boolean sPressed) {
+		this.sPressed = sPressed;
+	}
+
+	public boolean isdPressed() {
+		return dPressed;
+	}
+
+	public void setdPressed(boolean dPressed) {
+		this.dPressed = dPressed;
+	}
+
+	public boolean isMovingUp() {
+		return movingUp;
+	}
+
+	public void setMovingUp(boolean movingUp) {
+		this.movingUp = movingUp;
+	}
+
+	public boolean isMovingDown() {
+		return movingDown;
+	}
+
+	public void setMovingDown(boolean movingDown) {
+		this.movingDown = movingDown;
+	}
+
+	public boolean isMovingLeft() {
+		return movingLeft;
+	}
+
+	public void setMovingLeft(boolean movingLeft) {
+		this.movingLeft = movingLeft;
+	}
+
+	public boolean isMovingRight() {
+		return movingRight;
+	}
+
+	public void setMovingRight(boolean movingRight) {
+		this.movingRight = movingRight;
+	}
+
+	public ArrayList<String> getKeyPressed() {
+		return keyPressed;
+	}
+
+	public void setKeyPressed(ArrayList<String> keyPressed) {
+		this.keyPressed = keyPressed;
 	}	
+	
 }

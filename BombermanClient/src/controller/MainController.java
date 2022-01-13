@@ -13,6 +13,7 @@ import socket.MessageReceived;
 import socket.SocketReader;
 import socket.SocketWriter;
 import gameobject.*;
+import gameobject.actions.ThreadMoving;
 import gameobject.attribute.GameObject;
 import gameobject.bonus.BombNumberBonus;
 import gameobject.bonus.BombPowerBonus;
@@ -92,21 +93,27 @@ public class MainController {
     			}
         	}
     	}
+    	
+    	//moving event
+//    	try {
+//    		new Thread(new ThreadMoving(player, RBox, gameObjectList)).start();
+//    	}catch (Exception e) {
+//			e.printStackTrace();
+//		}
     }
     
   //Gestion des saisies clavier pour d�placements personnage
     
 	@FXML
 	private void KeyPressed(KeyEvent event) {
-		System.out.println("pressed"+event.getCode());
-		player.move(event.getCode(), RBox, gameObjectList);
+		player.movePress(event.getCode(), RBox, gameObjectList);
 		player.resetLayer(event.getCode());
 		
 	}
 	
 	@FXML
 	private void KeyReleased(KeyEvent event) {
-		System.out.println("relaché"+event.getCode());
+		player.movingRelease(event.getCode());
 		player.placeBomb(event.getCode(),RBox,gameObjectList);
 		player.resetLayer(event.getCode());		
 	}
