@@ -15,6 +15,20 @@ public class GameObject extends Object {
 		
 	}
 	
+	public GameObject(double x, double y, ImageView fxLayer) {
+		this.posX = x;
+		this.posY = y;
+		this.height = 50;
+		this.width = 50;
+		this.fxLayer = fxLayer;
+		fxLayer.setFitHeight(50.0);
+		fxLayer.setFitWidth(50.0);
+	}
+	
+	public GameObject(ImageView fxLayer) {
+		this.fxLayer = fxLayer;
+	}
+	
 	public void setHeight(double Height)
 	{
 		height = Height;

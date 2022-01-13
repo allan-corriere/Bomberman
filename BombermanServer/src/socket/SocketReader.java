@@ -27,7 +27,7 @@ public class SocketReader implements Runnable{
 				String receive = dis.readUTF();
 				if(receive != null) {
 					//System.out.println(this.identifier+":"+receive);
-					this.sw.send(this.identifier+":"+receive, this.identifier);
+					this.sw.send("move:"+this.identifier+":"+receive, this.identifier);
 				}
 			}
 		} catch (IOException e) {

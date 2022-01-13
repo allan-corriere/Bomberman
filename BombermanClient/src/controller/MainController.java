@@ -46,11 +46,16 @@ public class MainController {
     private void initialize() 
     {
     	System.out.println("yess");
+    	
+    	GameObject enemy1 = new GameObject(1000, 1000,new ImageView(new Image(new File("ressources/Hero/face0.png").toURI().toString())));
+    	GameObject enemy2 = new GameObject(1000, 1000,new ImageView(new Image(new File("ressources/Hero/face0.png").toURI().toString())));
+    	GameObject enemy3 = new GameObject(1000, 1000,new ImageView(new Image(new File("ressources/Hero/face0.png").toURI().toString())));
+    	
     	// Connexion au serveur
     	try {
 			GameClient client = new GameClient("localhost", 65432, "Osloh");
 			
-			new Thread(new SocketReader(client, messageReceivedMap, messageReceivedId)).start();
+			new Thread(new SocketReader(client, gameObjectList, messageReceivedMap, messageReceivedId, enemy1, enemy2, enemy3)).start();
 			
 			this.sw = new SocketWriter(client);
 			new Thread(this.sw).start();
@@ -114,8 +119,6 @@ public class MainController {
     			}
     			
     		}
-    		
-    	
     	
     	//traitement de l'id
     		int id = Integer.parseInt(messageReceivedId.getMessage().split(":")[1]);
@@ -126,15 +129,31 @@ public class MainController {
     		} else if(id==1) {
     			player.setPosX((totalColumn*50)-100);
     			player.setPosY(50);
+    			enemy1.setPosX(50);
+    			enemy1.setPosY(50);
     		} else if(id==2) {
     			player.setPosX(50);
     			player.setPosY((totalRow*50)-100);
+    			enemy1.setPosX(50);
+    			enemy1.setPosY(50);
+    			enemy2.setPosX((totalColumn*50)-100);
+    			enemy2.setPosY(50);
+
     		} else if(id==3) {
     			player.setPosX((totalColumn*50)-100);
     			player.setPosY((totalRow*50)-100);
+    			enemy1.setPosX(50);
+    			enemy1.setPosY(50);
+    			enemy2.setPosX((totalColumn*50)-100);
+    			enemy2.setPosY(50);
+    			enemy3.setPosX(50);
+    			enemy3.setPosY((totalRow*50)-100);
+
     		}
-    	
-    	
+    		
+    	gameObjectList.add(enemy1);
+    	gameObjectList.add(enemy2);
+    	gameObjectList.add(enemy3);
     	
     	player.setSpeed(5);
     	player.setMaxBomb(1);
