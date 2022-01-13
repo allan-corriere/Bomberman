@@ -79,7 +79,11 @@ public class Player extends GameObject implements MovableObject{
 	}
 	
 	public void sendPositionToServer() {
-		this.sw.send(this.getPosX()+":"+this.getPosY());
+		this.sw.send("move:"+this.getPosX()+":"+this.getPosY());
+	}
+	
+	public void sendBombPositionToServer(Bomb bomb) {
+		this.sw.send("bomb:"+bomb.getPosX()+":"+bomb.getPosY()+":"+this.bombRadius);
 	}
 
 	public void move(KeyCode code,Pane RBox, List<GameObject> gameObjectList) {
@@ -387,6 +391,7 @@ public class Player extends GameObject implements MovableObject{
 			}
 
 			gameObjectList.add(bomb);
+			this.sendBombPositionToServer(bomb);
 			bomb.fxLayer.setVisible(false);
 			RBox.getChildren().add(bomb.fxLayer);
 			bomb.startBomb(gameObjectList);

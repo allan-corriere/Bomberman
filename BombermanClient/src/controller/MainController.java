@@ -55,7 +55,7 @@ public class MainController {
     	try {
 			GameClient client = new GameClient("localhost", 65432, "Osloh");
 			
-			new Thread(new SocketReader(client, gameObjectList, messageReceivedMap, messageReceivedId, enemy1, enemy2, enemy3)).start();
+			new Thread(new SocketReader(client, gameObjectList, messageReceivedMap, messageReceivedId, enemy1, enemy2, enemy3, gameTimer, RBox)).start();
 			
 			this.sw = new SocketWriter(client);
 			new Thread(this.sw).start();
