@@ -85,6 +85,10 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		this.sw.send("move:"+this.getPosX()+":"+this.getPosY());
 	}
 	
+	public void sendBonusToServer(double x, double y) {
+		this.sw.send("bonus:"+x+":"+y);
+	}
+	
 	public void sendBombPositionToServer(Bomb bomb) {
 		this.sw.send("bomb:"+bomb.getPosX()+":"+bomb.getPosY()+":"+this.bombRadius);
 	}
@@ -453,6 +457,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		
 		//apply bonus to player
 		if(selectedBonus != null) {
+			this.sendBonusToServer(selectedBonus.getPosX(), selectedBonus.getPosY());
 			//speed
 			if(selectedBonus instanceof PlayerSpeedBonus) {
 				speed += 5;

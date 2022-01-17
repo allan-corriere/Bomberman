@@ -32,6 +32,9 @@ public class SocketReader implements Runnable{
 					}
 					if(receive.startsWith("bomb:")) {
 						this.sw.send("bomb:"+this.identifier+":"+receive.substring(receive.indexOf(":") + 1), this.identifier);
+					} 
+					if(receive.startsWith("bonus:")) {
+						this.sw.send("bonus:"+receive.substring(receive.indexOf(":") + 1), this.identifier);
 					} else {
 						this.sw.send("move:"+this.identifier+":"+receive.substring(receive.indexOf(":") + 1), this.identifier);
 					}

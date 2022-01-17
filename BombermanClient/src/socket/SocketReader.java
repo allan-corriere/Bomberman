@@ -56,6 +56,9 @@ public class SocketReader implements Runnable{
 					if(received.startsWith("bomb:")) {
 						this.placeBomb(received);
 					}
+					if(received.startsWith("bonus:")) {
+						this.deleteBonus(received);
+					}
 				}
 			}
 		} catch (IOException e) {
@@ -145,5 +148,27 @@ public class SocketReader implements Runnable{
 		});
 		//RBox.getChildren().add(bomb.fxLayer);
 		bomb.startBomb(gameObjectList);
+	}
+	
+	public void deleteBonus(String message) {
+		message = message.substring(message.indexOf(":") + 1);
+		double [] parsedMessage = Arrays.stream(message.split(":")).mapToDouble(Double::parseDouble).toArray();
+		double x = parsedMessage[0];
+		double y = parsedMessage[1];
+		
+		//System.out.println("x->"+x+" y->"+y);
+		
+		GameObject found = null;
+		
+		for(GameObject object : this.gameObjectList) {
+			if(object.getPosX() == x && object.getPosY() == y) {
+				found = object;
+				break;
+			}
+		}
+		if(found != null) {
+			found.fxLayer.setVisible(false);
+			this.gameObjectList.remove(found);
+		}
 	}
 }
