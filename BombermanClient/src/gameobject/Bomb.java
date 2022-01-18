@@ -4,21 +4,28 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
+import java.util.TimerTask;
 
 import gameobject.actions.ThreadBomb;
 import gameobject.attribute.DestructableObject;
 import gameobject.attribute.GameObject;
 import gameobject.attribute.UnmovableObject;
 import gameobject.bonus.Bonus;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import animations.ExplodeAnims;
 
 public class Bomb extends GameObject implements UnmovableObject {
 	private int timer;
 	private int radius;
+	boolean blockedXplus = false;
+	boolean blockedXminus = false;
+	boolean blockedYplus = false;
+	boolean blockedYminus = false ;
 	
 private Image image = new Image(new File("ressources/bomb.png").toURI().toString());
-	
 	
 	public Bomb(Timer gameTimer,int radius) {
 		this.gameTimer = gameTimer;
@@ -38,11 +45,10 @@ private Image image = new Image(new File("ressources/bomb.png").toURI().toString
 
 	
 	public void explode(List<GameObject> gameObjectList) {
+		
+
 		List<GameObject> objectToRemove = new ArrayList<GameObject>();
-		boolean blockedXplus = false;
-		boolean blockedXminus = false;
-		boolean blockedYplus = false;
-		boolean blockedYminus = false;
+
 		for(int i = 1; i <= radius; i++) {
 			for (GameObject object : gameObjectList) {
 				if(object instanceof DestructableObject) {
@@ -112,8 +118,25 @@ private Image image = new Image(new File("ressources/bomb.png").toURI().toString
 		
 		
 		
+		// Animation explosion bombe 
 		
+
+
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				System.out.println("bombexplode");
+				Pane RBox = (Pane)fxLayer.getParent();
+				ExplodeAnims bombAnim = new ExplodeAnims(gameObjectList, RBox,getPosX(), getPosY(), radius, blockedXplus, blockedYplus, blockedXminus, blockedYminus);
+				bombAnim.setVisible();
+				
+			}
+		});
+		
+
 	}
+	
+
 	
 	public int getTimer() {
 		return timer;

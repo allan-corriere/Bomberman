@@ -29,7 +29,7 @@ public class MainController {
 	public List<GameObject> gameObjectList = new ArrayList<GameObject>();
 	public Player player = new Player(gameTimer);
 	public Level masterLevel = new Level();
-	int[][] level = masterLevel.loadLevel02(); 
+	int[][] level = masterLevel.loadLevel02();
     // Add a public no-args constructor
     public MainController() 
     {
@@ -138,17 +138,7 @@ public class MainController {
 		player.resetLayer(event.getCode());
 	}
 
-	@FXML
-	private void explosion() {
-		//Animation de l'explosion : 
-		Image explosionImage1 = new Image(new File("ressources/Bombes/fire1.png").toURI().toString());
-
-		ImageView Explode = new ImageView(explosionImage1);
-		GameObject randomObject = gameObjectList.get(0);
-		Pane root = (Pane) randomObject.fxLayer.getParent();
-		root.getChildren().add(Explode);
-
-	}
+	
 	@FXML
 	private void placeBombImage() {
 		System.out.println("franc");

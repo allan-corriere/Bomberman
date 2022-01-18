@@ -11,6 +11,8 @@ import gameobject.bonus.BombNumberBonus;
 import gameobject.bonus.BombPowerBonus;
 import gameobject.bonus.Bonus;
 import gameobject.bonus.PlayerSpeedBonus;
+import gameobject.Bomb;
+import animations.ExplodeAnims;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -53,6 +55,7 @@ public class Player extends GameObject implements MovableObject{
 	private double countLeft;
 	
 	private boolean left_right;
+
 
 	public Player(Timer gameTimer) {
 		this.currentBombNb = 0;
@@ -356,15 +359,18 @@ public class Player extends GameObject implements MovableObject{
 	
 	
 	public void placeBomb(KeyCode code, Pane RBox, List<GameObject> gameObjectList) {
+		
+		int nbSquareX = (int) (this.getPosX() / 50.0);
+		int nbSquareY = (int) (this.getPosY() / 50.0);
+
+
 		if (code==KeyCode.SPACE && maxBomb > currentBombNb )
 		{
 			Bomb bomb = new Bomb(this.gameTimer, bombRadius);
 			bomb.fxLayer.toFront();
 			currentBombNb +=1;
 			//place bomb in the good place
-			int nbSquareX = (int) (this.getPosX() / 50.0);
 			double deltaX = this.getPosX() % 50.0;
-			int nbSquareY = (int) (this.getPosY() / 50.0);
 			double deltaY = this.getPosY() % 50.0;
 			
 			//player on square
@@ -384,11 +390,13 @@ public class Player extends GameObject implements MovableObject{
 				bomb.setPosY(nbSquareY*50.0);
 				
 			}
+				
 
 			gameObjectList.add(bomb);
 			bomb.fxLayer.setVisible(false);
 			RBox.getChildren().add(bomb.fxLayer);
 			bomb.startBomb(gameObjectList);
+
 			
 			//task to decount the bomb once explode
 			TimerTask task = new TimerTask()
@@ -400,9 +408,15 @@ public class Player extends GameObject implements MovableObject{
 	    	    	currentBombNb -= 1;
 	    	    
 	    	    }
+
 	    	};
 			gameTimer.schedule(task, 3000);
+
+			
+
 		}
+
+
 	}
 	
 	public void PlayerOnBonus(Pane RBox, List<GameObject> gameObjectList) {
