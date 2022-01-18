@@ -20,10 +20,17 @@ import animations.ExplodeAnims;
 public class Bomb extends GameObject implements UnmovableObject {
 	private int timer;
 	private int radius;
-	boolean blockedXplus = false;
-	boolean blockedXminus = false;
-	boolean blockedYplus = false;
-	boolean blockedYminus = false ;
+	private boolean blockedXplus = false;
+	private boolean blockedXminus = false;
+	private boolean blockedYplus = false;
+	private boolean blockedYminus = false ;
+	private boolean destructXplus = false ; 
+	private boolean destructXMinus = false ; 
+	private boolean destructYPlus = false ; 
+	private boolean destructYMinus = false ; 
+
+	
+	
 	
 private Image image = new Image(new File("ressources/bomb.png").toURI().toString());
 	
@@ -82,18 +89,23 @@ private Image image = new Image(new File("ressources/bomb.png").toURI().toString
 					// X plus
 					else if(objectPosX == (this.getPosX()+50.0*i) && objectPosY == this.getPosY() && blockedXplus == false) {
 						objectToRemove.add(object);
+						destructXplus = true;
+						
 					}
 					// X minus
 					else if(objectPosX == (this.getPosX()-50.0*i) && objectPosY == this.getPosY() && blockedXminus == false) {
 						objectToRemove.add(object);
+						destructXMinus = true;
 					}
 					// Y plus
 					else if(objectPosX == this.getPosX() && (objectPosY == this.getPosY()+50.0*i) && blockedYplus == false) {
 						objectToRemove.add(object);
+						destructYPlus = true;
 					}
 					// Y minus
 					else if(objectPosX == this.getPosX() && (objectPosY == this.getPosY()-50.0*i) && blockedYminus == false) {
 						objectToRemove.add(object);
+						destructYMinus = true;
 					} 
 				}
 				//check for blocking object in field including brick to ndo't break next object
@@ -150,7 +162,7 @@ private Image image = new Image(new File("ressources/bomb.png").toURI().toString
 			public void run() {
 				System.out.println("bombexplode");
 				Pane RBox = (Pane)fxLayer.getParent();
-				ExplodeAnims bombAnim = new ExplodeAnims(gameObjectList, RBox,getPosX(), getPosY(), radius, blockedXplus, blockedYplus, blockedXminus, blockedYminus);
+				ExplodeAnims bombAnim = new ExplodeAnims(gameObjectList, RBox,getPosX(), getPosY(), radius, blockedXplus, blockedYplus, blockedXminus, blockedYminus, destructXplus, destructXMinus, destructYPlus, destructYMinus);
 				bombAnim.setVisible();
 				
 			}

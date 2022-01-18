@@ -89,6 +89,10 @@ public class ExplodeAnims  {
 	private boolean blockedYPlus;
 	private boolean blockedXMinus;
 	private boolean blockedYMinus;
+	private boolean destructXplus; 
+	private boolean destructXMinus; 
+	private boolean destructYPlus; 
+	private boolean destructYMinus; 
 
 
 
@@ -102,12 +106,16 @@ public class ExplodeAnims  {
 	}
 
 	
-	public ExplodeAnims(List<GameObject> gameObjectList,Pane RBox, double bombX, double bombY, int radius, boolean blockedXPlus, boolean blockedYPlus, boolean blockedXMinus, boolean blockedYMinus) {
+	public ExplodeAnims(List<GameObject> gameObjectList,Pane RBox, double bombX, double bombY, int radius, boolean blockedXPlus, boolean blockedYPlus, boolean blockedXMinus, boolean blockedYMinus, boolean destructXplus, boolean destructXminus, boolean destructYPlus, boolean destructYMinus) {
 		
 		this.blockedXMinus=blockedXMinus;
 		this.blockedXPlus=blockedXPlus;
 		this.blockedYMinus = blockedYMinus;
 		this.blockedYPlus = blockedYPlus;
+		this.destructXplus = destructXplus;
+		this.destructXMinus = destructXminus;
+		this.destructYPlus = destructYPlus;
+		this.destructYMinus = destructYMinus;
 		
 		this.RBox = RBox;
 		
@@ -248,20 +256,20 @@ public class ExplodeAnims  {
 
 					bombAnimCenter2.setVisible(true);
 
-					if (blockedXMinus == false) {
+					if (blockedXMinus == false || destructXMinus == true) {
 						bombAnimLeft2.setVisible(true);
 
 					}
-					if (blockedXPlus == false) {
+					if (blockedXPlus == false || destructXplus == true) {
 						bombAnimRight2.setVisible(true);
 					}
 					
-					if (blockedYPlus==false ) {
+					if (blockedYPlus==false || destructYPlus == true ) {
 						bombAnimDown2.setVisible(true);
 
 					}
 					
-					if (blockedYMinus == false) {
+					if (blockedYMinus == false || destructYMinus == true) {
 						bombAnimUp2.setVisible(true);
 					}
 				
@@ -280,20 +288,20 @@ public class ExplodeAnims  {
 				
 					bombAnimCenter3.setVisible(true);
 
-					if (blockedXMinus == false) {
+					if (blockedXMinus == false || destructXMinus == true) {
 						bombAnimLeft3.setVisible(true);
 
 					}
-					if (blockedXPlus == false) {
+					if (blockedXPlus == false || destructXplus == true) {
 						bombAnimRight3.setVisible(true);
 					}
 					
-					if (blockedYPlus==false ) {
+					if (blockedYPlus==false || destructYPlus == true ) {
 						bombAnimDown3.setVisible(true);
 
 					}
 					
-					if (blockedYMinus == false) {
+					if (blockedYMinus == false || destructYMinus == true) {
 						bombAnimUp3.setVisible(true);
 					}
 				
@@ -312,20 +320,20 @@ public class ExplodeAnims  {
 				
 					bombAnimCenter4.setVisible(true);
 
-					if (blockedXMinus == false) {
+					if (blockedXMinus == false || destructXMinus == true) {
 						bombAnimLeft4.setVisible(true);
 
 					}
-					if (blockedXPlus == false) {
+					if (blockedXPlus == false || destructXplus == true) {
 						bombAnimRight4.setVisible(true);
 					}
 					
-					if (blockedYPlus==false ) {
+					if (blockedYPlus==false || destructYPlus == true) {
 						bombAnimDown4.setVisible(true);
 
 					}
 					
-					if (blockedYMinus == false) {
+					if (blockedYMinus == false || destructYMinus == true) {
 					bombAnimUp4.setVisible(true);
 					}
 				
@@ -345,20 +353,20 @@ public class ExplodeAnims  {
 				
 					bombAnimCenter5.setVisible(true);
 
-					if (blockedXMinus == false) {
+					if (blockedXMinus == false || destructXMinus == true) {
 						bombAnimLeft5.setVisible(true);
 
 					}
-					if (blockedXPlus == false) {
+					if (blockedXPlus == false || destructXplus == true) {
 						bombAnimRight5.setVisible(true);
 					}
 					
-					if (blockedYPlus==false ) {
+					if (blockedYPlus==false || destructYPlus == true ) {
 						bombAnimDown5.setVisible(true);
 
 					}
 					
-					if (blockedYMinus == false) {
+					if (blockedYMinus == false || destructYMinus == true) {
 						bombAnimUp5.setVisible(true);
 					}
 				
@@ -382,7 +390,6 @@ public class ExplodeAnims  {
 							bombAnimCenter5.setVisible(false);
 
 
-							if (blockedXMinus == false) {
 								
 								bombAnimLeft1.setVisible(false);
 								bombAnimLeft2.setVisible(false);
@@ -390,31 +397,31 @@ public class ExplodeAnims  {
 								bombAnimLeft4.setVisible(false);
 								bombAnimLeft5.setVisible(false);
 
-							}
-							if (blockedXPlus == false) {
+							
+
 								bombAnimRight1.setVisible(false);
 								bombAnimRight2.setVisible(false);
 								bombAnimRight3.setVisible(false);
 								bombAnimRight4.setVisible(false);
 								bombAnimRight5.setVisible(false);
-							}
 							
-							if (blockedYPlus==false ) {
+							
+
 								bombAnimDown1.setVisible(false);
 								bombAnimDown2.setVisible(false);
 								bombAnimDown3.setVisible(false);
 								bombAnimDown4.setVisible(false);
 								bombAnimDown5.setVisible(false);
 
-							}
 							
-							if (blockedYMinus == false) {
+							
+				
 								bombAnimUp1.setVisible(false);
 								bombAnimUp2.setVisible(false);
 								bombAnimUp3.setVisible(false);
 								bombAnimUp4.setVisible(false);
 								bombAnimUp5.setVisible(false);
-							}
+							
 					
 					}
 				};		
@@ -428,11 +435,11 @@ public class ExplodeAnims  {
 
 					bombAnimCenter1.setVisible(true);
 					
-					if (blockedXMinus == false) {
+					if (blockedXMinus == false || destructXMinus == true) {
 						bombAnimLeft1.setVisible(true);
 				
 					}
-					if (blockedXPlus == false) {
+					if (blockedXPlus == false || destructXplus == true) {
 						bombAnimRight1.setVisible(true);
 			
 			
