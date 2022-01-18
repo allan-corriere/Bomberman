@@ -15,6 +15,7 @@ public class SocketReader implements Runnable{
 		this.identifier = id;
 		this.sw = sw;
 		this.sw.sendMap(map, client);
+		this.sw.sendIndex(id, client);
 	}
 
 	@Override
@@ -26,7 +27,17 @@ public class SocketReader implements Runnable{
 				String receive = dis.readUTF();
 				if(receive != null) {
 					//System.out.println(this.identifier+":"+receive);
-					this.sw.send(this.identifier+":"+receive, this.identifier);
+					if(receive.startsWith("move:")) {
+						this.sw.send("move:"+this.identifier+":"+receive.substring(receive.indexOf(":") + 1), this.identifier);
+					}
+					if(receive.startsWith("bomb:")) {
+						this.sw.send("bomb:"+this.identifier+":"+receive.substring(receive.indexOf(":") + 1), this.identifier);
+					} 
+					if(receive.startsWith("bonus:")) {
+						this.sw.send("bonus:"+receive.substring(receive.indexOf(":") + 1), this.identifier);
+					} else {
+						this.sw.send("move:"+this.identifier+":"+receive.substring(receive.indexOf(":") + 1), this.identifier);
+					}
 				}
 			}
 		} catch (IOException e) {

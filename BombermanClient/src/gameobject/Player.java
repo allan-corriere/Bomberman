@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import gameobject.attribute.Crossable;
+import gameobject.attribute.DestructableObject;
 import gameobject.attribute.GameObject;
 import gameobject.attribute.MovableObject;
 import gameobject.bonus.BombNumberBonus;
@@ -23,7 +24,7 @@ import socket.SocketWriter;
 
 
 
-public class Player extends GameObject implements MovableObject{
+public class Player extends GameObject implements MovableObject, DestructableObject{
 	private SocketWriter sw;
 	private boolean alive;
 	private double speed;
@@ -32,7 +33,7 @@ public class Player extends GameObject implements MovableObject{
 	private int currentBombNb;
 	private int bombRadius;
 	
-	//Chargement des frames de déplacement
+	//Chargement des frames de dï¿½placement
 	
 	private Image face0 = new Image(new File("ressources/Hero/face0.png").toURI().toString());
 	private Image face1 = new Image(new File("ressources/Hero/face1.png").toURI().toString());
@@ -57,7 +58,8 @@ public class Player extends GameObject implements MovableObject{
 	private boolean left_right;
 
 
-	public Player(Timer gameTimer) {
+	public Player(Timer gameTimer, SocketWriter sw) {
+
 		this.currentBombNb = 0;
 		this.gameTimer = gameTimer;
 		fxLayer = new ImageView(face0);
@@ -65,23 +67,34 @@ public class Player extends GameObject implements MovableObject{
 		this.setPosY(0.0);
 		fxLayer.setFitHeight(50.0);
 		fxLayer.setFitWidth(50.0);
-		
-		try {
-			GameClient client = new GameClient("localhost", 65432, "Osloh");
-			new Thread(new SocketReader(client)).start();
-			
-			this.sw = new SocketWriter(client);
-			new Thread(this.sw).start();
-			
-			//this.sw = new TestSW(client);
-			//this.sw.run();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.sw = sw;
+		this.setSpeed(5);
+		this.setMaxBomb(1);
+		this.setBombRadius(1);
+//		try {
+//			GameClient client = new GameClient("localhost", 65432, "Osloh");
+//			new Thread(new SocketReader(client)).start();
+//			
+//			this.sw = new SocketWriter(client);
+//			new Thread(this.sw).start();
+//			
+//			//this.sw = new TestSW(client);
+//			//this.sw.run();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	public void sendPositionToServer() {
-		this.sw.send(this.getPosX()+":"+this.getPosY());
+		this.sw.send("move:"+this.getPosX()+":"+this.getPosY());
+	}
+	
+	public void sendBonusToServer(double x, double y) {
+		this.sw.send("bonus:"+x+":"+y);
+	}
+	
+	public void sendBombPositionToServer(Bomb bomb) {
+		this.sw.send("bomb:"+bomb.getPosX()+":"+bomb.getPosY()+":"+this.bombRadius);
 	}
 
 	public void move(KeyCode code,Pane RBox, List<GameObject> gameObjectList) {
@@ -93,7 +106,8 @@ public class Player extends GameObject implements MovableObject{
 		this.fxLayer.toFront();
 		
 		if (code ==KeyCode.Z)
-		{				
+		{
+			System.out.println("ca bouge");
 			if (this.getPosY()>0)
 			{
 			//check si un object ne bloque pas le passage
@@ -393,6 +407,7 @@ public class Player extends GameObject implements MovableObject{
 				
 
 			gameObjectList.add(bomb);
+			this.sendBombPositionToServer(bomb);
 			bomb.fxLayer.setVisible(false);
 			RBox.getChildren().add(bomb.fxLayer);
 			bomb.startBomb(gameObjectList);
@@ -457,6 +472,7 @@ public class Player extends GameObject implements MovableObject{
 		
 		//apply bonus to player
 		if(selectedBonus != null) {
+			this.sendBonusToServer(selectedBonus.getPosX(), selectedBonus.getPosY());
 			//speed
 			if(selectedBonus instanceof PlayerSpeedBonus) {
 				speed += 5;

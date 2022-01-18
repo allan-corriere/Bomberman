@@ -8,7 +8,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-
+import socket.GameClient;
+import socket.MessageReceived;
+import socket.SocketReader;
+import socket.SocketWriter;
 import gameobject.*;
 import gameobject.attribute.GameObject;
 import gameobject.bonus.BombNumberBonus;
@@ -20,6 +23,10 @@ import gamescene.Level;
 
 
 public class MainController {
+	
+	private SocketWriter sw;
+	private MessageReceived messageReceivedMap = new MessageReceived();
+	private MessageReceived messageReceivedId = new MessageReceived();
 
 	@FXML 
 	private Pane RBox;
@@ -27,74 +34,55 @@ public class MainController {
 	public Timer gameTimer = new Timer();
 	//Déclaration des objets de base 
 	public List<GameObject> gameObjectList = new ArrayList<GameObject>();
-	public Player player = new Player(gameTimer);
+	public Player player;// = new Player(gameTimer, sw);
+	public GameObject [] enemys = new GameObject[3];
 	public Level masterLevel = new Level();
-	int[][] level = masterLevel.loadLevel02();
+
+	public int[][] level = masterLevel.loadLevel02(); 
+	private int totalRow = 0;
+	private int totalColumn = 0;
     // Add a public no-args constructor
-    public MainController() 
-    {
+    public MainController() {
     }
      
     @FXML
-    private void initialize() 
-    {
-    	//parcours du level
-    	//ajout des gameobject à la liste
-    	player.setPosX(50.0);
-    	player.setPosY(50.0);
-    	gameObjectList.add(player);
-    	//gameObjectList.add(wall1);
+    private void initialize() {
     	
-    	//traitement des données level envoyés par le serveur
-    	String receivedMessage = "map(15,15):1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,2,2,2,3,2,2,2,2,2,0,0,1,1,0,1,2,1,2,1,2,1,2,1,4,1,0,1,1,2,2,5,2,2,2,2,3,2,2,2,2,2,1,1,2,1,2,1,2,1,2,1,4,1,2,1,4,1,1,2,2,2,2,3,2,2,2,2,2,2,5,3,1,1,3,1,2,1,2,1,3,1,2,1,2,1,2,1,1,3,2,5,4,2,4,2,5,5,2,4,2,2,1,1,2,1,2,1,2,1,2,1,2,1,2,1,5,1,1,2,2,3,2,2,2,2,4,2,2,2,5,2,1,1,5,1,2,1,2,1,2,1,2,1,2,1,2,1,1,2,2,4,3,2,2,2,2,2,3,2,4,2,1,1,0,1,2,1,5,1,2,1,2,1,4,1,0,1,1,0,0,2,3,2,2,2,2,2,2,4,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,";
-    	if(receivedMessage.startsWith("map(")){
-    		String mapSizeText = receivedMessage.substring(receivedMessage.indexOf("(") + 1, receivedMessage.indexOf(")"));
-    		int [] mapSize = Arrays.stream(mapSizeText.split(",")).mapToInt(Integer::parseInt).toArray();
-    		String dataText = receivedMessage.split(":")[1];
-    		int [] level = Arrays.stream(dataText.substring(0, dataText.length() - 1).split(",")).mapToInt(Integer::parseInt).toArray();
-    		System.out.println(level.length);
-    		int totalRow = mapSize[0];
-    		int totalColumn = mapSize[1];
-    		int currentRow = 0;
-    		int currentColumn = 0;
-    		
-    		for(int i = 0; i < totalRow*totalColumn; i++) {
-    			if(level[i] == 1) {
-    				gameObjectList.add(new Wall(currentRow*50.0,currentColumn*50));
-    			}
-    			else if(level[i] == 2 || level[i] == 3 || level[i] == 4 || level[i] == 5) {
-    				Bonus brickBonus = null;
-    			
-    			    if(level[i] == 3) {
-    			    	brickBonus = new PlayerSpeedBonus(currentRow*50.0,currentColumn*50);
-    			    }
-    			    else if(level[i] == 4) {
-    			    	brickBonus = new BombPowerBonus(currentRow*50.0,currentColumn*50);
-    			    }
-    			    else if(level[i] == 5) {
-    			    	brickBonus = new BombNumberBonus(currentRow*50.0,currentColumn*50);
-    			    }
-    				gameObjectList.add(new Brick(gameTimer,currentRow*50.0,currentColumn*50,brickBonus));
-    				
-    				
-    			}
-    			System.out.println(currentRow);
-    			System.out.println(currentColumn);
-    			currentRow ++;
-    			if(currentRow >= totalRow) {
-    				currentRow = 0;
-    				currentColumn ++;
-    			}
-    			
-    		}
-    		
+    	
+		//creation des ennemis
+    	enemys[0] = new GameObject(1000, 1000,new ImageView(new Image(new File("ressources/Hero/face0.png").toURI().toString())));
+    	enemys[1] = new GameObject(1000, 1000,new ImageView(new Image(new File("ressources/Hero/face0.png").toURI().toString())));
+    	enemys[2] = new GameObject(1000, 1000,new ImageView(new Image(new File("ressources/Hero/face0.png").toURI().toString())));
+
+
+    	// Connexion au serveur
+    	try {
+			GameClient client = new GameClient("localhost", 65432, "Osloh");    	
+	    	//lancement de la connexion
+			new Thread(new SocketReader(client, gameObjectList, messageReceivedMap, messageReceivedId, enemys, gameTimer, RBox)).start();
+			
+			this.sw = new SocketWriter(client);
+			new Thread(this.sw).start();
+			
+			//this.sw = new TestSW(client);
+			//this.sw.run();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	    	
+    	//traitement des données level envoyées par le serveur
+
+    	while(messageReceivedMap.getMessage() == "") {
+    		continue;
     	}
+    	while(messageReceivedId.getMessage() == "") {
+    		continue;
+    	}
+    	createMap();
+    	setPlayers();
+
     	
-    	
-    	player.setSpeed(5);
-    	player.setMaxBomb(1);
-    	player.setBombRadius(1);
-    	player.fxLayer.toFront();
+
     	//placer les objets fx
     	for (GameObject object : gameObjectList) {
     		RBox.getChildren().add(object.fxLayer);
@@ -105,21 +93,6 @@ public class MainController {
     			}
         	}
     	}
-  
-    	TimerTask task = new TimerTask()
-    	{
-
-    	    @Override
-    	    public void run()
-    	    {
-    	    	System.out.println(java.time.LocalTime.now());  
-    	    
-    	    }
-    	};
-    	//gameTimer.scheduleAtFixedRate(task,0, 10);
-    	
-    	
-
     }
     
   //Gestion des saisies clavier pour d�placements personnage
@@ -135,7 +108,7 @@ public class MainController {
 	private void KeyReleased(KeyEvent event) {
 		System.out.println("relaché"+event.getCode());
 		player.placeBomb(event.getCode(),RBox,gameObjectList);
-		player.resetLayer(event.getCode());
+		player.resetLayer(event.getCode());		
 	}
 
 	
@@ -144,6 +117,7 @@ public class MainController {
 		System.out.println("franc");
 	}
      
+
     // location and resources will be automatically injected by the FXML loader 
     @FXML
     private URL location;
@@ -151,7 +125,75 @@ public class MainController {
     @FXML
     private ResourceBundle resources;
      
-
+    private void createMap() {
+		String mapSizeText = messageReceivedMap.getMessage().substring(messageReceivedMap.getMessage().indexOf("(") + 1, messageReceivedMap.getMessage().indexOf(")"));
+		int [] mapSize = Arrays.stream(mapSizeText.split(",")).mapToInt(Integer::parseInt).toArray();
+		String dataText = messageReceivedMap.getMessage().split(":")[1];
+		int [] level = Arrays.stream(dataText.substring(0, dataText.length() - 1).split(",")).mapToInt(Integer::parseInt).toArray();
+		totalRow = mapSize[0];
+		totalColumn = mapSize[1];
+		int currentRow = 0;
+		int currentColumn = 0;
+		
+		//lecture des informations de la map et création
+		for(int i = 0; i < totalRow*totalColumn; i++) {
+			if(level[i] == 1) {
+				gameObjectList.add(new Wall(currentRow*50.0,currentColumn*50));
+			}
+			else if(level[i] == 2 || level[i] == 3 || level[i] == 4 || level[i] == 5) {
+				Bonus brickBonus = null;
+			
+			    if(level[i] == 3) {
+			    	brickBonus = new PlayerSpeedBonus(currentRow*50.0,currentColumn*50);
+			    }
+			    else if(level[i] == 4) {
+			    	brickBonus = new BombPowerBonus(currentRow*50.0,currentColumn*50);
+			    }
+			    else if(level[i] == 5) {
+			    	brickBonus = new BombNumberBonus(currentRow*50.0,currentColumn*50);
+			    }
+				gameObjectList.add(new Brick(gameTimer,currentRow*50.0,currentColumn*50,brickBonus));
+				
+			}
+			currentRow ++;
+			if(currentRow >= totalRow) {
+				currentRow = 0;
+				currentColumn ++;
+			}	
+		}
+    }
+    private void setPlayers() {
+    	//traitement des joueurs
+    	this.player = new Player(gameTimer, sw);
+    	gameObjectList.add(player);
+		int id = Integer.parseInt(messageReceivedId.getMessage().split(":")[1]);
+		System.out.println("Test lol "+id);
+		if(id==0) {
+			player.setPosition(50, 50);
+			enemys[0].setPosition((totalColumn*50)-100, 50);
+			enemys[1].setPosition(50, (totalRow*50)-100);
+			enemys[2].setPosition((totalColumn*50)-100, (totalRow*50)-100);
+		} else if(id==1) {
+			enemys[0].setPosition(50, 50);
+			player.setPosition((totalColumn*50)-100, 50);
+			enemys[1].setPosition(50, (totalRow*50)-100);
+			enemys[2].setPosition((totalColumn*50)-100, (totalRow*50)-100);
+		} else if(id==2) {
+			enemys[0].setPosition(50, 50);
+			enemys[1].setPosition((totalColumn*50)-100, 50);
+			player.setPosition(50, (totalRow*50)-100);
+			enemys[2].setPosition((totalColumn*50)-100, (totalRow*50)-100);
+		} else if(id==3) {
+			enemys[0].setPosition(50, 50);
+			enemys[1].setPosition((totalColumn*50)-100, 50);
+			enemys[2].setPosition(50, (totalRow*50)-100);
+			player.setPosition((totalColumn*50)-100, (totalRow*50)-100);
+		}
+		
+		for (GameObject object : enemys) {	
+	    	gameObjectList.add(object);
+		}
+    }
      
 
 }

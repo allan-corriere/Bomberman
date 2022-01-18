@@ -33,6 +33,15 @@ public class SocketWriter implements Runnable{
 			e.printStackTrace();
 		}
 	}
+	
+	public void sendIndex(int id, Socket client) {
+		try {
+			DataOutputStream dos = new DataOutputStream(client.getOutputStream());
+			dos.writeUTF("id:"+id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void run() {
