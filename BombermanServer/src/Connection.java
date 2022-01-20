@@ -4,10 +4,13 @@ import java.io.IOException;
 //import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import gamescene.GenerateMap;
 import socket.SocketReader;
 import socket.SocketWriter;
+
+import sql.ConnectSql;
 
 public class Connection {
 	public static void main(String[] args) {
@@ -54,6 +57,11 @@ public class Connection {
 	        e.printStackTrace(); 
 	      }
 	    }
+		
+		
+		
+			
+		
 	    
 	  }  
 }

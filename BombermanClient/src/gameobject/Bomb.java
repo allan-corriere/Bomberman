@@ -32,11 +32,14 @@ public class Bomb extends GameObject implements UnmovableObject {
 	
 	
 	
-private Image image = new Image(new File("ressources/bomb.png").toURI().toString());
+private Image SmallBomb1 = new Image(new File("ressources/bomb.png").toURI().toString());
+private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.png").toURI().toString());
+
+
 	
 	public Bomb(Timer gameTimer,int radius) {
 		this.gameTimer = gameTimer;
-		fxLayer = new ImageView(image);
+		fxLayer = new ImageView(SmallBomb1);
 		this.radius = radius;
 		this.setPosX(0.0);
 		this.setPosY(0.0);
