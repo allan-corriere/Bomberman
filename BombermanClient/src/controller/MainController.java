@@ -35,7 +35,7 @@ public class MainController {
 	//Déclaration des objets de base 
 	public List<GameObject> gameObjectList = new ArrayList<GameObject>();
 	public Player player;// = new Player(gameTimer, sw);
-	public GameObject [] enemys = new GameObject[3];
+	public Enemy [] enemys = new Enemy[3];
 	public Level masterLevel = new Level();
 
 	public int[][] level = masterLevel.loadLevel02(); 
@@ -50,9 +50,9 @@ public class MainController {
     	
     	
 		//creation des ennemis
-    	enemys[0] = new GameObject(1000, 1000,new ImageView(new Image(new File("ressources/Hero/face0.png").toURI().toString())));
-    	enemys[1] = new GameObject(1000, 1000,new ImageView(new Image(new File("ressources/Hero/face0.png").toURI().toString())));
-    	enemys[2] = new GameObject(1000, 1000,new ImageView(new Image(new File("ressources/Hero/face0.png").toURI().toString())));
+    	enemys[0] = new Enemy(1000, 1000,new ImageView(new Image(new File("ressources/Hero/face0.png").toURI().toString())));
+    	enemys[1] = new Enemy(1000, 1000,new ImageView(new Image(new File("ressources/Hero/face0.png").toURI().toString())));
+    	enemys[2] = new Enemy(1000, 1000,new ImageView(new Image(new File("ressources/Hero/face0.png").toURI().toString())));
 
 
     	// Connexion au serveur
@@ -99,14 +99,14 @@ public class MainController {
     
 	@FXML
 	private void KeyPressed(KeyEvent event) {
-		System.out.println("pressed"+event.getCode());
+		//System.out.println("pressed"+event.getCode());
 		player.move(event.getCode(), RBox, gameObjectList);
 		
 	}
 	
 	@FXML
 	private void KeyReleased(KeyEvent event) {
-		System.out.println("relaché"+event.getCode());
+		//System.out.println("relaché"+event.getCode());
 		player.placeBomb(event.getCode(),RBox,gameObjectList);
 		player.resetLayer(event.getCode());		
 	}
@@ -190,7 +190,7 @@ public class MainController {
 			player.setPosition((totalColumn*50)-100, (totalRow*50)-100);
 		}
 		
-		for (GameObject object : enemys) {	
+		for (Enemy object : enemys) {	
 	    	gameObjectList.add(object);
 		}
     }

@@ -84,7 +84,7 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 					objectPosX *= 50.0;
 					objectPosY *= 50.0;
 				}
-				if(object instanceof DestructableObject) {
+				if(object instanceof DestructableObject || object instanceof Enemy) {
 					//same pos
 					if(radius == 1 && objectPosX == this.getPosX() && objectPosY == this.getPosY()) {
 						objectToRemove.add(object);
