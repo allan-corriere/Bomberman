@@ -95,6 +95,12 @@ public class ExplodeAnims  {
 	private ImageView bombAnimTop4 = new ImageView(explosionTop4);
 	private ImageView bombAnimTop5 = new ImageView(explosionTop5);
 	
+	private ImageView bombAnimTop11 = new ImageView(explosionTop1);
+	private ImageView bombAnimTop21 = new ImageView(explosionTop2);
+	private ImageView bombAnimTop31 = new ImageView(explosionTop3);
+	private ImageView bombAnimTop41 = new ImageView(explosionTop4);
+	private ImageView bombAnimTop51 = new ImageView(explosionTop5);
+	
 	//Images Bomb radius ++ gauche/droite
 
 	private Image explosionSide1 = new Image(new File("ressources/Bombes/radius2/side1.png").toURI().toString());
@@ -108,6 +114,12 @@ public class ExplodeAnims  {
 	private ImageView bombAnimSide3 = new ImageView(explosionSide3);
 	private ImageView bombAnimSide4 = new ImageView(explosionSide4);
 	private ImageView bombAnimSide5 = new ImageView(explosionSide5);
+	
+	private ImageView bombAnimSide11 = new ImageView(explosionSide1);
+	private ImageView bombAnimSide21 = new ImageView(explosionSide2);
+	private ImageView bombAnimSide31 = new ImageView(explosionSide3);
+	private ImageView bombAnimSide41 = new ImageView(explosionSide4);
+	private ImageView bombAnimSide51 = new ImageView(explosionSide5);
 
 
 
@@ -229,19 +241,31 @@ public class ExplodeAnims  {
 	
 		//Cas ou rayon explosion >1 
 		
-				/*if (radius==2)
+				if (radius==2)
 				{
-					configAnims(bombAnimTop1, bombX, bombY);
-					configAnims(bombAnimTop2, bombX, bombY);
-					configAnims(bombAnimTop3, bombX, bombY);
-					configAnims(bombAnimTop4, bombX, bombY);
-					configAnims(bombAnimTop5, bombX, bombY);
+					configAnims(bombAnimTop1, bombX, bombY-50);
+					configAnims(bombAnimTop2, bombX, bombY-50);
+					configAnims(bombAnimTop3, bombX, bombY-50);
+					configAnims(bombAnimTop4, bombX, bombY-50);
+					configAnims(bombAnimTop5, bombX, bombY-50);
 					
-					configAnims(bombAnimSide1, bombX, bombY);
-					configAnims(bombAnimSide2, bombX, bombY);
-					configAnims(bombAnimSide3, bombX, bombY);
-					configAnims(bombAnimSide4, bombX, bombY);
-					configAnims(bombAnimSide5, bombX, bombY);
+					configAnims(bombAnimSide1, bombX-50, bombY);
+					configAnims(bombAnimSide2, bombX-50, bombY);
+					configAnims(bombAnimSide3, bombX-50, bombY);
+					configAnims(bombAnimSide4, bombX-50, bombY);
+					configAnims(bombAnimSide5, bombX-50, bombY);
+					
+					configAnims(bombAnimTop11, bombX, bombY+50);
+					configAnims(bombAnimTop21, bombX, bombY+50);
+					configAnims(bombAnimTop31, bombX, bombY+50);
+					configAnims(bombAnimTop41, bombX, bombY+50);
+					configAnims(bombAnimTop51, bombX, bombY+50);
+					
+					configAnims(bombAnimSide11, bombX+50, bombY);
+					configAnims(bombAnimSide21, bombX+50, bombY);
+					configAnims(bombAnimSide31, bombX+50, bombY);
+					configAnims(bombAnimSide41, bombX+50, bombY);
+					configAnims(bombAnimSide51, bombX+50, bombY);
 					
 					RBox.getChildren().add(bombAnimTop1);
 					RBox.getChildren().add(bombAnimTop2);
@@ -254,9 +278,21 @@ public class ExplodeAnims  {
 					RBox.getChildren().add(bombAnimSide3);
 					RBox.getChildren().add(bombAnimSide4);
 					RBox.getChildren().add(bombAnimSide5);
+					
+					RBox.getChildren().add(bombAnimTop11);
+					RBox.getChildren().add(bombAnimTop21);
+					RBox.getChildren().add(bombAnimTop31);
+					RBox.getChildren().add(bombAnimTop41);
+					RBox.getChildren().add(bombAnimTop51);
+
+					RBox.getChildren().add(bombAnimSide11);
+					RBox.getChildren().add(bombAnimSide21);
+					RBox.getChildren().add(bombAnimSide31);
+					RBox.getChildren().add(bombAnimSide41);
+					RBox.getChildren().add(bombAnimSide51);
 				}
 		
-		*/
+		
 		
 	/*	
 			//Retrait des premières animations 
@@ -330,15 +366,20 @@ public class ExplodeAnims  {
 					
 					if (blockedXMinus == false || destructXMinus == true) {
 						bombAnimLeft1.setVisible(true);
+						if (radius>1) {	bombAnimSide1.setVisible(true);	}
 						}
 					if (blockedXPlus == false || destructXplus == true) {
 						bombAnimRight1.setVisible(true);
+						if (radius>1) {	bombAnimSide11.setVisible(true);}
 						}				
 					if (blockedYPlus==false ) {
 						bombAnimDown1.setVisible(true);
+						if (radius>1) {	bombAnimTop11.setVisible(true);}
 						}				
 					if (blockedYMinus == false) {
 						bombAnimUp1.setVisible(true);
+						if (radius>1) {	bombAnimTop1.setVisible(true);}
+
 					}
 			
 				}
@@ -355,15 +396,19 @@ public class ExplodeAnims  {
 	
 						if (blockedXMinus == false || destructXMinus == true) {
 							bombAnimLeft2.setVisible(true);
+							if (radius>1) {	bombAnimSide2.setVisible(true);	}
 						}
 						if (blockedXPlus == false || destructXplus == true) {
-							bombAnimRight2.setVisible(true);
+							if (radius>1) {	bombAnimSide21.setVisible(true);}
 						}
 						if (blockedYPlus==false || destructYPlus == true ) {
 							bombAnimDown2.setVisible(true);
+							if (radius>1) {	bombAnimTop21.setVisible(true);}
+
 						}					
 						if (blockedYMinus == false || destructYMinus == true) {
 							bombAnimUp2.setVisible(true);
+							if (radius>1) {	bombAnimTop2.setVisible(true);}
 						}				
 					}		
 			};
@@ -378,15 +423,23 @@ public class ExplodeAnims  {
 	
 						if (blockedXMinus == false || destructXMinus == true) {
 							bombAnimLeft3.setVisible(true);
+							if (radius>1) {	bombAnimSide3.setVisible(true);	}
+
 						}
 						if (blockedXPlus == false || destructXplus == true) {
 							bombAnimRight3.setVisible(true);
+							if (radius>1) {	bombAnimSide31.setVisible(true);}
+
 						}					
 						if (blockedYPlus==false || destructYPlus == true ) {
 							bombAnimDown3.setVisible(true);
+							if (radius>1) {	bombAnimTop31.setVisible(true);}
+
 						}					
 						if (blockedYMinus == false || destructYMinus == true) {
 							bombAnimUp3.setVisible(true);
+							if (radius>1) {	bombAnimTop3.setVisible(true);}
+
 						}
 					
 					}
@@ -404,15 +457,23 @@ public class ExplodeAnims  {
 	
 						if (blockedXMinus == false || destructXMinus == true) {
 							bombAnimLeft4.setVisible(true);
+							if (radius>1) {	bombAnimSide4.setVisible(true);	}
+
 						}
 						if (blockedXPlus == false || destructXplus == true) {
 							bombAnimRight4.setVisible(true);
+							if (radius>1) {	bombAnimSide41.setVisible(true);}
+
 						}					
 						if (blockedYPlus==false || destructYPlus == true) {
 							bombAnimDown4.setVisible(true);
+							if (radius>1) {	bombAnimTop41.setVisible(true);}
+
 						}					
 						if (blockedYMinus == false || destructYMinus == true) {
 						bombAnimUp4.setVisible(true);
+						if (radius>1) {	bombAnimTop4.setVisible(true);}
+
 						}
 					}
 				
@@ -429,16 +490,24 @@ public class ExplodeAnims  {
 	
 						if (blockedXMinus == false || destructXMinus == true) {
 							bombAnimLeft5.setVisible(true);
+							if (radius>1) {	bombAnimSide5.setVisible(true);	}
+
 						}
 						if (blockedXPlus == false || destructXplus == true) {
 							bombAnimRight5.setVisible(true);
+							if (radius>1) {	bombAnimSide51.setVisible(true);}
+
 						}				
 						if (blockedYPlus==false || destructYPlus == true ) {
 							bombAnimDown5.setVisible(true);
+							if (radius>1) {	bombAnimTop51.setVisible(true);}
+
 						}
 						
 						if (blockedYMinus == false || destructYMinus == true) {
 							bombAnimUp5.setVisible(true);
+							if (radius>1) {	bombAnimTop4.setVisible(true);}
+
 						}				
 					}			
 			};
@@ -479,7 +548,31 @@ public class ExplodeAnims  {
 								bombAnimUp2.setVisible(false);
 								bombAnimUp3.setVisible(false);
 								bombAnimUp4.setVisible(false);
-								bombAnimUp5.setVisible(false);												
+								bombAnimUp5.setVisible(false);	
+								
+								if (radius>1) {
+								bombAnimTop1.setVisible(false);
+								bombAnimTop2.setVisible(false);
+								bombAnimTop3.setVisible(false);
+								bombAnimTop4.setVisible(false);
+								bombAnimTop5.setVisible(false);
+								bombAnimTop11.setVisible(false);
+								bombAnimTop21.setVisible(false);
+								bombAnimTop31.setVisible(false);
+								bombAnimTop41.setVisible(false);
+								bombAnimTop51.setVisible(false);
+								bombAnimSide1.setVisible(false);
+								bombAnimSide2.setVisible(false);
+								bombAnimSide3.setVisible(false);
+								bombAnimSide4.setVisible(false);
+								bombAnimSide5.setVisible(false);
+								bombAnimSide11.setVisible(false);
+								bombAnimSide21.setVisible(false);
+								bombAnimSide31.setVisible(false);
+								bombAnimSide41.setVisible(false);
+								bombAnimSide51.setVisible(false);
+
+								}
 						}
 					};		
 					
