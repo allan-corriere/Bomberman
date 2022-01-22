@@ -11,6 +11,7 @@ import gameobject.Bomb;
 import gameobject.attribute.GameObject;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 
 public class SocketReader implements Runnable{
 	
@@ -21,8 +22,9 @@ public class SocketReader implements Runnable{
 	private GameObject [] enemys = new GameObject[3];
 	private Timer gameTimer;
 	private Pane RBox;
-	
-	public SocketReader(GameClient client, List<GameObject> gameObjectList, MessageReceived messageReceivedMap, MessageReceived messageReceivedId, GameObject [] enemys, Timer gameTimer, Pane RBox) {
+	private Text endMessage;
+
+	public SocketReader(GameClient client, List<GameObject> gameObjectList, MessageReceived messageReceivedMap, MessageReceived messageReceivedId, GameObject [] enemys, Timer gameTimer, Pane RBox, Text endMessage) {
 		this.client = client;
 		this.messageReceivedMap = messageReceivedMap;
 		this.messageReceivedId = messageReceivedId;
@@ -30,6 +32,7 @@ public class SocketReader implements Runnable{
 		this.enemys = enemys;
 		this.gameTimer = gameTimer;
 		this.RBox = RBox;
+		this.endMessage = endMessage;
 	}
 	
 	@Override
@@ -131,7 +134,7 @@ public class SocketReader implements Runnable{
 		int bombRadius = (int)parsedMessage[3];
 		
 		//Pose de la bombe
-		Bomb bomb = new Bomb(this.gameTimer, bombRadius);
+		Bomb bomb = new Bomb(this.gameTimer, bombRadius, endMessage);
 		
 		bomb.setPosX(x);
 		bomb.setPosY(y);

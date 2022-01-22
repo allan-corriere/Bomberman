@@ -4,10 +4,16 @@ import java.net.URL;
 import java.util.*;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import socket.GameClient;
 import socket.MessageReceived;
 import socket.SocketReader;
@@ -35,8 +41,9 @@ public class MainController {
 	//Déclaration des objets de base 
 	public List<GameObject> gameObjectList = new ArrayList<GameObject>();
 	public Player player;// = new Player(gameTimer, sw);
-	public GameObject [] enemys = new GameObject[3];
+	public Enemy [] enemys = new Enemy[3];
 	public Level masterLevel = new Level();
+	public Text endMessage = new Text("");
 
 	public int[][] level = masterLevel.loadLevel02(); 
 	private int totalRow = 0;
@@ -50,16 +57,16 @@ public class MainController {
     	
     	
 		//creation des ennemis
-    	enemys[0] = new GameObject(1000, 1000,new ImageView(new Image(new File("ressources/Hero/face0.png").toURI().toString())));
-    	enemys[1] = new GameObject(1000, 1000,new ImageView(new Image(new File("ressources/Hero/face0.png").toURI().toString())));
-    	enemys[2] = new GameObject(1000, 1000,new ImageView(new Image(new File("ressources/Hero/face0.png").toURI().toString())));
+    	enemys[0] = new Enemy(1000, 1000,new ImageView(new Image(new File("ressources/Hero/face0.png").toURI().toString())));
+    	enemys[1] = new Enemy(1000, 1000,new ImageView(new Image(new File("ressources/Hero/face0.png").toURI().toString())));
+    	enemys[2] = new Enemy(1000, 1000,new ImageView(new Image(new File("ressources/Hero/face0.png").toURI().toString())));
 
 
     	// Connexion au serveur
     	try {
 			GameClient client = new GameClient("localhost", 65432, "Osloh");    	
 	    	//lancement de la connexion
-			new Thread(new SocketReader(client, gameObjectList, messageReceivedMap, messageReceivedId, enemys, gameTimer, RBox)).start();
+			new Thread(new SocketReader(client, gameObjectList, messageReceivedMap, messageReceivedId, enemys, gameTimer, RBox, endMessage)).start();
 			
 			this.sw = new SocketWriter(client);
 			new Thread(this.sw).start();
@@ -93,30 +100,38 @@ public class MainController {
     			}
         	}
     	}
+    	
+        endMessage.setTextOrigin(VPos.TOP);
+        endMessage.setFont(Font.font(null, FontWeight.BOLD, 25));
+        endMessage.setStyle("-fx-text-fill: red;");
+        endMessage.setTextAlignment(TextAlignment.CENTER);
+        endMessage.layoutXProperty().bind(RBox.widthProperty().subtract(endMessage.prefWidth(-1)).divide(2));
+        endMessage.layoutYProperty().bind(RBox.heightProperty().subtract(endMessage.prefHeight(-1)).divide(2));
+        RBox.getChildren().add(endMessage);
+        endMessage.setVisible(false);
+
     }
     
   //Gestion des saisies clavier pour d�placements personnage
     
 	@FXML
 	private void KeyPressed(KeyEvent event) {
-		System.out.println("pressed"+event.getCode());
-		player.move(event.getCode(), RBox, gameObjectList);
+		//System.out.println("pressed"+event.getCode());
+		if(player.isAlive()) {
+			player.move(event.getCode(), RBox, gameObjectList);
+			player.placeBomb(event.getCode(),RBox,gameObjectList, endMessage);
+		}
 		
 	}
 	
 	@FXML
 	private void KeyReleased(KeyEvent event) {
-		System.out.println("relaché"+event.getCode());
-		player.placeBomb(event.getCode(),RBox,gameObjectList);
-		player.resetLayer(event.getCode());		
+		//System.out.println("relaché"+event.getCode());
+		if(player.isAlive()) {
+			player.resetLayer(event.getCode());	
+		}	
 	}
 
-	
-	@FXML
-	private void placeBombImage() {
-		System.out.println("franc");
-	}
-     
 
     // location and resources will be automatically injected by the FXML loader 
     @FXML
@@ -171,26 +186,38 @@ public class MainController {
 		if(id==0) {
 			player.setPosition(50, 50);
 			enemys[0].setPosition((totalColumn*50)-100, 50);
+			enemys[0].setPlayerNumber(2);
 			enemys[1].setPosition(50, (totalRow*50)-100);
+			enemys[1].setPlayerNumber(3);
 			enemys[2].setPosition((totalColumn*50)-100, (totalRow*50)-100);
+			enemys[2].setPlayerNumber(4);
 		} else if(id==1) {
 			enemys[0].setPosition(50, 50);
+			enemys[0].setPlayerNumber(1);
 			player.setPosition((totalColumn*50)-100, 50);
 			enemys[1].setPosition(50, (totalRow*50)-100);
+			enemys[1].setPlayerNumber(3);
 			enemys[2].setPosition((totalColumn*50)-100, (totalRow*50)-100);
+			enemys[2].setPlayerNumber(4);
 		} else if(id==2) {
 			enemys[0].setPosition(50, 50);
+			enemys[0].setPlayerNumber(1);
 			enemys[1].setPosition((totalColumn*50)-100, 50);
+			enemys[1].setPlayerNumber(2);
 			player.setPosition(50, (totalRow*50)-100);
 			enemys[2].setPosition((totalColumn*50)-100, (totalRow*50)-100);
+			enemys[2].setPlayerNumber(4);
 		} else if(id==3) {
 			enemys[0].setPosition(50, 50);
+			enemys[0].setPlayerNumber(1);
 			enemys[1].setPosition((totalColumn*50)-100, 50);
+			enemys[1].setPlayerNumber(2);
 			enemys[2].setPosition(50, (totalRow*50)-100);
+			enemys[2].setPlayerNumber(3);
 			player.setPosition((totalColumn*50)-100, (totalRow*50)-100);
 		}
 		
-		for (GameObject object : enemys) {	
+		for (Enemy object : enemys) {	
 	    	gameObjectList.add(object);
 		}
     }
