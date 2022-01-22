@@ -49,8 +49,7 @@ public class MenuController {
     {
     	
     }
-    
-    
+        
 	@FXML
 	private void controlMenu(KeyEvent event) {
 		System.out.println(event.getCode());
@@ -142,6 +141,12 @@ public class MenuController {
 	
 	public String getUserName() {
 		return userName;
+	}
+	
+	
+	//Passe le champ pseudo en inactif 
+	public void setFieldDisable() {
+		pseudo.setEditable(false);
 	}
 	
 

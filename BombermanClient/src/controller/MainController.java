@@ -1,19 +1,27 @@
 package controller;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import socket.GameClient;
 import socket.MessageReceived;
 import socket.SocketReader;
@@ -51,9 +59,13 @@ public class MainController {
 	private int totalColumn = 0;
 	private String userName;
 	
+	private Stage menuDisplay ;
+	private MenuController menuController;
 	
-    public MainController(String Username) {
+    public MainController(MenuController menuController, Stage menu,String Username) {
 		this.userName=Username;
+		this.menuDisplay = menu;
+		this.menuController=menuController;
     }
      
     @FXML
@@ -126,8 +138,12 @@ public class MainController {
 			player.placeBomb(event.getCode(),RBox,gameObjectList, endMessage);
 		}
 		
+		if (event.getCode().equals(KeyCode.ENTER))
+		{
+			menuController.setFieldDisable();
+			menuDisplay.showAndWait();
+		}
 	}
-	
 	@FXML
 	private void KeyReleased(KeyEvent event) {
 		//System.out.println("relaché"+event.getCode());

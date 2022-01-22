@@ -68,7 +68,7 @@ public class Main extends Application {
         
         // Create the FXMLLoader 
         FXMLLoader loader = new FXMLLoader(new File("ressources/main_scene.fxml").toURI().toURL());
-        loader.setControllerFactory(controllerClass -> new MainController(Username));
+        loader.setControllerFactory(controllerClass -> new MainController(fxmlLoader2.getController(),stage2, Username));
         // Create the Pane and all Details
         Pane root = (Pane) loader.load();
         
