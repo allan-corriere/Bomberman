@@ -35,6 +35,7 @@ public class Bomb extends GameObject implements UnmovableObject {
 	private Text endMessage;
 	private int enemyCount;
 	private GameObject lastEnemy  = new GameObject();
+	private Player player ;
 
 
 
@@ -162,6 +163,7 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 			
 			if(object instanceof Player) {
 				((Player) object).setAlive(false);
+				this.player = (Player)object;
 				if(enemyCount != 1) {
 					Platform.runLater(new Runnable() {
 						@Override
@@ -214,6 +216,7 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 						Platform.runLater(new Runnable() {
 							@Override
 							public void run() {
+								player.setEndGame(true);
 								endMessage.setVisible(true);
 								endMessage.setText("Vous avez gagné !!!");
 							}
@@ -256,7 +259,7 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 	}
 	
 
-	
+
 	public int getTimer() {
 		return timer;
 	}

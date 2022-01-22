@@ -57,6 +57,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 	private double countLeft;
 	
 	private boolean left_right;
+	private boolean endGame;
 
 
 	public Player(Timer gameTimer, SocketWriter sw) {
@@ -554,4 +555,10 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 	public void setBombRadius(int bombRadius) {
 		this.bombRadius = bombRadius;
 	}	
+	public boolean EndGame() {
+		return endGame;
+	}
+	public void setEndGame(boolean state) {
+		endGame = state;
+	}
 }
