@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-border-color: #ffc200; -fx-border-width: 5;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HighScoreController">
+   <children>
+      <ImageView fitHeight="165.0" fitWidth="590.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Bomberman_Logo.png" />
+         </image>
+      </ImageView>
+      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="47.0" prefWidth="590.0" style="-fx-border-color: #3f7190; -fx-border-width: 3 0 3 0;" text="Meilleurs scores ">
+         <font>
+            <Font name="Bodoni MT Black Italic" size="24.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="1.0" endY="0.5734597156398105" startX="0.7819905213270142" startY="0.20853080568720378">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.24705882370471954" green="0.4431372582912445" blue="0.5647059082984924" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.7274853587150574" green="0.7017543911933899" blue="0.8421052694320679" opacity="0.12999999523162842" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <HBox prefHeight="238.0" prefWidth="590.0" VBox.vgrow="ALWAYS">
+         <children>
+            <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <ImageView fitHeight="190.0" fitWidth="145.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@trophe.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets top="25.0" />
+                     </HBox.margin>
+                  </ImageView>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="300.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <VBox prefHeight="191.0" prefWidth="68.0" style="-fx-border-width: 0 2 0 2; -fx-border-color: #3f7190;">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="46.0" prefWidth="65.0" style="-fx-border-color: #3f7190; -fx-border-width: 0 0 3 0;" text="Rang" textFill="#3f7190" VBox.vgrow="ALWAYS">
+                           <font>
+                              <Font name="Bodoni MT Black" size="17.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER" prefHeight="32.0" prefWidth="65.0" style="-fx-border-color: #3f7190; -fx-border-width: 0;" text="1" textFill="#3f7190">
+                           <font>
+                              <Font name="Bodoni MT Black" size="17.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER" prefHeight="32.0" prefWidth="65.0" style="-fx-border-color: #3f7190; -fx-border-width: 0;" text="2" textFill="#3f7190">
+                           <font>
+                              <Font name="Bodoni MT Black" size="17.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER" prefHeight="32.0" prefWidth="65.0" style="-fx-border-color: #3f7190; -fx-border-width: 0;" text="3" textFill="#3f7190">
+                           <font>
+                              <Font name="Bodoni MT Black" size="17.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER" prefHeight="32.0" prefWidth="65.0" style="-fx-border-color: #3f7190; -fx-border-width: 0;" text="4" textFill="#3f7190">
+                           <font>
+                              <Font name="Bodoni MT Black" size="17.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER" prefHeight="32.0" prefWidth="65.0" style="-fx-border-color: #3f7190; -fx-border-width: 0 0 0 0;" text="5" textFill="#3f7190">
+                           <font>
+                              <Font name="Bodoni MT Black" size="17.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="183.0" prefWidth="165.0" style="-fx-border-width: 0 2 0 0; -fx-border-color: #3f7190;">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="43.0" prefWidth="167.0" style="-fx-border-color: #3f7190; -fx-border-width: 0 0 3 0;" text="Joueur" textFill="#3f7190" VBox.vgrow="ALWAYS">
+                           <font>
+                              <Font name="Bodoni MT Black" size="17.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="player1" alignment="CENTER" prefHeight="30.0" prefWidth="169.0" style="-fx-border-color: #3f7190; -fx-border-width: 0;" textFill="#3f7190">
+                           <font>
+                              <Font name="Bodoni MT Black" size="17.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="player2" alignment="CENTER" prefHeight="30.0" prefWidth="195.0" style="-fx-border-color: #3f7190; -fx-border-width: 0;" textFill="#3f7190">
+                           <font>
+                              <Font name="Bodoni MT Black" size="17.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="player3" alignment="CENTER" prefHeight="31.0" prefWidth="176.0" style="-fx-border-color: #3f7190; -fx-border-width: 0;" textFill="#3f7190">
+                           <font>
+                              <Font name="Bodoni MT Black" size="17.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="player4" alignment="CENTER" prefHeight="31.0" prefWidth="189.0" style="-fx-border-color: #3f7190; -fx-border-width: 0;" textFill="#3f7190">
+                           <font>
+                              <Font name="Bodoni MT Black" size="17.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="player5" alignment="CENTER" prefHeight="31.0" prefWidth="179.0" style="-fx-border-color: #3f7190; -fx-border-width: 0;" textFill="#3f7190">
+                           <font>
+                              <Font name="Bodoni MT Black" size="17.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="191.0" prefWidth="94.0" style="-fx-border-width: 0 2 0 0; -fx-border-color: #3f7190;">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="43.0" prefWidth="83.0" style="-fx-border-color: #3f7190; -fx-border-width: 0 0 3 0;" text="Victoires" textFill="#3f7190" VBox.vgrow="ALWAYS">
+                           <font>
+                              <Font name="Bodoni MT Black" size="17.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="victory1" alignment="CENTER" prefHeight="30.0" prefWidth="127.0" style="-fx-border-color: #3f7190; -fx-border-width: 0;" textFill="#3f7190">
+                           <font>
+                              <Font name="Bodoni MT Black" size="17.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="victory2" alignment="CENTER" prefHeight="30.0" prefWidth="123.0" style="-fx-border-color: #3f7190; -fx-border-width: 0;" textFill="#3f7190">
+                           <font>
+                              <Font name="Bodoni MT Black" size="17.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="victory3" alignment="CENTER" prefHeight="31.0" prefWidth="133.0" style="-fx-border-color: #3f7190; -fx-border-width: 0;" textFill="#3f7190">
+                           <font>
+                              <Font name="Bodoni MT Black" size="17.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="victory4" alignment="CENTER" prefHeight="31.0" prefWidth="149.0" style="-fx-border-color: #3f7190; -fx-border-width: 0;" textFill="#3f7190">
+                           <font>
+                              <Font name="Bodoni MT Black" size="17.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="victory5" alignment="CENTER" prefHeight="31.0" prefWidth="196.0" style="-fx-border-color: #3f7190; -fx-border-width: 0 0 0 0;" textFill="#3f7190">
+                           <font>
+                              <Font name="Bodoni MT Black" size="17.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <ImageView fitHeight="190.0" fitWidth="145.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@trophe.png" />
+               </image>
+               <HBox.margin>
+                  <Insets top="25.0" />
+               </HBox.margin>
+            </ImageView>
+         </children>
+      </HBox>
+   </children>
+</VBox>

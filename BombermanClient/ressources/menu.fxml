@@ -7,14 +7,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="Menu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#controlMenu" prefHeight="409.0" prefWidth="600.0" style="-fx-border-color: #ffc200; -fx-border-width: 5;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MenuController">
+<VBox fx:id="Menu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#controlMenu" prefHeight="469.0" prefWidth="600.0" style="-fx-border-color: #ffc200; -fx-border-width: 5;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MenuController">
    <children>
       <ImageView fitHeight="168.0" fitWidth="591.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Bomberman_Logo.png" />
          </image>
       </ImageView>
-      <TextField alignment="CENTER" prefHeight="0.0" prefWidth="600.0" promptText="Pseudo">
+      <TextField fx:id="pseudo" alignment="CENTER" prefHeight="0.0" prefWidth="600.0" promptText="Pseudo">
          <font>
             <Font size="30.0" />
          </font>
@@ -24,12 +24,17 @@
             <Font size="40.0" />
          </font>
       </Label>
-      <Label fx:id="exit" alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#creditsClik" onMouseEntered="#entered" onMouseExited="#exited" prefHeight="0.0" prefWidth="600.0" text="Crédits">
+      <Label fx:id="highscore" alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#highscore" onMouseEntered="#entered" onMouseExited="#exited" prefHeight="0.0" prefWidth="600.0" text="Meilleurs scores" textAlignment="CENTER">
          <font>
             <Font size="40.0" />
          </font>
       </Label>
-      <Label fx:id="newGame1" alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#end" onMouseEntered="#entered" onMouseExited="#exited" prefHeight="0.0" prefWidth="600.0" text="Quitter" textAlignment="CENTER">
+      <Label fx:id="credits" alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#creditsClik" onMouseEntered="#entered" onMouseExited="#exited" prefHeight="0.0" prefWidth="600.0" text="Crédits">
+         <font>
+            <Font size="40.0" />
+         </font>
+      </Label>
+      <Label fx:id="exit" alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#end" onMouseEntered="#entered" onMouseExited="#exited" prefHeight="0.0" prefWidth="600.0" text="Quitter" textAlignment="CENTER">
          <font>
             <Font size="40.0" />
          </font>
