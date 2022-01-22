@@ -2,12 +2,14 @@ package socket;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import gameobject.Bomb;
+import gameobject.Enemy;
 import gameobject.attribute.GameObject;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
@@ -19,12 +21,13 @@ public class SocketReader implements Runnable{
 	private MessageReceived messageReceivedMap;
 	private MessageReceived messageReceivedId;
 	private List<GameObject> gameObjectList;
-	private GameObject [] enemys = new GameObject[3];
+	private Enemy [] enemys = new Enemy[3];
 	private Timer gameTimer;
 	private Pane RBox;
 	private Text endMessage;
+	private List<String> enemysUsername = new ArrayList<String>();
 
-	public SocketReader(GameClient client, List<GameObject> gameObjectList, MessageReceived messageReceivedMap, MessageReceived messageReceivedId, GameObject [] enemys, Timer gameTimer, Pane RBox, Text endMessage) {
+	public SocketReader(GameClient client, List<GameObject> gameObjectList, MessageReceived messageReceivedMap, MessageReceived messageReceivedId, Enemy [] enemys, Timer gameTimer, Pane RBox, Text endMessage) {
 		this.client = client;
 		this.messageReceivedMap = messageReceivedMap;
 		this.messageReceivedId = messageReceivedId;
@@ -61,6 +64,9 @@ public class SocketReader implements Runnable{
 					}
 					if(received.startsWith("bonus:")) {
 						this.deleteBonus(received);
+					}
+					if(received.startsWith("playerinfo:")) {
+						this.playerInfo(received);
 					}
 				}
 			}
@@ -174,4 +180,22 @@ public class SocketReader implements Runnable{
 			this.gameObjectList.remove(found);
 		}
 	}
+	
+	public void playerInfo(String message) {
+		enemysUsername.add(message.split(":")[1]);
+
+		if(enemysUsername.size() == 4) {
+			for (Enemy object : enemys) {
+				for(int i= 1; i < 5; i++) { //set usernames enemys
+					if(object.getPlayerNumber() == i) {
+						object.setUserName(enemysUsername.get(i-1));
+					}
+				}
+			}
+			for (Enemy object : enemys) {
+				System.out.println(object.getUserName());
+			}
+		}
+	}
+	
 }

@@ -4,18 +4,21 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import player.Player;
+
 public class SocketReader implements Runnable{
-	
+	private Player player;
 	private Socket client;
 	private int identifier;
 	private SocketWriter sw;
 	
-	public SocketReader(Socket client, int id, SocketWriter sw, String map) {
+	public SocketReader(Player player, Socket client, SocketWriter sw, String map) {
+		this.player = player;
 		this.client = client;
-		this.identifier = id;
+		this.identifier = player.getNumberOfPlayer();
 		this.sw = sw;
 		this.sw.sendMap(map, client);
-		this.sw.sendIndex(id, client);
+		this.sw.sendIndex(player.getNumberOfPlayer(), client);
 	}
 
 	@Override
@@ -35,8 +38,8 @@ public class SocketReader implements Runnable{
 					} 
 					if(receive.startsWith("bonus:")) {
 						this.sw.send("bonus:"+receive.substring(receive.indexOf(":") + 1), this.identifier);
-					} else {
-						this.sw.send("move:"+this.identifier+":"+receive.substring(receive.indexOf(":") + 1), this.identifier);
+					}if(receive.startsWith("pseudo:")) {
+						player.setUserName(receive.split(":")[1]);
 					}
 				}
 			}

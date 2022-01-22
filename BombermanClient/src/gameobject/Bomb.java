@@ -180,7 +180,7 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 						@Override
 						public void run() { //player dead
 							endMessage.setVisible(true);
-							endMessage.setText("Vous êtes mort !\n Le joueur "+((Enemy)lastEnemy).getPlayerNumber()+" remporte la partie");
+							endMessage.setText("Vous êtes mort !\n Le joueur n°"+((Enemy)lastEnemy).getPlayerNumber()+" "+((Enemy)lastEnemy).getUserName()+" remporte la partie");
 						}
 					});
 				}
@@ -197,7 +197,7 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 							@Override
 							public void run() { //player dead
 								endMessage.setVisible(true);
-								endMessage.setText("Vous êtes mort !\n Le joueur "+((Enemy)lastEnemy).getPlayerNumber()+" remporte la partie");
+								endMessage.setText("Vous êtes mort !\n Le joueur n°"+((Enemy)lastEnemy).getPlayerNumber()+" "+((Enemy)lastEnemy).getUserName()+" remporte la partie");
 							}
 						});
 					}else { // -1 enemy
