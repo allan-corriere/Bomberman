@@ -33,6 +33,7 @@ public class MainController {
 	private SocketWriter sw;
 	private MessageReceived messageReceivedMap = new MessageReceived();
 	private MessageReceived messageReceivedId = new MessageReceived();
+	private String UserName;
 
 	@FXML 
 	private Pane RBox;
@@ -48,8 +49,11 @@ public class MainController {
 	public int[][] level = masterLevel.loadLevel02(); 
 	private int totalRow = 0;
 	private int totalColumn = 0;
-    // Add a public no-args constructor
-    public MainController() {
+	private String userName;
+	
+	
+    public MainController(String Username) {
+		this.userName=Username;
     }
      
     @FXML
@@ -220,6 +224,11 @@ public class MainController {
 		for (Enemy object : enemys) {	
 	    	gameObjectList.add(object);
 		}
+    }
+    
+    public void setUserName(String Username) {
+    	this.UserName = Username;
+    	System.out.println("appel fonction "+Username);
     }
      
 

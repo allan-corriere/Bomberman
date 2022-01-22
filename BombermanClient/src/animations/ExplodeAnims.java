@@ -450,7 +450,6 @@ public class ExplodeAnims  {
 	
 						@Override
 						public void run() {
-							System.out.println("efface anim");
 	
 								bombAnimCenter1.setVisible(false);
 								bombAnimCenter2.setVisible(false);

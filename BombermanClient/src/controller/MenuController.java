@@ -2,6 +2,7 @@ package controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -11,12 +12,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -25,6 +28,8 @@ import sql.ConnectSql;
 public class MenuController {
 	@FXML 
 	private VBox Menu;
+		
+	private String userName;
 	
 	@FXML
 	private Label newGame;
@@ -57,6 +62,7 @@ public class MenuController {
 		{
 			Label test = (Label)event.getSource();
 		    Stage stage = (Stage)test.getScene().getWindow();
+		    userName = pseudo.getText();
 		    stage.close();
 		}
 		else 
@@ -134,6 +140,9 @@ public class MenuController {
 		test.setStyle("-fx-background-color:#ffc200;");
 	}
 	
+	public String getUserName() {
+		return userName;
+	}
 	
 
      
