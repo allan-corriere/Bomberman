@@ -15,6 +15,8 @@ import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import animations.ExplodeAnims;
 
 public class Bomb extends GameObject implements UnmovableObject {
@@ -27,7 +29,14 @@ public class Bomb extends GameObject implements UnmovableObject {
 	private boolean destructXplus = false ; 
 	private boolean destructXMinus = false ; 
 	private boolean destructYPlus = false ; 
-	private boolean destructYMinus = false ; 
+	private boolean destructYMinus = false ;
+	
+	//attribute for message prompting
+	private Text endMessage;
+	private int enemyCount;
+	private GameObject lastEnemy  = new GameObject();
+
+
 
 	
 	
@@ -37,10 +46,11 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 
 
 	
-	public Bomb(Timer gameTimer,int radius) {
+	public Bomb(Timer gameTimer,int radius, Text endMessage) {
 		this.gameTimer = gameTimer;
 		fxLayer = new ImageView(SmallBomb1);
 		this.radius = radius;
+		this.endMessage = endMessage;
 		this.setPosX(0.0);
 		this.setPosY(0.0);
 		fxLayer.setFitHeight(50.0);
@@ -58,9 +68,14 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 		
 
 		List<GameObject> objectToRemove = new ArrayList<GameObject>();
-
+		enemyCount = 0;
 		for(int i = 1; i <= radius; i++) {
 			for (GameObject object : gameObjectList) {
+				//count number of enemies alive
+				if(object instanceof Enemy) {
+					enemyCount += 1;
+				}
+				
 				//get the approximation of position
 				double objectPosX = (int) (object.getPosX() / 50.0);
 				double deltaX = object.getPosX() % 50.0;
@@ -84,7 +99,7 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 					objectPosX *= 50.0;
 					objectPosY *= 50.0;
 				}
-				if(object instanceof DestructableObject || object instanceof Enemy) {
+				if(object instanceof DestructableObject) {
 					//same pos
 					if(radius == 1 && objectPosX == this.getPosX() && objectPosY == this.getPosY()) {
 						objectToRemove.add(object);
@@ -132,25 +147,91 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 				}
 			}
 		}
+		//remove object from the game
 		for(GameObject object : objectToRemove) {
 			object.fxLayer.setVisible(false);
-			
 			if(object instanceof Brick) { //prompt when  bonus
-				if(((Brick) object).brickBonus != null) {
+				if(((Brick) object).brickBonus != null) { //bricks
 					Bonus bonus = ((Brick) object).brickBonus;
-					gameObjectList.remove(object);
+					//gameObjectList.remove(object);
 					bonus.fxLayer.setVisible(true);		
 					gameObjectList.add(bonus);
 				}
-				else {
-					gameObjectList.remove(object);
+			}
+			gameObjectList.remove(object);
+			
+			if(object instanceof Player) {
+				((Player) object).setAlive(false);
+				if(enemyCount != 1) {
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() { //player dead
+							endMessage.setVisible(true);
+							endMessage.setText("Vous êtes mort !\n"+"Il reste "+(enemyCount)+" joueurs en vie");
+						}
+					});
+				}else {
+					for(GameObject listenemy : gameObjectList) {
+						if(listenemy instanceof Enemy) {
+							lastEnemy = listenemy;
+						}
+					}
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() { //player dead
+							endMessage.setVisible(true);
+							endMessage.setText("Vous êtes mort !\n Le joueur "+((Enemy)lastEnemy).getPlayerNumber()+" remporte la partie");
+						}
+					});
 				}
 			}
-			else {
-				gameObjectList.remove(object);
+			else if(object instanceof Enemy) {
+				if(endMessage.isVisible()) { //si message affiché = joueur mort
+					if(enemyCount-1 == 1) {
+						for(GameObject listenemy : gameObjectList) {
+							if(listenemy instanceof Enemy) {
+								lastEnemy = listenemy;
+							}
+						}
+						Platform.runLater(new Runnable() { //win enemy
+							@Override
+							public void run() { //player dead
+								endMessage.setVisible(true);
+								endMessage.setText("Vous êtes mort !\n Le joueur "+((Enemy)lastEnemy).getPlayerNumber()+" remporte la partie");
+							}
+						});
+					}else { // -1 enemy
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() { //player dead
+								endMessage.setVisible(true);
+								endMessage.setText("Vous êtes mort !\n"+"Il reste "+(enemyCount-1)+" joueurs en vie");
+							}
+						});
+					}
+				}else { //player still alive
+					if(enemyCount-1 == 0) {
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() {
+								endMessage.setVisible(true);
+								endMessage.setText("Vous avez gagné !!!");
+							}
+						});
+					}
+				}
 			}
-			
-			
+			if(object instanceof Player || object instanceof Enemy) { //text center
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() { //player dead
+						Pane RBox = (Pane)fxLayer.getParent();
+						endMessage.setTextAlignment(TextAlignment.CENTER);
+				        endMessage.layoutXProperty().bind(RBox.widthProperty().subtract(endMessage.prefWidth(-1)).divide(2));
+				        endMessage.layoutYProperty().bind(RBox.heightProperty().subtract(endMessage.prefHeight(-1)).divide(2));
+					}
+				});
+			}
 			
 		}
 		

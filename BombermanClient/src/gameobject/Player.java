@@ -18,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import socket.GameClient;
 import socket.SocketReader;
 import socket.SocketWriter;
@@ -71,6 +72,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		this.setSpeed(5);
 		this.setMaxBomb(1);
 		this.setBombRadius(1);
+		this.alive = true;
 //		try {
 //			GameClient client = new GameClient("localhost", 65432, "Osloh");
 //			new Thread(new SocketReader(client)).start();
@@ -107,7 +109,6 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		
 		if (code ==KeyCode.Z)
 		{
-			System.out.println("ca bouge");
 			if (this.getPosY()>0)
 			{
 			//check si un object ne bloque pas le passage
@@ -372,7 +373,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 	}
 	
 	
-	public void placeBomb(KeyCode code, Pane RBox, List<GameObject> gameObjectList) {
+	public void placeBomb(KeyCode code, Pane RBox, List<GameObject> gameObjectList, Text endMessage) {
 		
 		int nbSquareX = (int) (this.getPosX() / 50.0);
 		int nbSquareY = (int) (this.getPosY() / 50.0);
@@ -380,7 +381,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 
 		if (code==KeyCode.SPACE && maxBomb > currentBombNb )
 		{
-			Bomb bomb = new Bomb(this.gameTimer, bombRadius);
+			Bomb bomb = new Bomb(this.gameTimer, bombRadius, endMessage);
 			bomb.fxLayer.toFront();
 			currentBombNb +=1;
 			//place bomb in the good place
