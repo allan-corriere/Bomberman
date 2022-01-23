@@ -4,6 +4,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -14,11 +15,20 @@
             <Image url="@Bomberman_Logo.png" />
          </image>
       </ImageView>
-      <TextField fx:id="pseudo" alignment="CENTER" prefHeight="0.0" prefWidth="600.0" promptText="Pseudo">
-         <font>
-            <Font size="30.0" />
-         </font>
-      </TextField>
+      <HBox prefHeight="65.0" prefWidth="590.0">
+         <children>
+            <TextField fx:id="pseudo" alignment="CENTER" prefHeight="65.0" prefWidth="296.0" promptText="Pseudo" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="ip" alignment="CENTER" prefHeight="65.0" prefWidth="296.0" promptText="\@ IP Serveur" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </TextField>
+         </children>
+      </HBox>
       <Label fx:id="newGame" alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#begin" onMouseEntered="#entered" onMouseExited="#exited" prefHeight="0.0" prefWidth="600.0" text="Rejoindre partie" textAlignment="CENTER">
          <font>
             <Font size="40.0" />

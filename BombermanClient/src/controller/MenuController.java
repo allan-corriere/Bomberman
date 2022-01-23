@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -37,7 +39,12 @@ public class MenuController {
 	@FXML
 	private Label exit;
 	
+	
 	@FXML private TextField pseudo;
+	@FXML private TextField ip;
+	
+	public static final String IP_ADDRESS_PATTERN = "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}";
+	private String message;
 	
 	
     public MenuController() 
@@ -54,10 +61,16 @@ public class MenuController {
 	private void controlMenu(KeyEvent event) {
 		System.out.println(event.getCode());
 	}
+	
+	private boolean verifIP(String ip) {
+		Matcher matcher = Pattern.compile(IP_ADDRESS_PATTERN).matcher(ip);
+		if (matcher.find()) return true;
+		else return false;
+	}
 
 	@FXML
 	private void begin(MouseEvent event) {
-		if (pseudo.getText()!="")
+		if (pseudo.getText()!="" && verifIP(ip.getText())==true)
 		{
 			Label test = (Label)event.getSource();
 		    Stage stage = (Stage)test.getScene().getWindow();
@@ -66,14 +79,35 @@ public class MenuController {
 		}
 		else 
 		{
-			final Stage dialog = new Stage();
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.initOwner(exit.getScene().getWindow());
-            VBox dialogVbox = new VBox(20);
-            dialogVbox.getChildren().add(new Text("Veuillez saisir un pseudo"));
-            Scene dialogScene = new Scene(dialogVbox, 200, 20);
-            dialog.setScene(dialogScene);
-            dialog.show();
+			if (verifIP(ip.getText())==true) {
+				message = "PSEUDO OBLIGATOIRE !!!";
+			}
+			if (pseudo.getText()!="") {
+				message = "ADRESSE IP INCORRECTE!";
+			}
+			else 
+				message = "REMPLIR TOUS LES CHAMPS!";
+			FXMLLoader fxmlLoader2;
+			try {
+				fxmlLoader2 = new FXMLLoader(new File("ressources/erreur.fxml").toURI().toURL());
+			    fxmlLoader2.setControllerFactory(controllerClass -> new errorController(message));
+			    VBox root1 = (VBox) fxmlLoader2.load();
+			    Stage stage2 = new Stage();
+			    Scene scene2 = new Scene(root1);
+			    stage2.setScene(scene2);
+			    stage2.initModality(Modality.APPLICATION_MODAL);
+			    stage2.initStyle(StageStyle.UNDECORATED);
+			    stage2.setTitle("Erreur");
+			    scene2.getRoot().requestFocus();
+			    stage2.showAndWait();
+			}
+		    catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}     
 		}
 	}
 	
@@ -81,13 +115,13 @@ public class MenuController {
 	private void highscore(MouseEvent event) {
 		try
 	    {
-		    FXMLLoader fxmlLoader2 = new FXMLLoader(new File("ressources/highscores.fxml").toURI().toURL());     
+		    FXMLLoader fxmlLoader2 = new FXMLLoader(new File("ressources/highscores.fxml").toURI().toURL());
 		    VBox root1 = (VBox) fxmlLoader2.load();
 		    Stage stage2 = new Stage();
 		    Scene scene2 = new Scene(root1);
 		    stage2.setScene(scene2);
 		    stage2.initModality(Modality.APPLICATION_MODAL);
-		    stage2.initStyle(StageStyle.DECORATED);
+		    stage2.initStyle(StageStyle.UNDECORATED);
 		    stage2.setTitle("HighScores");
 		    scene2.getRoot().requestFocus();
 		    stage2.showAndWait();
@@ -141,6 +175,10 @@ public class MenuController {
 	
 	public String getUserName() {
 		return userName;
+	}
+	
+	public String getIP() {
+		return ip.getText();
 	}
 	
 	

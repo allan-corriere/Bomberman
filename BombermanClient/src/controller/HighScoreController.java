@@ -84,7 +84,11 @@ public class HighScoreController {
     
     
 	
-	
+    @FXML
+    private void quit() {
+    	Stage stage =  (Stage) victory1.getScene().getWindow();
+		stage.close();
+    }
 
 
 
