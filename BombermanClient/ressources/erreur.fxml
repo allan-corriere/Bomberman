@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="errorC" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#quit" prefHeight="269.0" prefWidth="393.0" style="-fx-border-color: #ffc200; -fx-border-width: 5;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.errorController">
+   <children>
+      <ImageView fitHeight="217.0" fitWidth="384.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@error.jpg" />
+         </image>
+      </ImageView>
+      <Label fx:id="errorMessage" alignment="CENTER" contentDisplay="CENTER" prefHeight="41.0" prefWidth="383.0" style="-fx-background-color: #879876;" textAlignment="CENTER" textFill="#fefeff">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="27.0" />
+         </font>
+      </Label>
+   </children>
+</VBox>

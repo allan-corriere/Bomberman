@@ -83,7 +83,7 @@ public class MainController {
 
     	// Connexion au serveur
     	try {
-			GameClient client = new GameClient("localhost", 65432, "Osloh");    	
+			GameClient client = new GameClient(menuController.getIP(), 65432, "Osloh");    	
 	    	//lancement de la connexion
 			this.sw = new SocketWriter(client);
 			new Thread(this.sw).start();
