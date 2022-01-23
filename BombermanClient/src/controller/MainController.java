@@ -139,7 +139,7 @@ public class MainController {
 		//System.out.println("pressed"+event.getCode());
 		System.out.println(messageReceivedPlayStatus.getMessage());
 		if(player.isAlive() && messageReceivedPlayStatus.getMessage() == "start") {
-			player.move(event.getCode(), RBox, gameObjectList);
+			player.movePress(event.getCode(), RBox, gameObjectList);
 			player.placeBomb(event.getCode(),RBox,gameObjectList, mainMessage);
 		}
 		
@@ -155,6 +155,7 @@ public class MainController {
 	private void KeyReleased(KeyEvent event) {
 		//System.out.println("relaché"+event.getCode());
 		if(player.isAlive() && messageReceivedPlayStatus.getMessage() == "start") {
+			player.moveRelease(event.getCode(), RBox, gameObjectList);
 			player.resetLayer(event.getCode());	
 		}	
 	}
