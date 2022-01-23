@@ -83,44 +83,43 @@ public class MenuController {
 		    Stage stage = (Stage)test.getScene().getWindow();
 		    userName = pseudo.getText();
 		    stage.close();
+
+	    	 // Create the FXMLLoader 
+	        FXMLLoader loader;
+			try {
+				loader = new FXMLLoader(new File("ressources/main_scene.fxml").toURI().toURL());
+			
+		        loader.setControllerFactory(controllerClass -> new GameController(this,(Stage)pseudo.getScene().getWindow(), pseudo.getText()));
+		        // Create the Pane and all Details
+		        Pane root = (Pane) loader.load();
+		        
+			    Stage stage2 = new Stage();
+			    stage2.initModality(Modality.APPLICATION_MODAL);
+		        stage2.initStyle(StageStyle.DECORATED);
+		        // Create the Scene
+		        Scene scene = new Scene(root);
+		        // Set the Scene to the Stage
+		        stage2.setScene(scene);
+
+		        // Set the Title to the Stage
+		        stage2.setTitle("Main Scene");
+		        stage2.setOnCloseRequest(new EventHandler<WindowEvent>() {
+		            public void handle(WindowEvent we) {
+		        		Platform.exit();
+		                System.exit(0);
+		            }
+		        });
+		        scene.getRoot().requestFocus();
+		        stage2.show();
+		        
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		    
-		    if (isNewGame==false) {
-		    	 // Create the FXMLLoader 
-		        FXMLLoader loader;
-				try {
-					loader = new FXMLLoader(new File("ressources/main_scene.fxml").toURI().toURL());
-				
-			        loader.setControllerFactory(controllerClass -> new MainController(this,(Stage)pseudo.getScene().getWindow(), pseudo.getText()));
-			        // Create the Pane and all Details
-			        Pane root = (Pane) loader.load();
-			        
-				    Stage stage2 = new Stage();
-				    stage2.initModality(Modality.APPLICATION_MODAL);
-			        stage2.initStyle(StageStyle.DECORATED);
-			        // Create the Scene
-			        Scene scene = new Scene(root);
-			        // Set the Scene to the Stage
-			        stage2.setScene(scene);
-	
-			        // Set the Title to the Stage
-			        stage2.setTitle("Main Scene");
-			        stage2.setOnCloseRequest(new EventHandler<WindowEvent>() {
-			            public void handle(WindowEvent we) {
-			        		Platform.exit();
-			                System.exit(0);
-			            }
-			        });
-			        scene.getRoot().requestFocus();
-			        stage2.show();
-			        
-					} catch (MalformedURLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-			    }
 			
 		}
 		else 
@@ -219,7 +218,7 @@ public class MenuController {
 		    stage2.setScene(scene2);
 		    stage2.initModality(Modality.APPLICATION_MODAL);
 		    stage2.initStyle(StageStyle.DECORATED);
-		    stage2.setTitle("Crédits");
+		    stage2.setTitle("Crï¿½dits");
 		    scene2.getRoot().requestFocus();
 		    stage2.showAndWait();
 	    }
@@ -236,7 +235,7 @@ public class MenuController {
 	@FXML
 	private void exited(MouseEvent event) {
 		
-		//Récupération de l'id du container cliqué : 
+		//Rï¿½cupï¿½ration de l'id du container cliquï¿½ : 
 		Label test = (Label)event.getSource();
 		test.setStyle(null);
 	}
@@ -244,7 +243,7 @@ public class MenuController {
 	@FXML
 	private void entered(MouseEvent event) {
 		
-		//Récupération de l'id du container cliqué : 
+		//Rï¿½cupï¿½ration de l'id du container cliquï¿½ : 
 		Label test = (Label)event.getSource();
 		test.setStyle("-fx-background-color:#ffc200;");
 	}
@@ -258,10 +257,6 @@ public class MenuController {
 	}
 	
 	
-	//Passe le champ pseudo en inactif 
-	public void isNewGame(boolean state) {
-		this.isNewGame = state;
-	}
 	
 
      

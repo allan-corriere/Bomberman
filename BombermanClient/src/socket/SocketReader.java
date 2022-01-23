@@ -81,7 +81,6 @@ public class SocketReader implements Runnable{
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
 			System.out.println("Connection close by server");
 		} finally {
 			try {
@@ -242,12 +241,10 @@ public class SocketReader implements Runnable{
 		}
 		this.messageReceivedPlayStatus.setMessage("end"); // les joueurs ne peuvent plus bouger
 		
-		Runtime.getRuntime().addShutdownHook(new Thread(){public void run(){
-		    try {
+		try {
 		        client.close();
-		        System.out.println("The server is shut down!");
+		        System.out.println("Connection with server ended");
 		    } catch (IOException e) { /* failed */ }
-		}});
 		
 		Platform.runLater(new Runnable() {
 			@Override

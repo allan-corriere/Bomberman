@@ -54,6 +54,7 @@ public class Connection {
 		    			numberOfClient++;
 		    		}
 		    	}
+		    	serverSocket.close();
 		    	//attente que tout les joueurs soient connectés
 		    	int nbPlayerReady = 0;
 		    	while(nbPlayerReady != 4) {
@@ -73,7 +74,7 @@ public class Connection {
 		    	startGame.start();
 		    	
 		    	//check for end game
-		    	EndGame endGame = new EndGame(players, sw, clients);
+		    	EndGame endGame = new EndGame(players, sw, serverSocket, clients);
 		    	endGame.start();
 		    	
 
@@ -83,20 +84,8 @@ public class Connection {
 		    } catch (Exception e) {  
 		      e.printStackTrace();
 		      ServerRun = false;
-		    } finally{ 
-		      try { 
-		        if(serverSocket != null){ 
-		          serverSocket.close();
-		          ServerRun = false;
-		        } 
-		      }catch (EOFException e) {
-		    	  System.out.println("Client disconnected");
-		    	  ServerRun = false;
-		      } catch (IOException e) { 
-		        e.printStackTrace();
-		        ServerRun = false;
-		      }
 		    }
+		    System.out.println("fdqsffdsfdslafin");
 		}
 		
 		

@@ -1,6 +1,7 @@
 package gamescene;
 
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -13,6 +14,7 @@ import sql.ConnectSql;
 
 public class EndGame {
 	private SocketWriter sw;
+	private ServerSocket serverSocket;
 	private Player players[];
 	private int numberDead;
 	private Socket clients[] = new Socket[4];
@@ -20,8 +22,9 @@ public class EndGame {
 	private String winner;
 
 	
-	public EndGame(Player [] players,SocketWriter sw, Socket clients[]) {
+	public EndGame(Player [] players,SocketWriter sw,ServerSocket serverSocket, Socket clients[]) {
 		this.sw = sw;
+		this.serverSocket =serverSocket;
 		this.players = players;
 		this.clients = clients;
 	}
@@ -52,14 +55,16 @@ public class EndGame {
 				if(numberDead == 3 || numberDead == 4) {
 					t.cancel();
 					
-					Runtime.getRuntime().addShutdownHook(new Thread(){public void run(){
+
 					    try {
+					    	serverSocket.close();
+					    	System.out.println("server socket closed");
 					    	for(int i = 0; i < 4 ; i++) {
 					    		clients[i].close();
-					    		System.out.println("The server is shut down! "+i);
+					    		System.out.println("Connection with client "+i+" closed");
 					    	}
+					    	gameOver = true;
 					    } catch (IOException e) { /* failed */ }
-					}});
 				
 				}
 				

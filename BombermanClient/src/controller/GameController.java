@@ -38,7 +38,7 @@ import gamescene.Level;
 
 
 
-public class MainController {
+public class GameController {
 	
 	private SocketWriter sw;
 	private MessageReceived messageReceivedMap = new MessageReceived();
@@ -66,7 +66,7 @@ public class MainController {
 	
 
 	
-    public MainController(MenuController menuController, Stage menu,String Username) {
+    public GameController(MenuController menuController, Stage menu,String Username) {
 		this.userName=Username;
 		this.menuDisplay = menu;
 		this.menuController=menuController;
@@ -142,7 +142,6 @@ public class MainController {
     
 	@FXML
 	private void KeyPressed(KeyEvent event) {
-		System.out.println((Stage) RBox.getScene().getWindow());
 		System.out.println(messageReceivedPlayStatus.getMessage());
 		if(connected && player.isAlive() && messageReceivedPlayStatus.getMessage() == "start") {
 			player.movePress(event.getCode(), RBox, gameObjectList);
@@ -151,9 +150,7 @@ public class MainController {
 		else if (event.getCode().equals(KeyCode.ENTER) && messageReceivedPlayStatus.getMessage() == "end"){
 			Stage stage =  (Stage) RBox.getScene().getWindow();
 			stage.close();
-			System.out.println("set � false");
-			menuController.isNewGame(false);
-			menuDisplay.showAndWait();
+			menuDisplay.show();
 		}
 	}
 	
@@ -283,9 +280,7 @@ public class MainController {
 					f.printStackTrace();
 				}
 				//back to menu
-				System.out.println("set � false");
-				menuController.isNewGame(false);
-				menuDisplay.showAndWait();
+				menuDisplay.show();
 			}
 		});
     }
