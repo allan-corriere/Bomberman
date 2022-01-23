@@ -17,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import socket.SocketWriter;
 import animations.ExplodeAnims;
 
 public class Bomb extends GameObject implements UnmovableObject {
@@ -36,7 +37,7 @@ public class Bomb extends GameObject implements UnmovableObject {
 	private int enemyCount;
 	private GameObject lastEnemy  = new GameObject();
 	private Player player ;
-
+	private SocketWriter sw;
 
 
 	
@@ -47,11 +48,12 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 
 
 	
-	public Bomb(Timer gameTimer,int radius, Text mainMessage) {
+	public Bomb(Timer gameTimer,int radius, Text mainMessage, SocketWriter sw) {
 		this.gameTimer = gameTimer;
 		fxLayer = new ImageView(SmallBomb1);
 		this.radius = radius;
 		this.mainMessage = mainMessage;
+		this.sw = sw;
 		this.setPosX(0.0);
 		this.setPosY(0.0);
 		fxLayer.setFitHeight(50.0);
@@ -162,7 +164,11 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 			gameObjectList.remove(object);
 			
 			if(object instanceof Player) {
-				((Player) object).setAlive(false);
+				if(((Player) object).isAlive()) { // send death to server
+					((Player) object).setAlive(false);
+					this.sw.send("playerdeath:");
+				}
+				
 				this.player = (Player)object;
 				if(enemyCount != 1) {
 					Platform.runLater(new Runnable() {
@@ -216,7 +222,6 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 						Platform.runLater(new Runnable() {
 							@Override
 							public void run() {
-								player.setEndGame(true);
 								mainMessage.setVisible(true);
 								mainMessage.setText("Vous avez gagné !!!");
 							}

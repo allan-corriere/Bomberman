@@ -33,13 +33,15 @@ public class SocketReader implements Runnable{
 					if(receive.startsWith("move:")) {
 						this.sw.send("move:"+this.identifier+":"+receive.substring(receive.indexOf(":") + 1), this.identifier);
 					}
-					if(receive.startsWith("bomb:")) {
+					else if(receive.startsWith("bomb:")) {
 						this.sw.send("bomb:"+this.identifier+":"+receive.substring(receive.indexOf(":") + 1), this.identifier);
 					} 
-					if(receive.startsWith("bonus:")) {
+					else if(receive.startsWith("bonus:")) {
 						this.sw.send("bonus:"+receive.substring(receive.indexOf(":") + 1), this.identifier);
-					}if(receive.startsWith("pseudo:")) {
+					}else if(receive.startsWith("pseudo:")) {
 						player.setUserName(receive.split(":")[1]);
+					}else if(receive.startsWith("playerdeath:")) {
+						this.player.setAlive(false);
 					}
 				}
 			}

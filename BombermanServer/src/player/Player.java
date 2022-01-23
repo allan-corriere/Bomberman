@@ -5,6 +5,8 @@ public class Player {
 	
 	private String userName;
 	private int numberOfPlayer;
+	private boolean alive;
+	
 	public Player() {
 		
 	}
@@ -19,6 +21,12 @@ public class Player {
 	}
 	public void setNumberOfPlayer(int numberOfPlayer) {
 		this.numberOfPlayer = numberOfPlayer;
+	}
+	public boolean isAlive() {
+		return alive;
+	}
+	public void setAlive(boolean alive) {
+		this.alive = alive;
 	}
 	
 }

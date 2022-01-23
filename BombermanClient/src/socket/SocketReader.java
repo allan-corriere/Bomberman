@@ -19,6 +19,7 @@ import javafx.scene.text.TextAlignment;
 public class SocketReader implements Runnable{
 	
 	private GameClient client;
+	private SocketWriter sw;
 	private MessageReceived messageReceivedMap;
 	private MessageReceived messageReceivedId;
 	private MessageReceived messageReceivedPlayStatus;
@@ -29,8 +30,9 @@ public class SocketReader implements Runnable{
 	private Text mainMessage;
 	private List<String> enemysUsername = new ArrayList<String>();
 
-	public SocketReader(GameClient client, List<GameObject> gameObjectList, MessageReceived messageReceivedMap, MessageReceived messageReceivedId, MessageReceived messageReceivedPlayStatus, Enemy [] enemys, Timer gameTimer, Pane RBox, Text mainMessage) {
+	public SocketReader(GameClient client, SocketWriter sw, List<GameObject> gameObjectList, MessageReceived messageReceivedMap, MessageReceived messageReceivedId, MessageReceived messageReceivedPlayStatus, Enemy [] enemys, Timer gameTimer, Pane RBox, Text mainMessage) {
 		this.client = client;
+		this.sw = sw;
 		this.messageReceivedMap = messageReceivedMap;
 		this.messageReceivedId = messageReceivedId;
 		this.messageReceivedPlayStatus = messageReceivedPlayStatus;
@@ -73,6 +75,8 @@ public class SocketReader implements Runnable{
 					}
 					else if(received.startsWith("gamestart:")) {
 						this.startGame(received);
+					}else if(received.startsWith("gameover:")) {
+						this.endGame(received);
 					}
 				}
 			}
@@ -146,7 +150,7 @@ public class SocketReader implements Runnable{
 		int bombRadius = (int)parsedMessage[3];
 		
 		//Pose de la bombe
-		Bomb bomb = new Bomb(this.gameTimer, bombRadius, mainMessage);
+		Bomb bomb = new Bomb(this.gameTimer, bombRadius, mainMessage, sw);
 		
 		bomb.setPosX(x);
 		bomb.setPosY(y);
@@ -207,7 +211,7 @@ public class SocketReader implements Runnable{
 			mainMessage.setText("La partie commence dans\n"+num);
 		}else {
 			mainMessage.setText("C'est parti !!!");
-			this.messageReceivedPlayStatus.setMessage("go"); // les joueurs peuvent bouger
+			this.messageReceivedPlayStatus.setMessage("start"); // les joueurs peuvent bouger
 			Timer t = new Timer();
 			TimerTask tgo = new TimerTask() {
 	    		
@@ -224,6 +228,20 @@ public class SocketReader implements Runnable{
 				mainMessage.setTextAlignment(TextAlignment.CENTER);
 		        mainMessage.layoutXProperty().bind(RBox.widthProperty().subtract(mainMessage.prefWidth(-1)).divide(2));
 		        mainMessage.layoutYProperty().bind(RBox.heightProperty().subtract(mainMessage.prefHeight(-1)).divide(2));
+			}
+		});
+	}
+	
+	public void endGame(String message) {
+	
+		mainMessage.setText(mainMessage.getText()+"\n appuyez sur entrée pour revenir au menu");
+		this.messageReceivedPlayStatus.setMessage("end"); // les joueurs ne peuvent plus bouger
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() { //player dead
+				mainMessage.setTextAlignment(TextAlignment.CENTER);
+				mainMessage.layoutXProperty().bind(RBox.widthProperty().subtract(mainMessage.prefWidth(-1)).divide(2));
+				mainMessage.layoutYProperty().bind(RBox.heightProperty().subtract(mainMessage.prefHeight(-1)).divide(2));
 			}
 		});
 	}

@@ -85,10 +85,12 @@ public class MainController {
     	try {
 			GameClient client = new GameClient("localhost", 65432, "Osloh");    	
 	    	//lancement de la connexion
-			new Thread(new SocketReader(client, gameObjectList, messageReceivedMap, messageReceivedId, messageReceivedPlayStatus, enemys, gameTimer, RBox, mainMessage)).start();
-			
 			this.sw = new SocketWriter(client);
 			new Thread(this.sw).start();
+			
+			new Thread(new SocketReader(client, sw, gameObjectList, messageReceivedMap, messageReceivedId, messageReceivedPlayStatus, enemys, gameTimer, RBox, mainMessage)).start();
+			
+			
 			
 			//this.sw = new TestSW(client);
 			//this.sw.run();
@@ -137,13 +139,12 @@ public class MainController {
 	private void KeyPressed(KeyEvent event) {
 		//System.out.println("pressed"+event.getCode());
 		System.out.println(messageReceivedPlayStatus.getMessage());
-		if(player.isAlive() && messageReceivedPlayStatus.getMessage() == "go") {
+		if(player.isAlive() && messageReceivedPlayStatus.getMessage() == "start") {
 			player.move(event.getCode(), RBox, gameObjectList);
 			player.placeBomb(event.getCode(),RBox,gameObjectList, mainMessage);
 		}
 		
-		if (event.getCode().equals(KeyCode.ENTER) && (player.isAlive()==false || player.EndGame()==true))
-		{
+		else if (event.getCode().equals(KeyCode.ENTER) && messageReceivedPlayStatus.getMessage() == "end"){
 			Stage stage =  (Stage) RBox.getScene().getWindow();
 			stage.close();
 			menuController.setFieldDisable();
@@ -153,7 +154,7 @@ public class MainController {
 	@FXML
 	private void KeyReleased(KeyEvent event) {
 		//System.out.println("relaché"+event.getCode());
-		if(player.isAlive() && messageReceivedPlayStatus.getMessage() == "go") {
+		if(player.isAlive() && messageReceivedPlayStatus.getMessage() == "start") {
 			player.resetLayer(event.getCode());	
 		}	
 	}

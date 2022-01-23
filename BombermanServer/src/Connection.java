@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
+import gamescene.EndGame;
 import gamescene.GenerateMap;
 import gamescene.StartGame;
 import player.Player;
@@ -26,6 +27,7 @@ public class Connection {
 
 		for (int i= 0; i < 4; i++) {
 			players[i] = new Player();
+			players[i].setAlive(true);
 			players[i].setNumberOfPlayer(i);
 		}
 		
@@ -64,11 +66,15 @@ public class Connection {
 	    	for (int i= 0; i < 4; i++) {
 	    		sw.send("playerinfo:"+players[i].getUserName());
 	    	}
+	    	//countdown
 	    	StartGame startGame = new StartGame(sw);
 	    	startGame.start();
-//	        Socket client = serverSocket.accept();
-//	        new Thread(new SocketReader(client)).start();  
-//	        new Thread(new SocketWriter(client)).start();
+	    	
+	    	//check for end game
+	    	EndGame endGame = new EndGame(players, sw);
+	    	endGame.start();
+	    	
+
 	    } catch (EOFException e) {
 	    	System.out.println("Client disconnected");
 	    } catch (Exception e) {  
