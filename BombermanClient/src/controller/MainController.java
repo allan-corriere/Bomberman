@@ -1,9 +1,11 @@
 package controller;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -42,27 +44,27 @@ public class MainController {
 	private MessageReceived messageReceivedMap = new MessageReceived();
 	private MessageReceived messageReceivedId = new MessageReceived();
 	private MessageReceived messageReceivedPlayStatus = new MessageReceived();
-	private String UserName;
-
+	private Stage menuDisplay ;
+	private MenuController menuController;
+	public Text mainMessage = new Text("");
+	
 	@FXML 
 	private Pane RBox;
 	
+	private boolean connected =true;
 	
 	public Timer gameTimer = new Timer();
 	//Déclaration des objets de base 
 	public List<GameObject> gameObjectList = new ArrayList<GameObject>();
 	public Player player;// = new Player(gameTimer, sw);
 	public Enemy [] enemys = new Enemy[3];
-	public Level masterLevel = new Level();
-	public Text mainMessage = new Text("");
+	
 
-	public int[][] level = masterLevel.loadLevel02(); 
 	private int totalRow = 0;
 	private int totalColumn = 0;
 	private String userName;
 	
-	private Stage menuDisplay ;
-	private MenuController menuController;
+
 	
     public MainController(MenuController menuController, Stage menu,String Username) {
 		this.userName=Username;
@@ -79,55 +81,59 @@ public class MainController {
     	enemys[1] = new Enemy(1000, 1000,new ImageView(new Image(new File("ressources/Hero/face0.png").toURI().toString())));
     	enemys[2] = new Enemy(1000, 1000,new ImageView(new Image(new File("ressources/Hero/face0.png").toURI().toString())));
 
-
     	// Connexion au serveur
     	try {
 			GameClient client = new GameClient(menuController.getIP(), 65432, "Osloh");    	
 	    	//lancement de la connexion
 			this.sw = new SocketWriter(client);
-			new Thread(this.sw).start();
-			
+			new Thread(this.sw).start();	
 			new Thread(new SocketReader(client, sw, gameObjectList, messageReceivedMap, messageReceivedId, messageReceivedPlayStatus, enemys, gameTimer, RBox, mainMessage)).start();
-			
-			
-			
-			//this.sw = new TestSW(client);
-			//this.sw.run();
 		} catch (Exception e) {
-			e.printStackTrace();
+			connected = false;
 		}
     	
-    	
-    	
-    	//traitement des données level envoyées par le serveur
-
-    	while(messageReceivedMap.getMessage() == "") {
-    		continue;
-    	}
-    	while(messageReceivedId.getMessage() == "") {
-    		continue;
-    	}
-    	
-    	createMap();
-    	setPlayers();
-    	this.sw.send("pseudo:"+userName); // envoi du pseudo du joueur au serveur
-
-    	//placer les objets fx
-    	for (GameObject object : gameObjectList) {
-    		RBox.getChildren().add(object.fxLayer);
-    	  	//placer les fx des bonus
-        	if(object instanceof Brick) { //prompt when  bonus
-    			if(((Brick) object).brickBonus != null) {
-    				RBox.getChildren().add(((Brick) object).brickBonus.fxLayer);
-    			}
+    	if(connected) {
+        	//traitement des données level envoyées par le serveur
+        	while(messageReceivedMap.getMessage() == "") {
+        		continue;
         	}
+        	while(messageReceivedId.getMessage() == "") {
+        		continue;
+        	}
+        	
+        	createMap();
+        	setPlayers();
+        	this.sw.send("pseudo:"+userName); // envoi du pseudo du joueur au serveur
+
+        	//placer les objets fx
+        	for (GameObject object : gameObjectList) {
+        		RBox.getChildren().add(object.fxLayer);
+        	  	//placer les fx des bonus
+            	if(object instanceof Brick) { //prompt when  bonus
+        			if(((Brick) object).brickBonus != null) {
+        				RBox.getChildren().add(((Brick) object).brickBonus.fxLayer);
+        			}
+            	}
+        	}
+        	//main centered message
+        	mainMessage.setText("En attente de la connexion de tout les joueurs");
+            mainMessage.setTextOrigin(VPos.TOP);
+            mainMessage.setFont(Font.font(null, FontWeight.BOLD, 25));
+            RBox.getChildren().add(mainMessage);mainMessage.setTextAlignment(TextAlignment.CENTER);
+            mainMessage.layoutXProperty().bind(RBox.widthProperty().subtract(mainMessage.prefWidth(-1)).divide(2));
+            mainMessage.layoutYProperty().bind(RBox.heightProperty().subtract(mainMessage.prefHeight(-1)).divide(2));
     	}
-    	mainMessage.setText("En attente de la connexion de tout les joueurs");
-        mainMessage.setTextOrigin(VPos.TOP);
-        mainMessage.setFont(Font.font(null, FontWeight.BOLD, 25));
-        RBox.getChildren().add(mainMessage);mainMessage.setTextAlignment(TextAlignment.CENTER);
-        mainMessage.layoutXProperty().bind(RBox.widthProperty().subtract(mainMessage.prefWidth(-1)).divide(2));
-        mainMessage.layoutYProperty().bind(RBox.heightProperty().subtract(mainMessage.prefHeight(-1)).divide(2));
+    	else {
+    		Timer t = new Timer();
+    		TimerTask tfailed = new TimerTask() {
+        		
+    			@Override
+    			public void run() {
+    				failedToConnect();
+    			}
+        	};
+        	t.schedule(tfailed, 10);
+    	}
 
 
     }
@@ -136,25 +142,24 @@ public class MainController {
     
 	@FXML
 	private void KeyPressed(KeyEvent event) {
-		//System.out.println("pressed"+event.getCode());
+		System.out.println((Stage) RBox.getScene().getWindow());
 		System.out.println(messageReceivedPlayStatus.getMessage());
-		if(player.isAlive() && messageReceivedPlayStatus.getMessage() == "start") {
+		if(connected && player.isAlive() && messageReceivedPlayStatus.getMessage() == "start") {
 			player.movePress(event.getCode(), RBox, gameObjectList);
 			player.placeBomb(event.getCode(),RBox,gameObjectList, mainMessage);
-		}
-		
+		}	
 		else if (event.getCode().equals(KeyCode.ENTER) && messageReceivedPlayStatus.getMessage() == "end"){
 			Stage stage =  (Stage) RBox.getScene().getWindow();
 			stage.close();
-			System.out.println("set � false");
+			System.out.println("set � false");
 			menuController.isNewGame(false);
 			menuDisplay.showAndWait();
 		}
 	}
+	
 	@FXML
 	private void KeyReleased(KeyEvent event) {
-		//System.out.println("relaché"+event.getCode());
-		if(player.isAlive() && messageReceivedPlayStatus.getMessage() == "start") {
+		if(connected && player.isAlive() && messageReceivedPlayStatus.getMessage() == "start") {
 			player.moveRelease(event.getCode(), RBox, gameObjectList);
 			player.resetLayer(event.getCode());	
 		}	
@@ -249,9 +254,40 @@ public class MainController {
 		}
     }
     
-    public void setUserName(String Username) {
-    	this.UserName = Username;
-    	System.out.println("appel fonction "+Username);
+    public void failedToConnect() {
+    	Platform.runLater(new Runnable() {
+			@Override
+			public void run() { //player dead
+				Stage stage =  (Stage) RBox.getScene().getWindow();
+				stage.close();
+				//error page !!!
+				FXMLLoader fxmlLoader2;
+				try {
+					fxmlLoader2 = new FXMLLoader(new File("ressources/erreur.fxml").toURI().toURL());
+				    fxmlLoader2.setControllerFactory(controllerClass -> new errorController("Le serveur n'est pas disponible"));
+				    VBox root1 = (VBox) fxmlLoader2.load();
+				    Stage stage2 = new Stage();
+				    Scene scene2 = new Scene(root1);
+				    stage2.setScene(scene2);
+				    stage2.initModality(Modality.APPLICATION_MODAL);
+				    stage2.initStyle(StageStyle.UNDECORATED);
+				    stage2.setTitle("Erreur");
+				    scene2.getRoot().requestFocus();
+				    stage2.showAndWait();
+				}
+			    catch (MalformedURLException f) {
+					// TODO Auto-generated catch block
+					f.printStackTrace();
+				} catch (IOException f) {
+					// TODO Auto-generated catch block
+					f.printStackTrace();
+				}
+				//back to menu
+				System.out.println("set � false");
+				menuController.isNewGame(false);
+				menuDisplay.showAndWait();
+			}
+		});
     }
      
 

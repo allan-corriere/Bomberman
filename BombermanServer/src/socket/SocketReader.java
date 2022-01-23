@@ -47,7 +47,7 @@ public class SocketReader implements Runnable{
 			}
 		} catch (IOException e) {
 			System.err.println("client failed, disconnected");
-			e.printStackTrace();
+			//e.printStackTrace();
 		} finally {
 			try {
 				if(dis != null) {

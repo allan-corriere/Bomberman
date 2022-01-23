@@ -51,16 +51,16 @@ public class EndGame {
 				}
 				if(numberDead == 3 || numberDead == 4) {
 					t.cancel();
-					for(int i = 0; i < 4 ; i++) {
-						try {
-							clients[i].close();
-							gameOver = true;
-							
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
+					
+					Runtime.getRuntime().addShutdownHook(new Thread(){public void run(){
+					    try {
+					    	for(int i = 0; i < 4 ; i++) {
+					    		clients[i].close();
+					    		System.out.println("The server is shut down! "+i);
+					    	}
+					    } catch (IOException e) { /* failed */ }
+					}});
+				
 				}
 				
 			}

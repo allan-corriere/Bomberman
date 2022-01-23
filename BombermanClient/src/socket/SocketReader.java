@@ -241,6 +241,14 @@ public class SocketReader implements Runnable{
 			mainMessage.setText("Match nul !\n appuyez sur entrée pour revenir au menu");
 		}
 		this.messageReceivedPlayStatus.setMessage("end"); // les joueurs ne peuvent plus bouger
+		
+		Runtime.getRuntime().addShutdownHook(new Thread(){public void run(){
+		    try {
+		        client.close();
+		        System.out.println("The server is shut down!");
+		    } catch (IOException e) { /* failed */ }
+		}});
+		
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() { //player dead
