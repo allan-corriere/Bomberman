@@ -47,6 +47,7 @@ public class MainController {
 	@FXML 
 	private Pane RBox;
 	
+	
 	public Timer gameTimer = new Timer();
 	//Déclaration des objets de base 
 	public List<GameObject> gameObjectList = new ArrayList<GameObject>();
@@ -137,7 +138,7 @@ public class MainController {
 			player.placeBomb(event.getCode(),RBox,gameObjectList, endMessage);
 		}
 		
-		if (event.getCode().equals(KeyCode.ENTER))
+		if (event.getCode().equals(KeyCode.ENTER) && (player.isAlive()==false || player.EndGame()==true))
 		{
 			Stage stage =  (Stage) RBox.getScene().getWindow();
 			stage.close();
