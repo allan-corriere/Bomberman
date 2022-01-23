@@ -18,10 +18,10 @@ import sql.ConnectSql;
 
 public class Connection {
 	public static void main(String[] args) {
-		
-		while(true) {
+		boolean ServerRun = true;
+		while(ServerRun) {
 			final int port = 65432;
-			System.out.println("lfdsqf");
+			System.out.println("New Server instance running");
 			Socket clients[] = new Socket[4];
 			int numberOfClient = 0;
 			
@@ -79,17 +79,22 @@ public class Connection {
 
 		    } catch (EOFException e) {
 		    	System.out.println("Client disconnected");
+		    	ServerRun =false;
 		    } catch (Exception e) {  
-		      e.printStackTrace();  
+		      e.printStackTrace();
+		      ServerRun = false;
 		    } finally{ 
 		      try { 
 		        if(serverSocket != null){ 
-		          serverSocket.close(); 
+		          serverSocket.close();
+		          ServerRun = false;
 		        } 
 		      }catch (EOFException e) {
 		    	  System.out.println("Client disconnected");
+		    	  ServerRun = false;
 		      } catch (IOException e) { 
-		        e.printStackTrace(); 
+		        e.printStackTrace();
+		        ServerRun = false;
 		      }
 		    }
 		}

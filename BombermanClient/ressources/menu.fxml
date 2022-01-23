@@ -22,7 +22,7 @@
                   <Font size="30.0" />
                </font>
             </TextField>
-            <TextField fx:id="ip" alignment="CENTER" prefHeight="65.0" prefWidth="296.0" promptText="\@ IP Serveur" HBox.hgrow="ALWAYS">
+            <TextField fx:id="ip" alignment="CENTER" prefHeight="65.0" prefWidth="296.0" promptText="\@ IP Serveur" Text="127.0.0.1" HBox.hgrow="ALWAYS">
                <font>
                   <Font size="30.0" />
                </font>
