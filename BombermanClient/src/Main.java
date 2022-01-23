@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import controller.MainController;
 import controller.MenuController;
@@ -21,21 +23,6 @@ public class Main extends Application {
 	
 	
 	public static void main(String[] args) {
-		//Connection conn = new Connection(65432, "localhost", "Osloh");
-		
-//		try { 
-//		      // instantiation 1 a Socket , and specify the server address and port  
-//		      //GameClient client = new GameClient("localhost", 65432, "Osloh"); 
-//		      // Start two threads, 1 The individual is responsible for reading, 1 Responsible for writing  
-//		      //new Thread(new SocketReader(client)).start(); 
-//		      //new Thread(new SocketWriter(client)).start(); 
-//		    } catch (ConnectException e) {
-//		    	System.out.println("Unable to connect to server");
-//		    } catch (EOFException e) {
-//		    	System.out.println("Server connection lost");
-//		    } catch (Exception e) { 
-//		      e.printStackTrace(); 
-//		    }
         Application.launch(args);
 	}
 	
@@ -60,7 +47,7 @@ public class Main extends Application {
         scene2.getRoot().requestFocus();
         stage2.showAndWait();
         
-        //Récupération du userName 
+        //Rï¿½cupï¿½ration du userName 
         MenuController menuControl = (MenuController) fxmlLoader2.getController();
         String Username = menuControl.getUserName();
         // Display the Stage

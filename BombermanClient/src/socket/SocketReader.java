@@ -2,37 +2,45 @@ package socket;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import gameobject.Bomb;
+import gameobject.Enemy;
 import gameobject.attribute.GameObject;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 public class SocketReader implements Runnable{
 	
 	private GameClient client;
+	private SocketWriter sw;
 	private MessageReceived messageReceivedMap;
 	private MessageReceived messageReceivedId;
+	private MessageReceived messageReceivedPlayStatus;
 	private List<GameObject> gameObjectList;
-	private GameObject [] enemys = new GameObject[3];
+	private Enemy [] enemys = new Enemy[3];
 	private Timer gameTimer;
 	private Pane RBox;
-	private Text endMessage;
+	private Text mainMessage;
+	private List<String> enemysUsername = new ArrayList<String>();
 
-	public SocketReader(GameClient client, List<GameObject> gameObjectList, MessageReceived messageReceivedMap, MessageReceived messageReceivedId, GameObject [] enemys, Timer gameTimer, Pane RBox, Text endMessage) {
+	public SocketReader(GameClient client, SocketWriter sw, List<GameObject> gameObjectList, MessageReceived messageReceivedMap, MessageReceived messageReceivedId, MessageReceived messageReceivedPlayStatus, Enemy [] enemys, Timer gameTimer, Pane RBox, Text mainMessage) {
 		this.client = client;
+		this.sw = sw;
 		this.messageReceivedMap = messageReceivedMap;
 		this.messageReceivedId = messageReceivedId;
+		this.messageReceivedPlayStatus = messageReceivedPlayStatus;
 		this.gameObjectList = gameObjectList;
 		this.enemys = enemys;
 		this.gameTimer = gameTimer;
 		this.RBox = RBox;
-		this.endMessage = endMessage;
+		this.mainMessage = mainMessage;
 	}
 	
 	@Override
@@ -49,23 +57,32 @@ public class SocketReader implements Runnable{
 		    			this.messageReceivedMap.setMessage(received);
 		    		}
 					// cas où c'est l'id
-					if(received.startsWith("id:")) {
+					else if(received.startsWith("id:")) {
 		    			this.messageReceivedId.setMessage(received);
 		    		}
 					// cas où c'est un mouvement
-					if(received.startsWith("move:")) {
+					else if(received.startsWith("move:")) {
 						this.moveEnemies(received);
 					}
-					if(received.startsWith("bomb:")) {
+					else if(received.startsWith("bomb:")) {
 						this.placeBomb(received);
 					}
-					if(received.startsWith("bonus:")) {
+					else if(received.startsWith("bonus:")) {
 						this.deleteBonus(received);
+					}
+					else if(received.startsWith("playerinfo:")) {
+						this.playerInfo(received);
+					}
+					else if(received.startsWith("gamestart:")) {
+						this.startGame(received);
+					}else if(received.startsWith("gameover:")) {
+						this.endGame(received);
 					}
 				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+			System.out.println("Connection close by server");
 		} finally {
 			try {
 				if(dis != null) {
@@ -134,7 +151,7 @@ public class SocketReader implements Runnable{
 		int bombRadius = (int)parsedMessage[3];
 		
 		//Pose de la bombe
-		Bomb bomb = new Bomb(this.gameTimer, bombRadius, endMessage);
+		Bomb bomb = new Bomb(this.gameTimer, bombRadius, mainMessage, sw);
 		
 		bomb.setPosX(x);
 		bomb.setPosY(y);
@@ -174,4 +191,64 @@ public class SocketReader implements Runnable{
 			this.gameObjectList.remove(found);
 		}
 	}
+	
+	public void playerInfo(String message) {
+		enemysUsername.add(message.split(":")[1]);
+
+		if(enemysUsername.size() == 4) {
+			for (Enemy object : enemys) {
+				for(int i= 1; i < 5; i++) { //set usernames enemys
+					if(object.getPlayerNumber() == i) {
+						object.setUserName(enemysUsername.get(i-1));
+					}
+				}
+			}
+		}
+	}
+	
+	public void startGame(String message) {
+		int num = Integer.parseInt(message.split(":")[1]);
+		if(num != 0) {
+			mainMessage.setText("La partie commence dans\n"+num);
+		}else {
+			mainMessage.setText("C'est parti !!!");
+			this.messageReceivedPlayStatus.setMessage("start"); // les joueurs peuvent bouger
+			Timer t = new Timer();
+			TimerTask tgo = new TimerTask() {
+	    		
+				@Override
+				public void run() {
+					mainMessage.setVisible(false);
+				}
+	    	};
+	    	t.schedule(tgo, 1000);
+		}
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() { //player dead
+				mainMessage.setTextAlignment(TextAlignment.CENTER);
+		        mainMessage.layoutXProperty().bind(RBox.widthProperty().subtract(mainMessage.prefWidth(-1)).divide(2));
+		        mainMessage.layoutYProperty().bind(RBox.heightProperty().subtract(mainMessage.prefHeight(-1)).divide(2));
+			}
+		});
+	}
+	
+	public void endGame(String message) {
+		String result = message.split(":")[1];
+		if(result.equals("win")) {
+			mainMessage.setText(mainMessage.getText()+"\n appuyez sur entrée pour revenir au menu");
+		}else if(result.equals("draw")) {
+			mainMessage.setText("Match nul !\n appuyez sur entrée pour revenir au menu");
+		}
+		this.messageReceivedPlayStatus.setMessage("end"); // les joueurs ne peuvent plus bouger
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() { //player dead
+				mainMessage.setTextAlignment(TextAlignment.CENTER);
+				mainMessage.layoutXProperty().bind(RBox.widthProperty().subtract(mainMessage.prefWidth(-1)).divide(2));
+				mainMessage.layoutYProperty().bind(RBox.heightProperty().subtract(mainMessage.prefHeight(-1)).divide(2));
+			}
+		});
+	}
+	
 }

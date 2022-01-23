@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -41,6 +42,7 @@ public class MainController {
 	private SocketWriter sw;
 	private MessageReceived messageReceivedMap = new MessageReceived();
 	private MessageReceived messageReceivedId = new MessageReceived();
+	private MessageReceived messageReceivedPlayStatus = new MessageReceived();
 	private String UserName;
 
 	@FXML 
@@ -53,7 +55,7 @@ public class MainController {
 	public Player player;// = new Player(gameTimer, sw);
 	public Enemy [] enemys = new Enemy[3];
 	public Level masterLevel = new Level();
-	public Text endMessage = new Text("");
+	public Text mainMessage = new Text("");
 
 	public int[][] level = masterLevel.loadLevel02(); 
 	private int totalRow = 0;
@@ -83,17 +85,21 @@ public class MainController {
     	try {
 			GameClient client = new GameClient(menuController.getIP(), 65432, "Osloh");    	
 	    	//lancement de la connexion
-			new Thread(new SocketReader(client, gameObjectList, messageReceivedMap, messageReceivedId, enemys, gameTimer, RBox, endMessage)).start();
-			
 			this.sw = new SocketWriter(client);
 			new Thread(this.sw).start();
+			
+			new Thread(new SocketReader(client, sw, gameObjectList, messageReceivedMap, messageReceivedId, messageReceivedPlayStatus, enemys, gameTimer, RBox, mainMessage)).start();
+			
+			
 			
 			//this.sw = new TestSW(client);
 			//this.sw.run();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    	    	
+    	
+    	
+    	
     	//traitement des données level envoyées par le serveur
 
     	while(messageReceivedMap.getMessage() == "") {
@@ -102,10 +108,10 @@ public class MainController {
     	while(messageReceivedId.getMessage() == "") {
     		continue;
     	}
+    	
     	createMap();
     	setPlayers();
-
-    	
+    	this.sw.send("pseudo:"+userName); // envoi du pseudo du joueur au serveur
 
     	//placer les objets fx
     	for (GameObject object : gameObjectList) {
@@ -117,15 +123,13 @@ public class MainController {
     			}
         	}
     	}
-    	
-        endMessage.setTextOrigin(VPos.TOP);
-        endMessage.setFont(Font.font(null, FontWeight.BOLD, 25));
-        endMessage.setStyle("-fx-text-fill: red;");
-        endMessage.setTextAlignment(TextAlignment.CENTER);
-        endMessage.layoutXProperty().bind(RBox.widthProperty().subtract(endMessage.prefWidth(-1)).divide(2));
-        endMessage.layoutYProperty().bind(RBox.heightProperty().subtract(endMessage.prefHeight(-1)).divide(2));
-        RBox.getChildren().add(endMessage);
-        endMessage.setVisible(false);
+    	mainMessage.setText("En attente de la connexion de tout les joueurs");
+        mainMessage.setTextOrigin(VPos.TOP);
+        mainMessage.setFont(Font.font(null, FontWeight.BOLD, 25));
+        RBox.getChildren().add(mainMessage);mainMessage.setTextAlignment(TextAlignment.CENTER);
+        mainMessage.layoutXProperty().bind(RBox.widthProperty().subtract(mainMessage.prefWidth(-1)).divide(2));
+        mainMessage.layoutYProperty().bind(RBox.heightProperty().subtract(mainMessage.prefHeight(-1)).divide(2));
+
 
     }
     
@@ -134,13 +138,15 @@ public class MainController {
 	@FXML
 	private void KeyPressed(KeyEvent event) {
 		//System.out.println("pressed"+event.getCode());
-		if(player.isAlive()) {
+		System.out.println(messageReceivedPlayStatus.getMessage());
+		if(player.isAlive() && messageReceivedPlayStatus.getMessage() == "start") {
 			player.move(event.getCode(), RBox, gameObjectList);
-			player.placeBomb(event.getCode(),RBox,gameObjectList, endMessage);
+			player.placeBomb(event.getCode(),RBox,gameObjectList, mainMessage);
 		}
 		
-		if (event.getCode().equals(KeyCode.ENTER) && (player.isAlive()==false || player.EndGame()==true))
-		{
+		else if (event.getCode().equals(KeyCode.ENTER) && messageReceivedPlayStatus.getMessage() == "end"){
+			Stage stage =  (Stage) RBox.getScene().getWindow();
+			stage.close();
 			menuController.setFieldDisable();
 			menuDisplay.showAndWait();
 		}
@@ -148,7 +154,7 @@ public class MainController {
 	@FXML
 	private void KeyReleased(KeyEvent event) {
 		//System.out.println("relaché"+event.getCode());
-		if(player.isAlive()) {
+		if(player.isAlive() && messageReceivedPlayStatus.getMessage() == "start") {
 			player.resetLayer(event.getCode());	
 		}	
 	}
@@ -237,9 +243,8 @@ public class MainController {
 			enemys[2].setPlayerNumber(3);
 			player.setPosition((totalColumn*50)-100, (totalRow*50)-100);
 		}
-		
-		for (Enemy object : enemys) {	
-	    	gameObjectList.add(object);
+		for (Enemy object : enemys) {
+	    	gameObjectList.add(object); //add enemys to the gamelist
 		}
     }
     

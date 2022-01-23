@@ -11,7 +11,7 @@ public class SocketWriter implements Runnable{
 		this.clients = clients;
 	}
 
-	public void send(String string, int id) {
+	public void send(String string, int id) { //send to all except sender
 		for(int i = 0; i<this.clients.length; i++) {
 			if(clients[i] != null && id != i) {
 				Socket client = clients[i];
@@ -22,6 +22,17 @@ public class SocketWriter implements Runnable{
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+	public void send(String string) { //send to all
+		for(int i = 0; i<this.clients.length; i++) {
+				Socket client = clients[i];
+				try {
+					DataOutputStream dos = new DataOutputStream(client.getOutputStream());
+					dos.writeUTF(string);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 		}
 	}
 	
