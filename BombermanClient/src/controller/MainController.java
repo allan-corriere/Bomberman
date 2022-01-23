@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -147,7 +146,8 @@ public class MainController {
 		else if (event.getCode().equals(KeyCode.ENTER) && messageReceivedPlayStatus.getMessage() == "end"){
 			Stage stage =  (Stage) RBox.getScene().getWindow();
 			stage.close();
-			menuController.setFieldDisable();
+			System.out.println("set à false");
+			menuController.isNewGame(false);
 			menuDisplay.showAndWait();
 		}
 	}

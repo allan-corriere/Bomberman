@@ -6,6 +6,8 @@ import java.util.TimerTask;
 import controller.MainController;
 import controller.MenuController;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -15,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import socket.SocketReader;
 import socket.SocketWriter;
 
@@ -65,7 +68,13 @@ public class Main extends Application {
         stage.setScene(scene);
         // Set the Title to the Stage
         stage.setTitle("Main Scene");
-
+        
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+        		Platform.exit();
+                System.exit(0);
+            }
+        });
 
 
         scene.getRoot().requestFocus();

@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.input.KeyEvent;
@@ -21,6 +22,7 @@ import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -45,6 +47,7 @@ public class MenuController {
 	
 	public static final String IP_ADDRESS_PATTERN = "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}";
 	private String message;
+	private boolean isNewGame = true;
 	
 	
     public MenuController() 
@@ -68,14 +71,58 @@ public class MenuController {
 		else return false;
 	}
 
+	
+	//Clique sur lancer la partie
 	@FXML
 	private void begin(MouseEvent event) {
 		if (pseudo.getText()!="" && verifIP(ip.getText())==true)
 		{
+			
+
 			Label test = (Label)event.getSource();
 		    Stage stage = (Stage)test.getScene().getWindow();
 		    userName = pseudo.getText();
-		    stage.close();
+		    System.out.println("before if : "+isNewGame);
+		    if (isNewGame==true) {stage.close();}
+		    else {
+		    	System.out.println("new GAME");
+		    	 // Create the FXMLLoader 
+		        FXMLLoader loader;
+				try {
+					loader = new FXMLLoader(new File("ressources/main_scene.fxml").toURI().toURL());
+				
+			        loader.setControllerFactory(controllerClass -> new MainController(this,(Stage)pseudo.getScene().getWindow(), pseudo.getText()));
+			        // Create the Pane and all Details
+			        Pane root = (Pane) loader.load();
+			        
+				    Stage stage2 = new Stage();
+				    stage2.initModality(Modality.APPLICATION_MODAL);
+			        stage2.initStyle(StageStyle.DECORATED);
+			        // Create the Scene
+			        Scene scene = new Scene(root);
+			        // Set the Scene to the Stage
+			        stage2.setScene(scene);
+	
+			        // Set the Title to the Stage
+			        stage2.setTitle("Main Scene");
+			        stage2.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			            public void handle(WindowEvent we) {
+			        		Platform.exit();
+			                System.exit(0);
+			            }
+			        });
+			        scene.getRoot().requestFocus();
+			        stage2.show();
+			        
+					} catch (MalformedURLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			    }
+			
 		}
 		else 
 		{
@@ -183,8 +230,8 @@ public class MenuController {
 	
 	
 	//Passe le champ pseudo en inactif 
-	public void setFieldDisable() {
-		pseudo.setEditable(false);
+	public void isNewGame(boolean state) {
+		this.isNewGame = state;
 	}
 	
 
