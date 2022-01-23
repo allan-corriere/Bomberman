@@ -34,8 +34,6 @@ public class GenerateMap {
     			}
     		}
     	}
-    	
-    	//System.out.println(mapToSend);
 	}
 	
 	//to generate random
@@ -53,7 +51,7 @@ public class GenerateMap {
 	    return (arr[l] >= r) ? l : -1;
 	}
 	 
-	//to generate random
+	//generation aleatoire
 	static int myRand(int arr[], int freq[], int n)
 	{
 	    // Create and fill prefix array

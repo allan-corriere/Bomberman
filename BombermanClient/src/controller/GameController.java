@@ -2,13 +2,13 @@ package controller;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.Socket;
 import java.net.URL;
 import java.util.*;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -24,7 +24,6 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import socket.GameClient;
 import socket.MessageReceived;
 import socket.SocketReader;
 import socket.SocketWriter;
@@ -34,7 +33,6 @@ import gameobject.bonus.BombNumberBonus;
 import gameobject.bonus.BombPowerBonus;
 import gameobject.bonus.Bonus;
 import gameobject.bonus.PlayerSpeedBonus;
-import gamescene.Level;
 
 
 
@@ -47,9 +45,6 @@ public class GameController {
 	private Stage menuDisplay ;
 	private MenuController menuController;
 	public Text mainMessage = new Text("");
-	
-	@FXML 
-	private Pane RBox;
 	
 	private boolean connected =true;
 	
@@ -64,8 +59,10 @@ public class GameController {
 	private int totalColumn = 0;
 	private String userName;
 	
-
+	@FXML 
+	private Pane RBox;
 	
+
     public GameController(MenuController menuController, Stage menu,String Username) {
 		this.userName=Username;
 		this.menuDisplay = menu;
@@ -83,7 +80,7 @@ public class GameController {
 
     	// Connexion au serveur
     	try {
-			GameClient client = new GameClient(menuController.getIP(), 65432, "Osloh");    	
+    		Socket client = new Socket(menuController.getIP(), 65432);    	
 	    	//lancement de la connexion
 			this.sw = new SocketWriter(client);
 			new Thread(this.sw).start();	
@@ -109,13 +106,13 @@ public class GameController {
         	for (GameObject object : gameObjectList) {
         		RBox.getChildren().add(object.fxLayer);
         	  	//placer les fx des bonus
-            	if(object instanceof Brick) { //prompt when  bonus
+            	if(object instanceof Brick) { //placer les bonus
         			if(((Brick) object).brickBonus != null) {
         				RBox.getChildren().add(((Brick) object).brickBonus.fxLayer);
         			}
             	}
         	}
-        	//main centered message
+        	//Message central
         	mainMessage.setText("En attente de la connexion de tout les joueurs");
             mainMessage.setTextOrigin(VPos.TOP);
             mainMessage.setFont(Font.font(null, FontWeight.BOLD, 25));
@@ -124,6 +121,7 @@ public class GameController {
             mainMessage.layoutYProperty().bind(RBox.heightProperty().subtract(mainMessage.prefHeight(-1)).divide(2));
     	}
     	else {
+    		//tâche de retour au menu
     		Timer t = new Timer();
     		TimerTask tfailed = new TimerTask() {
         		
@@ -138,11 +136,10 @@ public class GameController {
 
     }
     
-  //Gestion des saisies clavier pour d�placements personnage
+  //Gestion des saisies clavier pour déplacements personnage
     
 	@FXML
 	private void KeyPressed(KeyEvent event) {
-		System.out.println(messageReceivedPlayStatus.getMessage());
 		if(connected && player.isAlive() && messageReceivedPlayStatus.getMessage() == "start") {
 			player.movePress(event.getCode(), RBox, gameObjectList);
 			player.placeBomb(event.getCode(),RBox,gameObjectList, mainMessage);
@@ -257,7 +254,9 @@ public class GameController {
 			public void run() { //player dead
 				Stage stage =  (Stage) RBox.getScene().getWindow();
 				stage.close();
-				//error page !!!
+				//retour au menu
+				menuDisplay.show();
+				//page d'erreur
 				FXMLLoader fxmlLoader2;
 				try {
 					fxmlLoader2 = new FXMLLoader(new File("ressources/erreur.fxml").toURI().toURL());
@@ -279,8 +278,6 @@ public class GameController {
 					// TODO Auto-generated catch block
 					f.printStackTrace();
 				}
-				//back to menu
-				menuDisplay.show();
 			}
 		});
     }

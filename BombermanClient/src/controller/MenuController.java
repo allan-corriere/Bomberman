@@ -4,11 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
+
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -17,17 +16,13 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import sql.ConnectSql;
 
 public class MenuController {
 	@FXML 
@@ -47,8 +42,6 @@ public class MenuController {
 	
 	public static final String IP_ADDRESS_PATTERN = "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}";
 	private String message;
-	private boolean isNewGame = true;
-	
 	
     public MenuController() 
     {
@@ -86,7 +79,7 @@ public class MenuController {
 
 	    	 // Create the FXMLLoader 
 	        FXMLLoader loader;
-			try {
+			try { // lancement du jeu
 				loader = new FXMLLoader(new File("ressources/main_scene.fxml").toURI().toURL());
 			
 		        loader.setControllerFactory(controllerClass -> new GameController(this,(Stage)pseudo.getScene().getWindow(), pseudo.getText()));
@@ -133,7 +126,7 @@ public class MenuController {
 			else 
 				message = "REMPLIR TOUS LES CHAMPS!";
 			FXMLLoader fxmlLoader2;
-			try {
+			try { // message d'erreur
 				fxmlLoader2 = new FXMLLoader(new File("ressources/erreur.fxml").toURI().toURL());
 			    fxmlLoader2.setControllerFactory(controllerClass -> new errorController(message));
 			    VBox root1 = (VBox) fxmlLoader2.load();
@@ -161,7 +154,7 @@ public class MenuController {
 		if (verifIP(ip.getText())==true){
 			try
 		    {
-	
+				//chargement page highscore
 			    FXMLLoader fxmlLoader2 = new FXMLLoader(new File("ressources/highscores.fxml").toURI().toURL());
 			    fxmlLoader2.setControllerFactory(controllerClass -> new HighScoreController(ip.getText()));
 			    VBox root1 = (VBox) fxmlLoader2.load();
@@ -182,7 +175,7 @@ public class MenuController {
 		else {
 			message = "SAISIR UNE ADRESSE IP!";
 			FXMLLoader fxmlLoader2;
-			try {
+			try { //message d'erreur
 				fxmlLoader2 = new FXMLLoader(new File("ressources/erreur.fxml").toURI().toURL());
 			    fxmlLoader2.setControllerFactory(controllerClass -> new errorController(message));
 			    VBox root1 = (VBox) fxmlLoader2.load();
@@ -210,7 +203,7 @@ public class MenuController {
 	@FXML 
 	private void creditsClik(MouseEvent event) {
 	    try
-	    {
+	    { //load crédits
 		    FXMLLoader fxmlLoader2 = new FXMLLoader(new File("ressources/credits.fxml").toURI().toURL());     
 		    VBox root1 = (VBox) fxmlLoader2.load();
 		    Stage stage2 = new Stage();
@@ -218,7 +211,7 @@ public class MenuController {
 		    stage2.setScene(scene2);
 		    stage2.initModality(Modality.APPLICATION_MODAL);
 		    stage2.initStyle(StageStyle.DECORATED);
-		    stage2.setTitle("Cr�dits");
+		    stage2.setTitle("Crédits");
 		    scene2.getRoot().requestFocus();
 		    stage2.showAndWait();
 	    }

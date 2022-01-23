@@ -3,10 +3,9 @@ package gameobject.actions;
 
 import java.util.*;
 
-import animations.ExplodeAnims;
 import gameobject.Bomb;
 import gameobject.attribute.GameObject;
-import javafx.scene.layout.Pane;
+
 
 public class ThreadBomb extends Thread {
 	private Bomb bomb;

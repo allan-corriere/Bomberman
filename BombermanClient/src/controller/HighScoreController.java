@@ -1,23 +1,11 @@
 package controller;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
-
 import sql.ConnectSql;
 
 public class HighScoreController {
@@ -66,7 +54,7 @@ public class HighScoreController {
     @FXML
     private void initialize() 
     {
-    	ConnectSql dBCon = new ConnectSql(ip,"test","toto","toto");
+    	ConnectSql dBCon = new ConnectSql(ip,"bombermandb","bomberuser","bombermdp");
 		ArrayList<String> test = dBCon.getTab();
 
 		int i=1;

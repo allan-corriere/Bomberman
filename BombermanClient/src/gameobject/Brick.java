@@ -6,10 +6,7 @@ import java.util.Timer;
 import gameobject.attribute.DestructableObject;
 import gameobject.attribute.GameObject;
 import gameobject.attribute.UnmovableObject;
-import gameobject.bonus.BombNumberBonus;
-import gameobject.bonus.BombPowerBonus;
 import gameobject.bonus.Bonus;
-import gameobject.bonus.PlayerSpeedBonus;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -36,8 +33,6 @@ public class Brick extends GameObject implements DestructableObject, UnmovableOb
 		fxLayer.setFitHeight(50.0);
 		fxLayer.setFitWidth(50.0);
 		this.brickBonus = bonus;
-
-		
 	}
 		
 	public Bonus getBrickBonus() {

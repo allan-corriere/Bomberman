@@ -1,8 +1,5 @@
 package gameobject.bonus;
 
-
-import java.util.Timer;
-
 import gameobject.attribute.Crossable;
 import gameobject.attribute.DestructableObject;
 import gameobject.attribute.GameObject;

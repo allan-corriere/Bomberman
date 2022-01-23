@@ -20,17 +20,17 @@ public class Enemy extends GameObject implements DestructableObject {
 		private Image face2 = new Image(new File("ressources/Enemy/face2.png").toURI().toString());
 		private double countFace;
 
-		private Image back0 = new Image(new File("ressources/Enemy/back0.png").toURI().toString());
+		//private Image back0 = new Image(new File("ressources/Enemy/back0.png").toURI().toString());
 		private Image back1 = new Image(new File("ressources/Enemy/back1.png").toURI().toString());
 		private Image back2 = new Image(new File("ressources/Enemy/back2.png").toURI().toString());
 		private double countBack;
 		
-		private Image right0 = new Image(new File("ressources/Enemy/right0.png").toURI().toString());
+		//private Image right0 = new Image(new File("ressources/Enemy/right0.png").toURI().toString());
 		private Image right1 = new Image(new File("ressources/Enemy/right1.png").toURI().toString());
 		private Image right2 = new Image(new File("ressources/Enemy/right2.png").toURI().toString());
 		private double countRight;
 
-		private Image left0 = new Image(new File("ressources/Enemy/left0.png").toURI().toString());
+		//private Image left0 = new Image(new File("ressources/Enemy/left0.png").toURI().toString());
 		private Image left1 = new Image(new File("ressources/Enemy/left1.png").toURI().toString());
 		private Image left2 = new Image(new File("ressources/Enemy/left2.png").toURI().toString());
 		private double countLeft;

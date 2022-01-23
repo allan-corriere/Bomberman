@@ -7,10 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import com.mysql.cj.*;
-import com.mysql.cj.jdbc.result.ResultSetMetaData;
-
-
 
 /*     Exemple d'utilisation 
  * ConnectSql dBCon = new ConnectSql("test","toto","toto");
@@ -43,14 +39,14 @@ public class ConnectSql {
 	
 		try {
 			
-			//Déclaration des drivers 
+			//Dï¿½claration des drivers 
 			Class.forName("com.mysql.cj.jdbc.Driver");	
 			
 		     cn = DriverManager.getConnection(url,login,password);
 		     st = cn.createStatement();
 		     ResultSet rs = st.executeQuery(selectGen);	
 		    	    	
-	    	 //Vérification de l'existence du player dans la liste 
+	    	 //Vï¿½rification de l'existence du player dans la liste 
 
 		    	 boolean exist = false;	 
 		    	 
@@ -98,7 +94,7 @@ public class ConnectSql {
 		
 		try {
 		
-		//Déclaration des drivers 
+		//Dï¿½claration des drivers 
 		Class.forName("com.mysql.cj.jdbc.Driver");
 	     cn = DriverManager.getConnection(url,login,password);
 	     st = cn.createStatement();

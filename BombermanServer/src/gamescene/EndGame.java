@@ -30,7 +30,7 @@ public class EndGame {
 	
 	public void start() {
 		Timer t = new Timer();
-		TimerTask tend = new TimerTask() { //check for match to end
+		TimerTask tend = new TimerTask() { //check pour la fin du match
     		
 			@Override
 			public void run() {
@@ -44,17 +44,17 @@ public class EndGame {
 				}
 				if(numberDead == 3) { //winner
 					sw.send("gameover:win");
-			    	ConnectSql dBCon = new ConnectSql("test","toto","toto");
+			    	ConnectSql dBCon = new ConnectSql("bombermandb","bomberuser","bombermdp");
 					dBCon.WriteTab(winner);
 				}
-				else if(numberDead == 4) { //draw match
+				else if(numberDead == 4) { //egalite
 					sw.send("gameover:draw");
 					
 				}
 				if(numberDead == 3 || numberDead == 4) {
 					t.cancel();
 					
-
+						//fermeture des connexions avec les clients
 					    try {
 					    	serverSocket.close();
 					    	System.out.println("server socket closed");

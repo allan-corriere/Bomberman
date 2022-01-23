@@ -2,6 +2,7 @@ package socket;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +19,7 @@ import javafx.scene.text.TextAlignment;
 
 public class SocketReader implements Runnable{
 	
-	private GameClient client;
+	private Socket client;
 	private SocketWriter sw;
 	private MessageReceived messageReceivedMap;
 	private MessageReceived messageReceivedId;
@@ -27,13 +28,13 @@ public class SocketReader implements Runnable{
 	private Enemy [] enemys = new Enemy[3];
 	private Timer gameTimer;
 	private Pane RBox;
-	//specific to method
+	//specific aux methodes
 	private Text mainMessage;
 	private List<String> enemysUsername = new ArrayList<String>();
 	private GameObject lastEnemy;
 	private int enemyCount;
 
-	public SocketReader(GameClient client, SocketWriter sw, List<GameObject> gameObjectList, MessageReceived messageReceivedMap, MessageReceived messageReceivedId, MessageReceived messageReceivedPlayStatus, Enemy [] enemys, Timer gameTimer, Pane RBox, Text mainMessage) {
+	public SocketReader(Socket client, SocketWriter sw, List<GameObject> gameObjectList, MessageReceived messageReceivedMap, MessageReceived messageReceivedId, MessageReceived messageReceivedPlayStatus, Enemy [] enemys, Timer gameTimer, Pane RBox, Text mainMessage) {
 		this.client = client;
 		this.sw = sw;
 		this.messageReceivedMap = messageReceivedMap;
@@ -67,20 +68,28 @@ public class SocketReader implements Runnable{
 					else if(received.startsWith("move:")) {
 						this.moveEnemies(received);
 					}
+					//bombe a placer
 					else if(received.startsWith("bomb:")) {
 						this.placeBomb(received);
 					}
+					//bonus a enlever (recuperer par un enemy)
 					else if(received.startsWith("bonus:")) {
 						this.deleteBonus(received);
 					}
+					//pseudo des autres joueurs
 					else if(received.startsWith("playerinfo:")) {
 						this.playerInfo(received);
 					}
+					//condition départ du jeu
 					else if(received.startsWith("gamestart:")) {
 						this.startGame(received);
-					}else if(received.startsWith("gameover:")) {
+					}
+					//fin de partie
+					else if(received.startsWith("gameover:")) {
 						this.endGame(received);
-					}else if(received.startsWith("dead:")) {
+					}
+					//joueur déconnecté du serveur
+					else if(received.startsWith("dead:")) {
 						this.death(received);
 					}
 				}
@@ -141,8 +150,6 @@ public class SocketReader implements Runnable{
 				enemys[2].setPosition(x,y);
 			}
 		}
-		//System.out.println("id->"+id+" x->"+x+" y->"+y);
-		
 	}
 	
 	public void placeBomb(String message) {
@@ -169,7 +176,6 @@ public class SocketReader implements Runnable{
 				RBox.getChildren().add(bomb.fxLayer);
 			}
 		});
-		//RBox.getChildren().add(bomb.fxLayer);
 		bomb.startBomb(gameObjectList);
 	}
 	
@@ -178,9 +184,7 @@ public class SocketReader implements Runnable{
 		double [] parsedMessage = Arrays.stream(message.split(":")).mapToDouble(Double::parseDouble).toArray();
 		double x = parsedMessage[0];
 		double y = parsedMessage[1];
-		
-		//System.out.println("x->"+x+" y->"+y);
-		
+			
 		GameObject found = null;
 		
 		for(GameObject object : this.gameObjectList) {
@@ -228,7 +232,7 @@ public class SocketReader implements Runnable{
 		}
 		Platform.runLater(new Runnable() {
 			@Override
-			public void run() { //player dead
+			public void run() { //player mort
 				mainMessage.setTextAlignment(TextAlignment.CENTER);
 		        mainMessage.layoutXProperty().bind(RBox.widthProperty().subtract(mainMessage.prefWidth(-1)).divide(2));
 		        mainMessage.layoutYProperty().bind(RBox.heightProperty().subtract(mainMessage.prefHeight(-1)).divide(2));
@@ -252,7 +256,7 @@ public class SocketReader implements Runnable{
 		
 		Platform.runLater(new Runnable() {
 			@Override
-			public void run() { //player dead
+			public void run() { //player mort
 				mainMessage.setTextAlignment(TextAlignment.CENTER);
 				mainMessage.layoutXProperty().bind(RBox.widthProperty().subtract(mainMessage.prefWidth(-1)).divide(2));
 				mainMessage.layoutYProperty().bind(RBox.heightProperty().subtract(mainMessage.prefHeight(-1)).divide(2));
@@ -260,7 +264,7 @@ public class SocketReader implements Runnable{
 		});
 	}
 	
-	public void death(String message) { //remove enemy that is disconnected
+	public void death(String message) { //enleve les enemis déconnectés
 		int result = (Integer.parseInt(message.split(":")[1])+1);
 		GameObject toRemove =null;
 		enemyCount = 0;
@@ -295,13 +299,13 @@ public class SocketReader implements Runnable{
 			}else if(enemyCount-1 != 0) { // -1 enemy
 				Platform.runLater(new Runnable() {
 					@Override
-					public void run() { //player dead
+					public void run() { //player mort
 						mainMessage.setVisible(true);
 						mainMessage.setText("Vous êtes mort !\n"+"Il reste "+(enemyCount-1)+" joueurs en vie");
 					}
 				});
 			}
-		}else { //player still alive
+		}else { //player toujours en vie
 			if(enemyCount-1 == 0) {
 				Platform.runLater(new Runnable() {
 					@Override

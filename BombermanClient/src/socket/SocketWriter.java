@@ -1,12 +1,13 @@
 package socket;
 
 import java.io.DataOutputStream;
+import java.net.Socket;
 
 public class SocketWriter implements Runnable{
 	
-	private GameClient client;
+	private Socket client;
 	
-	public SocketWriter(GameClient client) {
+	public SocketWriter(Socket client) {
 		this.client = client;
 	}
 

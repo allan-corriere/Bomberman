@@ -14,9 +14,7 @@ public class errorController {
 	@FXML 
 	private Label errorMessage;
 	
-	
 
-    
     public errorController(String Message) {
     	this.message = Message;
     }

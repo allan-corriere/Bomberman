@@ -20,12 +20,9 @@ import java.util.ArrayList;
 
 public class ConnectSql {
 
-	private String ip;
 	private String url = "jdbc:mysql://";
 	private String login;
 	private String password;
-	private String insert = "INSERT INTO highscore(nickname, n_victory) VALUES";
-	private String selectGen = "SELECT * from highscore";
 	private String select =  "SELECT * from highscore order by n_victory desc limit 5";
 	private Connection cn = null;
 	private Statement st = null; 

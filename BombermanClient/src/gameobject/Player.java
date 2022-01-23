@@ -1,10 +1,7 @@
 package gameobject;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-
 import gameobject.attribute.Crossable;
 import gameobject.attribute.DestructableObject;
 import gameobject.attribute.GameObject;
@@ -13,20 +10,13 @@ import gameobject.bonus.BombNumberBonus;
 import gameobject.bonus.BombPowerBonus;
 import gameobject.bonus.Bonus;
 import gameobject.bonus.PlayerSpeedBonus;
-import gameobject.Bomb;
-import animations.ExplodeAnims;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import socket.GameClient;
-import socket.SocketReader;
 import socket.SocketWriter;
-import sql.ConnectSql;
-
 
 
 public class Player extends GameObject implements MovableObject, DestructableObject{
@@ -86,18 +76,6 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		this.setMaxBomb(1);
 		this.setBombRadius(1);
 		this.alive = true;
-//		try {
-//			GameClient client = new GameClient("localhost", 65432, "Osloh");
-//			new Thread(new SocketReader(client)).start();
-//			
-//			this.sw = new SocketWriter(client);
-//			new Thread(this.sw).start();
-//			
-//			//this.sw = new TestSW(client);
-//			//this.sw.run();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
 	}
 	
 	public void sendPositionToServer() {
@@ -112,6 +90,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		this.sw.send("bomb:"+bomb.getPosX()+":"+bomb.getPosY()+":"+this.bombRadius);
 	}
 
+	// Ajout de la derniere touche pressé dans une liste, le système essai les mouvements des touches préssées de la dernière préssée à la première
 	public void movePress(KeyCode code,Pane RBox, List<GameObject> gameObjectList) {
 		int beforeSize = keyPressed.size();
 		if (code==KeyCode.Z) {
@@ -139,10 +118,11 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		}
 		int afterSize = keyPressed.size();
 		System.out.println("avant"+beforeSize+" apres"+afterSize);
+		//lancement du déplacement
 		if(beforeSize == 0 && afterSize ==1) {
 			moveTimer = new Timer();
 			//Move task
-			TimerTask tmove = new TimerTask() { //check for match to end
+			TimerTask tmove = new TimerTask() {
 	    		
 				@Override
 				public void run() {
@@ -158,8 +138,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 								
 				}
 	    	};
-	    
-	    	moveTimer.scheduleAtFixedRate(tmove, 0, 50);
+	       	moveTimer.scheduleAtFixedRate(tmove, 0, 50);
 		}
 	}
 	
@@ -233,7 +212,6 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 					}
 				}
 			}
-				//if(player.getPosX()+player.fxLayer.getFitWidth()<wall1.getPosX() && player.getPosX()>wall1.getPosX()+wall1.fxLayer.getFitWidth())
 			if(moveOk == true){
 				
 				this.setPosY(this.getPosY()-this.getSpeed());
@@ -516,16 +494,15 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 			Bomb bomb = new Bomb(this.gameTimer, bombRadius, mainMessage, sw);
 			bomb.fxLayer.toFront();
 			currentBombNb +=1;
-			//place bomb in the good place
+			//approximation de la position du joueur
 			double deltaX = this.getPosX() % 50.0;
 			double deltaY = this.getPosY() % 50.0;
 			
-			//player on square
+			//ajustement des positions
 			if(deltaX == 0 && deltaY == 0) {
 				bomb.setPosX(this.getPosX());
 				bomb.setPosY(this.getPosY());
 			}
-			//adjust bomb position to the nearest square
 			else {
 				if(deltaX > 50.0/2.0) {
 					nbSquareX += 1;
@@ -538,25 +515,22 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 				
 			}
 				
-
 			gameObjectList.add(bomb);
 			this.sendBombPositionToServer(bomb);
 			bomb.fxLayer.setVisible(false);
 			RBox.getChildren().add(bomb.fxLayer);
 			bomb.startBomb(gameObjectList);
 
-			
-			//task to decount the bomb once explode
+
+			//tache d'explosion de la bombe à h+3sec
 			TimerTask task = new TimerTask()
 	    	{
-
 	    	    @Override
 	    	    public void run()
 	    	    {
 	    	    	currentBombNb -= 1;
 	    	    
 	    	    }
-
 	    	};
 			gameTimer.schedule(task, 3000);
 
@@ -574,7 +548,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		double deltaY = this.getPosY() % 50.0;
 		Bonus selectedBonus = null;
 		
-		//player on square
+		//approximation de la position du joueur
 		if(deltaX == 0 && deltaY == 0) {
 			for(GameObject object : gameObjectList) {
 				if(object instanceof Bonus){
@@ -585,7 +559,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 			}
 				
 		}
-		//adjust player position to the nearest square
+		//ajustement de la position
 		else {
 			if(deltaX > 50.0/2.0) {
 				nbSquareX += 1;
@@ -603,7 +577,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 			
 		}
 		
-		//apply bonus to player
+		//affecter le bonus au joueur
 		if(selectedBonus != null) {
 			this.sendBonusToServer(selectedBonus.getPosX(), selectedBonus.getPosY());
 			//speed

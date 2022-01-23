@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
-
 import gameobject.actions.ThreadBomb;
 import gameobject.attribute.DestructableObject;
 import gameobject.attribute.GameObject;
@@ -36,15 +34,10 @@ public class Bomb extends GameObject implements UnmovableObject {
 	private Text mainMessage;
 	private int enemyCount;
 	private GameObject lastEnemy  = new GameObject();
-	private Player player ;
 	private SocketWriter sw;
 
-
-	
-	
-	
-private Image SmallBomb1 = new Image(new File("ressources/bomb.png").toURI().toString());
-private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.png").toURI().toString());
+	private Image SmallBomb1 = new Image(new File("ressources/bomb.png").toURI().toString());
+	//private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.png").toURI().toString());
 
 
 	
@@ -68,30 +61,26 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 
 	
 	public void explode(List<GameObject> gameObjectList) {
-		
-
 		List<GameObject> objectToRemove = new ArrayList<GameObject>();
 		enemyCount = 0;
-		for(int i = 1; i <= radius; i++) {
+		for(int i = 1; i <= radius; i++) { // check des objets a détruire
 			for (GameObject object : gameObjectList) {
-				//count number of enemies alive
+				//nombre d'enemis en vie
 				if(object instanceof Enemy) {
 					enemyCount += 1;
 				}
 				
-				//get the approximation of position
+				//prendre la case la plus proche de la position d'un objet
 				double objectPosX = (int) (object.getPosX() / 50.0);
 				double deltaX = object.getPosX() % 50.0;
 				double objectPosY = (int) (object.getPosY() / 50.0);
 				double deltaY = object.getPosY() % 50.0;
 
-				//player on square
+				//rectification des coordonnées
 				if(deltaX == 0 && deltaY == 0) {
 					objectPosX = object.getPosX();
 					objectPosY = object.getPosY();
-				}
-				//adjust bomb position to the nearest square
-				else {
+				}else {
 					if(deltaX > 50.0/2.0) {
 						objectPosX += 1;
 					
@@ -129,7 +118,7 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 						destructYMinus = true;
 					} 
 				}
-				//check for blocking object in field including brick to ndo't break next object
+				//detection des objets non explosifs (égalements des bricks bloquantes)
 				if(!(object instanceof DestructableObject) || object instanceof Brick) {
 				// X plus
 				if(objectPosX == (this.getPosX()+50.0*i) && objectPosY == this.getPosY()) {
@@ -150,13 +139,12 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 				}
 			}
 		}
-		//remove object from the game
+		//retrait des objets du jeu
 		for(GameObject object : objectToRemove) {
 			object.fxLayer.setVisible(false);
-			if(object instanceof Brick) { //prompt when  bonus
+			if(object instanceof Brick) { //affichage des bonus
 				if(((Brick) object).brickBonus != null) { //bricks
 					Bonus bonus = ((Brick) object).brickBonus;
-					//gameObjectList.remove(object);
 					bonus.fxLayer.setVisible(true);		
 					gameObjectList.add(bonus);
 				}
@@ -164,16 +152,15 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 			gameObjectList.remove(object);
 			
 			if(object instanceof Player) {
-				if(((Player) object).isAlive()) { // send death to server
+				if(((Player) object).isAlive()) { // envoyer la mort du joueur au serveur
 					((Player) object).setAlive(false);
 					this.sw.send("playerdeath:");
 				}
-				
-				this.player = (Player)object;
+
 				if(enemyCount != 1) {
 					Platform.runLater(new Runnable() {
 						@Override
-						public void run() { //player dead
+						public void run() { //player mort
 							mainMessage.setVisible(true);
 							if(!mainMessage.getText().contains("Vous avez gagné !!!")) { // si la bombe explose à la fin de la partie
 								mainMessage.setText("Vous êtes mort !\n"+"Il reste "+(enemyCount)+" joueurs en vie");
@@ -188,7 +175,7 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 					}
 					Platform.runLater(new Runnable() {
 						@Override
-						public void run() { //player dead
+						public void run() { //player mort
 							mainMessage.setVisible(true);
 							mainMessage.setText("Vous êtes mort !\n Le joueur n°"+((Enemy)lastEnemy).getPlayerNumber()+" "+((Enemy)lastEnemy).getUserName()+" remporte la partie");
 						}
@@ -213,13 +200,13 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 					}else if(enemyCount-1 != 0) { // -1 enemy
 						Platform.runLater(new Runnable() {
 							@Override
-							public void run() { //player dead
+							public void run() { //player mort
 								mainMessage.setVisible(true);
 								mainMessage.setText("Vous êtes mort !\n"+"Il reste "+(enemyCount-1)+" joueurs en vie");
 							}
 						});
 					}
-				}else { //player still alive
+				}else { //joueur toujours vivant
 					if(enemyCount-1 == 0) {
 						Platform.runLater(new Runnable() {
 							@Override
@@ -244,13 +231,7 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 			}
 			
 		}
-		
-		
-		
 		// Animation explosion bombe 
-		
-
-
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -265,8 +246,6 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 
 	}
 	
-
-
 	public int getTimer() {
 		return timer;
 	}
