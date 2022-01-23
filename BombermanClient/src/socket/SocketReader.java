@@ -82,6 +82,7 @@ public class SocketReader implements Runnable{
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+			System.out.println("Connection close by server");
 		} finally {
 			try {
 				if(dis != null) {

@@ -35,59 +35,7 @@ public class ConnectSql {
 		this.password = password ;
 		this.url = this.url+dbName ;
 	}
-	
-	public void WriteTab(String playerId) {
-	
-		try {
-			
-			//Déclaration des drivers 
-			Class.forName("com.mysql.cj.jdbc.Driver");	
-			
-		     cn = DriverManager.getConnection(url,login,password);
-		     st = cn.createStatement();
-		     ResultSet rs = st.executeQuery(selectGen);	
-		    	    	
-	    	 //Vérification de l'existence du player dans la liste 
-
-		    	 boolean exist = false;	 
-		    	 
-		    	   while (rs.next()) {
-		    	         if (rs.getString(1).equals(playerId)) {
-		    	        	 exist = true;
-		    	         }
-		    	   }
-		    	   rs.close();
-		    	   
-		    	   if (exist == false) {
-		    		  String  insertFirst = insert + "('"+playerId+"', 1)";
-		    		   st.executeUpdate(insertFirst);
-		    	   }
-		    	   else 
-		    	   {
-		    		   String update = "UPDATE highscore SET n_victory = n_victory+1 WHERE nickname = '"+playerId+"'";
-		    		   st.executeUpdate(update);
-		    	   }
-
-		    	}
 		
-		
-		catch (ClassNotFoundException | SQLException e) {
-				e.printStackTrace();
-		}
-	    // Handle any errors that may have occurred.
-		
-		finally {
-			try 
-			{
-				cn.close();
-				st.close();
-			}
-			catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
 	public ArrayList<String> getTab ()
 	{
 		
@@ -95,7 +43,7 @@ public class ConnectSql {
 		
 		try {
 		
-		//Déclaration des drivers 
+		//Dï¿½claration des drivers 
 		Class.forName("com.mysql.cj.jdbc.Driver");
 	     cn = DriverManager.getConnection(url,login,password);
 	     st = cn.createStatement();
