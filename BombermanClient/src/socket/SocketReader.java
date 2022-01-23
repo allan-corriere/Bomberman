@@ -280,6 +280,8 @@ public class SocketReader implements Runnable{
 		if(toRemove != null) {
 			toRemove.fxLayer.setVisible(false);
 			gameObjectList.remove(toRemove);
+		}else { //si l'enemi est déconnecté après sa mort
+			enemyCount +=1;
 		}
 		//main message
 		if(mainMessage.isVisible()) { //si message affiché = joueur mort
