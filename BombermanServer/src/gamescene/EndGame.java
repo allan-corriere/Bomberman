@@ -30,9 +30,14 @@ public class EndGame {
 					}
 				}
 				if(numberDead == 3) {
-					sw.send("gameover:");
+					sw.send("gameover:win");
 					t.cancel();
 				}
+				else if(numberDead == 4) {
+					sw.send("gameover:draw");
+					t.cancel();
+				}
+				
 			}
     	};
     

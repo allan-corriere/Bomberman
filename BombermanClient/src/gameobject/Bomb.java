@@ -175,7 +175,9 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 						@Override
 						public void run() { //player dead
 							mainMessage.setVisible(true);
-							mainMessage.setText("Vous êtes mort !\n"+"Il reste "+(enemyCount)+" joueurs en vie");
+							if(!mainMessage.getText().contains("Vous avez gagné !!!")) { // si la bombe explose à la fin de la partie
+								mainMessage.setText("Vous êtes mort !\n"+"Il reste "+(enemyCount)+" joueurs en vie");
+							}
 						}
 					});
 				}else {
@@ -208,7 +210,7 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 								mainMessage.setText("Vous êtes mort !\n Le joueur n°"+((Enemy)lastEnemy).getPlayerNumber()+" "+((Enemy)lastEnemy).getUserName()+" remporte la partie");
 							}
 						});
-					}else { // -1 enemy
+					}else if(enemyCount-1 != 0) { // -1 enemy
 						Platform.runLater(new Runnable() {
 							@Override
 							public void run() { //player dead

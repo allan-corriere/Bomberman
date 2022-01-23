@@ -233,8 +233,12 @@ public class SocketReader implements Runnable{
 	}
 	
 	public void endGame(String message) {
-	
-		mainMessage.setText(mainMessage.getText()+"\n appuyez sur entrée pour revenir au menu");
+		String result = message.split(":")[1];
+		if(result.equals("win")) {
+			mainMessage.setText(mainMessage.getText()+"\n appuyez sur entrée pour revenir au menu");
+		}else if(result.equals("draw")) {
+			mainMessage.setText("Match nul !\n appuyez sur entrée pour revenir au menu");
+		}
 		this.messageReceivedPlayStatus.setMessage("end"); // les joueurs ne peuvent plus bouger
 		Platform.runLater(new Runnable() {
 			@Override
