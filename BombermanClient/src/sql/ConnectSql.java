@@ -20,7 +20,8 @@ import java.util.ArrayList;
 
 public class ConnectSql {
 
-	private String url = "jdbc:mysql://localhost/";
+	private String ip;
+	private String url = "jdbc:mysql://";
 	private String login;
 	private String password;
 	private String insert = "INSERT INTO highscore(nickname, n_victory) VALUES";
@@ -29,11 +30,11 @@ public class ConnectSql {
 	private Connection cn = null;
 	private Statement st = null; 
 	
-	public ConnectSql(String dbName,String login, String password){
+	public ConnectSql(String ipDB,String dbName,String login, String password){
 		
 		this.login = login;
 		this.password = password ;
-		this.url = this.url+dbName ;
+		this.url = this.url+ipDB+"/"+dbName ;
 	}
 		
 	public ArrayList<String> getTab ()

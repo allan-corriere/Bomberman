@@ -55,15 +55,18 @@ public class HighScoreController {
 	@FXML private Label victory9;
 	@FXML private Label victory10;
 	
+	private String ip;
 	
-    public HighScoreController() 
+	
+    public HighScoreController(String ipServ) 
     {
+    	this.ip=ipServ;
     }
      
     @FXML
     private void initialize() 
     {
-    	ConnectSql dBCon = new ConnectSql("test","toto","toto");
+    	ConnectSql dBCon = new ConnectSql(ip,"test","toto","toto");
 		ArrayList<String> test = dBCon.getTab();
 
 		int i=1;

@@ -163,6 +163,7 @@ public class MenuController {
 		try
 	    {
 		    FXMLLoader fxmlLoader2 = new FXMLLoader(new File("ressources/highscores.fxml").toURI().toURL());
+		    fxmlLoader2.setControllerFactory(controllerClass -> new HighScoreController(ip.getText()));
 		    VBox root1 = (VBox) fxmlLoader2.load();
 		    Stage stage2 = new Stage();
 		    Scene scene2 = new Scene(root1);
