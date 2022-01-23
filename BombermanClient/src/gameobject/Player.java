@@ -1,6 +1,7 @@
 package gameobject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -14,14 +15,17 @@ import gameobject.bonus.Bonus;
 import gameobject.bonus.PlayerSpeedBonus;
 import gameobject.Bomb;
 import animations.ExplodeAnims;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import socket.GameClient;
 import socket.SocketReader;
 import socket.SocketWriter;
+import sql.ConnectSql;
 
 
 
@@ -29,6 +33,15 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 	private SocketWriter sw;
 	private boolean alive;
 	private double speed;
+	private Timer gameTimer;
+	private Timer moveTimer;
+	//move
+	private ArrayList<String> keyPressed = new ArrayList<>();
+	private boolean zPressed = false;
+	private boolean qPressed = false;
+	private boolean sPressed = false;
+	private boolean dPressed = false;
+	
 	//bomb spec
 	private int maxBomb;
 	private int currentBombNb;
@@ -99,15 +112,111 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		this.sw.send("bomb:"+bomb.getPosX()+":"+bomb.getPosY()+":"+this.bombRadius);
 	}
 
-	public void move(KeyCode code,Pane RBox, List<GameObject> gameObjectList) {
+	public void movePress(KeyCode code,Pane RBox, List<GameObject> gameObjectList) {
+		int beforeSize = keyPressed.size();
+		if (code==KeyCode.Z) {
+			if(!zPressed) {
+				keyPressed.add("up");
+			}
+			zPressed = true;
+		}else if (code==KeyCode.Q) {
+			if(!qPressed) {
+				keyPressed.add("left");
+			}
+			qPressed = true;
+		}		
+		else if (code==KeyCode.S) {
+			if(!sPressed) {
+				keyPressed.add("down");
+			}
+			sPressed = true;
+		}
+		else if (code==KeyCode.D) {
+			if(!dPressed) {
+				keyPressed.add("right");
+			}
+			dPressed = true;
+		}
+		int afterSize = keyPressed.size();
+		System.out.println("avant"+beforeSize+" apres"+afterSize);
+		if(beforeSize == 0 && afterSize ==1) {
+			moveTimer = new Timer();
+			//Move task
+			TimerTask tmove = new TimerTask() { //check for match to end
+	    		
+				@Override
+				public void run() {
+					boolean moveOk = false;
+					int inputToTake = 1;
+					while(!moveOk) {
+						moveOk = move(keyPressed.get(keyPressed.size() - inputToTake),RBox,gameObjectList);
+						inputToTake += 1;
+						if(inputToTake > keyPressed.size()) {
+							moveOk = true;
+						}
+					}
+								
+				}
+	    	};
+	    
+	    	moveTimer.scheduleAtFixedRate(tmove, 0, 50);
+		}
+	}
+	
+	public void moveRelease(KeyCode code,Pane RBox, List<GameObject> gameObjectList) {
+		int beforeSize = keyPressed.size();
+		if (code==KeyCode.Z) {
+			if(zPressed) {
+				System.out.println(keyPressed.size());
+				keyPressed.remove("up");
+				System.out.println(keyPressed.size());
+			}
+			zPressed = false;
+		}else if (code==KeyCode.Q) {
+			if(qPressed) {
+				System.out.println(keyPressed.size());
+				keyPressed.remove("left");
+				System.out.println(keyPressed.size());
+			}
+			qPressed = false;
+		}
+		else if (code==KeyCode.S) {
+			if(sPressed) {
+				System.out.println(keyPressed.size());
+				keyPressed.remove("down");
+				System.out.println(keyPressed.size());
+			}
+			sPressed = false;
+		}
+		else if (code==KeyCode.D) {
+			if(dPressed) {
+				System.out.println(keyPressed.size());
+				keyPressed.remove("right");
+				System.out.println(keyPressed.size());
+			}
+			dPressed = false;
+		}
+		int afterSize = keyPressed.size();
+		if(beforeSize == 1 && afterSize ==0) {
+	    	moveTimer.cancel();
+		}
+	}
+	
+	public boolean move(String code,Pane RBox, List<GameObject> gameObjectList) {
 		boolean moveOk = true;
 		double playerTop = this.getPosY()+0.1;
 		double playerBottom = this.getPosY()+49.99;
 		double playerLeft = this.getPosX()+0.1;
 		double playerRight = this.getPosX()+49.00;
-		this.fxLayer.toFront();
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				fxLayer.toFront();
+			}
+		});
 		
-		if (code ==KeyCode.Z)
+		
+		if (code.equals("up"))
 		{
 			if (this.getPosY()>0)
 			{
@@ -128,7 +237,12 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 			if(moveOk == true){
 				
 				this.setPosY(this.getPosY()-this.getSpeed());
-				this.fxLayer.toBack();   /// Garder les bombes visibles 
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						fxLayer.toBack();   /// Garder les bombes visibles 
+					}
+				}); 
 
 				//Animations du personnage //////////////
 							
@@ -166,7 +280,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 			}
 		}
 		
-		if (code==KeyCode.S)
+		if (code.equals("down"))
 		{
 			//check si un object ne bloque pas le passage
 			for (GameObject object : gameObjectList) {
@@ -184,8 +298,12 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 
 		if(moveOk == true) {
 			this.setPosY(this.getPosY()+this.getSpeed());
-			this.fxLayer.toBack();   /// Garder les bombes visibles 
-
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					fxLayer.toBack();   /// Garder les bombes visibles 
+				}
+			});
 			
 			
 			//Animations du personnage //////////////////
@@ -225,7 +343,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		
 		}
 		
-		if (code==KeyCode.Q)
+		if (code.equals("left"))
 		{
 			
 			if (this.getPosX()>0) {
@@ -245,7 +363,13 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 				if(moveOk == true) {
 					
 					this.setPosX(this.getPosX()-this.getSpeed());
-					this.fxLayer.toBack();   /// Garder les bombes visibles 
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() { 
+							fxLayer.toBack();   /// Garder les bombes visibles 
+						}
+					});
+					
 
 					
 					//Animations du personnage ////////////////////
@@ -286,7 +410,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 			PlayerOnBonus(RBox, gameObjectList);
 		}
 		
-		if (code==KeyCode.D)
+		if (code.equals("right"))
 		{
 			double prefWidth = ((Pane) this.fxLayer.getParent()).getPrefWidth();
 			if (prefWidth-this.getPosX()>this.fxLayer.getFitWidth()){
@@ -307,8 +431,13 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 				}
 				if(moveOk == true) {
 					this.setPosX(this.getPosX()+this.getSpeed());
-					this.fxLayer.toBack();   /// Garder les bombes visibles 
-
+					
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() { 
+							fxLayer.toBack();   /// Garder les bombes visibles 
+						}
+					});
 					
 					//Animations du personnage ////////////////::
 					
@@ -347,6 +476,9 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		}
 		if(moveOk) {
 			this.sendPositionToServer();
+			return moveOk;	
+		}else {
+			return moveOk;
 		}
 	}
 	
