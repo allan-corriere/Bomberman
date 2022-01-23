@@ -13,7 +13,7 @@ import player.Player;
 import socket.SocketReader;
 import socket.SocketWriter;
 
-public class Connection {
+public class Main {
 	public static void main(String[] args) {
 		boolean ServerRun = true;
 		while(ServerRun) {
