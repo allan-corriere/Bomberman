@@ -82,10 +82,9 @@ public class MenuController {
 			Label test = (Label)event.getSource();
 		    Stage stage = (Stage)test.getScene().getWindow();
 		    userName = pseudo.getText();
-		    System.out.println("before if : "+isNewGame);
-		    if (isNewGame==true) {stage.close();}
-		    else {
-		    	System.out.println("new GAME");
+		    stage.close();
+		    
+		    if (isNewGame==false) {
 		    	 // Create the FXMLLoader 
 		        FXMLLoader loader;
 				try {
@@ -160,24 +159,53 @@ public class MenuController {
 	
 	@FXML
 	private void highscore(MouseEvent event) {
-		try
-	    {
-		    FXMLLoader fxmlLoader2 = new FXMLLoader(new File("ressources/highscores.fxml").toURI().toURL());
-		    fxmlLoader2.setControllerFactory(controllerClass -> new HighScoreController(ip.getText()));
-		    VBox root1 = (VBox) fxmlLoader2.load();
-		    Stage stage2 = new Stage();
-		    Scene scene2 = new Scene(root1);
-		    stage2.setScene(scene2);
-		    stage2.initModality(Modality.APPLICATION_MODAL);
-		    stage2.initStyle(StageStyle.UNDECORATED);
-		    stage2.setTitle("HighScores");
-		    scene2.getRoot().requestFocus();
-		    stage2.showAndWait();
-	    }
+		if (verifIP(ip.getText())==true){
+			try
+		    {
 	
-    	catch (IOException e) {
-			e.printStackTrace();
+			    FXMLLoader fxmlLoader2 = new FXMLLoader(new File("ressources/highscores.fxml").toURI().toURL());
+			    fxmlLoader2.setControllerFactory(controllerClass -> new HighScoreController(ip.getText()));
+			    VBox root1 = (VBox) fxmlLoader2.load();
+			    Stage stage2 = new Stage();
+			    Scene scene2 = new Scene(root1);
+			    stage2.setScene(scene2);
+			    stage2.initModality(Modality.APPLICATION_MODAL);
+			    stage2.initStyle(StageStyle.UNDECORATED);
+			    stage2.setTitle("HighScores");
+			    scene2.getRoot().requestFocus();
+			    stage2.showAndWait();
+				}
+		    
+	    	catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+		else {
+			message = "SAISIR UNE ADRESSE IP!";
+			FXMLLoader fxmlLoader2;
+			try {
+				fxmlLoader2 = new FXMLLoader(new File("ressources/erreur.fxml").toURI().toURL());
+			    fxmlLoader2.setControllerFactory(controllerClass -> new errorController(message));
+			    VBox root1 = (VBox) fxmlLoader2.load();
+			    Stage stage2 = new Stage();
+			    Scene scene2 = new Scene(root1);
+			    stage2.setScene(scene2);
+			    stage2.initModality(Modality.APPLICATION_MODAL);
+			    stage2.initStyle(StageStyle.UNDECORATED);
+			    stage2.setTitle("Erreur");
+			    scene2.getRoot().requestFocus();
+			    stage2.showAndWait();
+			}
+		    catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}     
+		}
+			
+	    
 	}
 		
 	@FXML 
