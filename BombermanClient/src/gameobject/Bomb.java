@@ -32,7 +32,7 @@ public class Bomb extends GameObject implements UnmovableObject {
 	private boolean destructYMinus = false ;
 	
 	//attribute for message prompting
-	private Text endMessage;
+	private Text mainMessage;
 	private int enemyCount;
 	private GameObject lastEnemy  = new GameObject();
 	private Player player ;
@@ -47,11 +47,11 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 
 
 	
-	public Bomb(Timer gameTimer,int radius, Text endMessage) {
+	public Bomb(Timer gameTimer,int radius, Text mainMessage) {
 		this.gameTimer = gameTimer;
 		fxLayer = new ImageView(SmallBomb1);
 		this.radius = radius;
-		this.endMessage = endMessage;
+		this.mainMessage = mainMessage;
 		this.setPosX(0.0);
 		this.setPosY(0.0);
 		fxLayer.setFitHeight(50.0);
@@ -168,8 +168,8 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 					Platform.runLater(new Runnable() {
 						@Override
 						public void run() { //player dead
-							endMessage.setVisible(true);
-							endMessage.setText("Vous êtes mort !\n"+"Il reste "+(enemyCount)+" joueurs en vie");
+							mainMessage.setVisible(true);
+							mainMessage.setText("Vous êtes mort !\n"+"Il reste "+(enemyCount)+" joueurs en vie");
 						}
 					});
 				}else {
@@ -181,14 +181,14 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 					Platform.runLater(new Runnable() {
 						@Override
 						public void run() { //player dead
-							endMessage.setVisible(true);
-							endMessage.setText("Vous êtes mort !\n Le joueur n°"+((Enemy)lastEnemy).getPlayerNumber()+" "+((Enemy)lastEnemy).getUserName()+" remporte la partie");
+							mainMessage.setVisible(true);
+							mainMessage.setText("Vous êtes mort !\n Le joueur n°"+((Enemy)lastEnemy).getPlayerNumber()+" "+((Enemy)lastEnemy).getUserName()+" remporte la partie");
 						}
 					});
 				}
 			}
 			else if(object instanceof Enemy) {
-				if(endMessage.isVisible()) { //si message affiché = joueur mort
+				if(mainMessage.isVisible()) { //si message affiché = joueur mort
 					if(enemyCount-1 == 1) {
 						for(GameObject listenemy : gameObjectList) {
 							if(listenemy instanceof Enemy) {
@@ -198,16 +198,16 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 						Platform.runLater(new Runnable() { //win enemy
 							@Override
 							public void run() { //player dead
-								endMessage.setVisible(true);
-								endMessage.setText("Vous êtes mort !\n Le joueur n°"+((Enemy)lastEnemy).getPlayerNumber()+" "+((Enemy)lastEnemy).getUserName()+" remporte la partie");
+								mainMessage.setVisible(true);
+								mainMessage.setText("Vous êtes mort !\n Le joueur n°"+((Enemy)lastEnemy).getPlayerNumber()+" "+((Enemy)lastEnemy).getUserName()+" remporte la partie");
 							}
 						});
 					}else { // -1 enemy
 						Platform.runLater(new Runnable() {
 							@Override
 							public void run() { //player dead
-								endMessage.setVisible(true);
-								endMessage.setText("Vous êtes mort !\n"+"Il reste "+(enemyCount-1)+" joueurs en vie");
+								mainMessage.setVisible(true);
+								mainMessage.setText("Vous êtes mort !\n"+"Il reste "+(enemyCount-1)+" joueurs en vie");
 							}
 						});
 					}
@@ -217,8 +217,8 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 							@Override
 							public void run() {
 								player.setEndGame(true);
-								endMessage.setVisible(true);
-								endMessage.setText("Vous avez gagné !!!");
+								mainMessage.setVisible(true);
+								mainMessage.setText("Vous avez gagné !!!");
 							}
 						});
 					}
@@ -229,9 +229,9 @@ private Image BigBomb1 = new Image(new File("ressources/Bombes/bombs1/Bigbomb1.p
 					@Override
 					public void run() { //player dead
 						Pane RBox = (Pane)fxLayer.getParent();
-						endMessage.setTextAlignment(TextAlignment.CENTER);
-				        endMessage.layoutXProperty().bind(RBox.widthProperty().subtract(endMessage.prefWidth(-1)).divide(2));
-				        endMessage.layoutYProperty().bind(RBox.heightProperty().subtract(endMessage.prefHeight(-1)).divide(2));
+						mainMessage.setTextAlignment(TextAlignment.CENTER);
+				        mainMessage.layoutXProperty().bind(RBox.widthProperty().subtract(mainMessage.prefWidth(-1)).divide(2));
+				        mainMessage.layoutYProperty().bind(RBox.heightProperty().subtract(mainMessage.prefHeight(-1)).divide(2));
 					}
 				});
 			}

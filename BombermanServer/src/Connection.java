@@ -5,9 +5,10 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-
+import java.util.TimerTask;
 
 import gamescene.GenerateMap;
+import gamescene.StartGame;
 import player.Player;
 import socket.SocketReader;
 import socket.SocketWriter;
@@ -49,6 +50,7 @@ public class Connection {
 	    			numberOfClient++;
 	    		}
 	    	}
+	    	//attente que tout les joueurs soient connectés
 	    	int nbPlayerReady = 0;
 	    	while(nbPlayerReady != 4) {
 	    		nbPlayerReady = 0;
@@ -58,10 +60,12 @@ public class Connection {
 		    		}
 		    	}
 	    	}
-	    	
+	    	//envoi des usernames aux clients
 	    	for (int i= 0; i < 4; i++) {
 	    		sw.send("playerinfo:"+players[i].getUserName());
 	    	}
+	    	StartGame startGame = new StartGame(sw);
+	    	startGame.start();
 //	        Socket client = serverSocket.accept();
 //	        new Thread(new SocketReader(client)).start();  
 //	        new Thread(new SocketWriter(client)).start();

@@ -374,7 +374,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 	}
 	
 	
-	public void placeBomb(KeyCode code, Pane RBox, List<GameObject> gameObjectList, Text endMessage) {
+	public void placeBomb(KeyCode code, Pane RBox, List<GameObject> gameObjectList, Text mainMessage) {
 		
 		int nbSquareX = (int) (this.getPosX() / 50.0);
 		int nbSquareY = (int) (this.getPosY() / 50.0);
@@ -382,7 +382,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 
 		if (code==KeyCode.SPACE && maxBomb > currentBombNb )
 		{
-			Bomb bomb = new Bomb(this.gameTimer, bombRadius, endMessage);
+			Bomb bomb = new Bomb(this.gameTimer, bombRadius, mainMessage);
 			bomb.fxLayer.toFront();
 			currentBombNb +=1;
 			//place bomb in the good place

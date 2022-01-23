@@ -42,6 +42,7 @@ public class MainController {
 	private SocketWriter sw;
 	private MessageReceived messageReceivedMap = new MessageReceived();
 	private MessageReceived messageReceivedId = new MessageReceived();
+	private MessageReceived messageReceivedPlayStatus = new MessageReceived();
 	private String UserName;
 
 	@FXML 
@@ -54,7 +55,7 @@ public class MainController {
 	public Player player;// = new Player(gameTimer, sw);
 	public Enemy [] enemys = new Enemy[3];
 	public Level masterLevel = new Level();
-	public Text endMessage = new Text("");
+	public Text mainMessage = new Text("");
 
 	public int[][] level = masterLevel.loadLevel02(); 
 	private int totalRow = 0;
@@ -84,7 +85,7 @@ public class MainController {
     	try {
 			GameClient client = new GameClient("localhost", 65432, "Osloh");    	
 	    	//lancement de la connexion
-			new Thread(new SocketReader(client, gameObjectList, messageReceivedMap, messageReceivedId, enemys, gameTimer, RBox, endMessage)).start();
+			new Thread(new SocketReader(client, gameObjectList, messageReceivedMap, messageReceivedId, messageReceivedPlayStatus, enemys, gameTimer, RBox, mainMessage)).start();
 			
 			this.sw = new SocketWriter(client);
 			new Thread(this.sw).start();
@@ -120,11 +121,13 @@ public class MainController {
     			}
         	}
     	}
-    	
-        endMessage.setTextOrigin(VPos.TOP);
-        endMessage.setFont(Font.font(null, FontWeight.BOLD, 25));
-        RBox.getChildren().add(endMessage);
-        endMessage.setVisible(false);
+    	mainMessage.setText("En attente de la connexion de tout les joueurs");
+        mainMessage.setTextOrigin(VPos.TOP);
+        mainMessage.setFont(Font.font(null, FontWeight.BOLD, 25));
+        RBox.getChildren().add(mainMessage);mainMessage.setTextAlignment(TextAlignment.CENTER);
+        mainMessage.layoutXProperty().bind(RBox.widthProperty().subtract(mainMessage.prefWidth(-1)).divide(2));
+        mainMessage.layoutYProperty().bind(RBox.heightProperty().subtract(mainMessage.prefHeight(-1)).divide(2));
+
 
     }
     
@@ -133,9 +136,10 @@ public class MainController {
 	@FXML
 	private void KeyPressed(KeyEvent event) {
 		//System.out.println("pressed"+event.getCode());
-		if(player.isAlive()) {
+		System.out.println(messageReceivedPlayStatus.getMessage());
+		if(player.isAlive() && messageReceivedPlayStatus.getMessage() == "go") {
 			player.move(event.getCode(), RBox, gameObjectList);
-			player.placeBomb(event.getCode(),RBox,gameObjectList, endMessage);
+			player.placeBomb(event.getCode(),RBox,gameObjectList, mainMessage);
 		}
 		
 		if (event.getCode().equals(KeyCode.ENTER) && (player.isAlive()==false || player.EndGame()==true))
@@ -149,7 +153,7 @@ public class MainController {
 	@FXML
 	private void KeyReleased(KeyEvent event) {
 		//System.out.println("relaché"+event.getCode());
-		if(player.isAlive()) {
+		if(player.isAlive() && messageReceivedPlayStatus.getMessage() == "go") {
 			player.resetLayer(event.getCode());	
 		}	
 	}
