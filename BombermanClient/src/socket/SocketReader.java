@@ -27,8 +27,11 @@ public class SocketReader implements Runnable{
 	private Enemy [] enemys = new Enemy[3];
 	private Timer gameTimer;
 	private Pane RBox;
+	//specific to method
 	private Text mainMessage;
 	private List<String> enemysUsername = new ArrayList<String>();
+	private GameObject lastEnemy;
+	private int enemyCount;
 
 	public SocketReader(GameClient client, SocketWriter sw, List<GameObject> gameObjectList, MessageReceived messageReceivedMap, MessageReceived messageReceivedId, MessageReceived messageReceivedPlayStatus, Enemy [] enemys, Timer gameTimer, Pane RBox, Text mainMessage) {
 		this.client = client;
@@ -77,6 +80,8 @@ public class SocketReader implements Runnable{
 						this.startGame(received);
 					}else if(received.startsWith("gameover:")) {
 						this.endGame(received);
+					}else if(received.startsWith("dead:")) {
+						this.death(received);
 					}
 				}
 			}
@@ -144,7 +149,6 @@ public class SocketReader implements Runnable{
 		//Parsing
 		message = message.substring(message.indexOf(":") + 1);
 		double [] parsedMessage = Arrays.stream(message.split(":")).mapToDouble(Double::parseDouble).toArray();
-		int id = (int)parsedMessage[0];
 		double x = parsedMessage[1];
 		double y = parsedMessage[2];
 		int bombRadius = (int)parsedMessage[3];
@@ -254,6 +258,61 @@ public class SocketReader implements Runnable{
 				mainMessage.layoutYProperty().bind(RBox.heightProperty().subtract(mainMessage.prefHeight(-1)).divide(2));
 			}
 		});
+	}
+	
+	public void death(String message) { //remove enemy that is disconnected
+		int result = (Integer.parseInt(message.split(":")[1])+1);
+		GameObject toRemove =null;
+		enemyCount = 0;
+		for(GameObject object : this.gameObjectList) {
+			if(object instanceof Enemy) {
+				enemyCount += 1;
+				if(((Enemy) object).getPlayerNumber() == result) {
+					toRemove = object;	
+				}
+				
+			}
+		}
+		if(toRemove != null) {
+			toRemove.fxLayer.setVisible(false);
+			gameObjectList.remove(toRemove);
+		}
+		//main message
+		if(mainMessage.isVisible()) { //si message affiché = joueur mort
+			if(enemyCount-1 == 1) {
+				for(GameObject listenemy : gameObjectList) {
+					if(listenemy instanceof Enemy) {
+						lastEnemy = listenemy;
+					}
+				}
+				Platform.runLater(new Runnable() { //win enemy
+					@Override
+					public void run() { //player dead
+						mainMessage.setVisible(true);
+						mainMessage.setText("Vous êtes mort !\n Le joueur n°"+((Enemy)lastEnemy).getPlayerNumber()+" "+((Enemy)lastEnemy).getUserName()+" remporte la partie");
+					}
+				});
+			}else if(enemyCount-1 != 0) { // -1 enemy
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() { //player dead
+						mainMessage.setVisible(true);
+						mainMessage.setText("Vous êtes mort !\n"+"Il reste "+(enemyCount-1)+" joueurs en vie");
+					}
+				});
+			}
+		}else { //player still alive
+			if(enemyCount-1 == 0) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						mainMessage.setVisible(true);
+						mainMessage.setText("Vous avez gagné !!!");
+					}
+				});
+			}
+		}
+		
 	}
 	
 }

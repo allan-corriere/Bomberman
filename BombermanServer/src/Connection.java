@@ -1,11 +1,10 @@
 //import java.io.BufferedReader;
 import java.io.EOFException;
-import java.io.IOException;
+
 //import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.TimerTask;
+
 
 import gamescene.EndGame;
 import gamescene.GenerateMap;
@@ -13,8 +12,6 @@ import gamescene.StartGame;
 import player.Player;
 import socket.SocketReader;
 import socket.SocketWriter;
-
-import sql.ConnectSql;
 
 public class Connection {
 	public static void main(String[] args) {
@@ -34,12 +31,8 @@ public class Connection {
 			}
 			
 			GenerateMap map = new GenerateMap();
-
-			//System.out.println(map.getMap());
-
-			
+			//ouverture du serveur à 4 clients
 			SocketWriter sw = new SocketWriter(clients);
-			
 			ServerSocket serverSocket = null; 
 		    try {  
 		    	serverSocket = new ServerSocket(port); 
@@ -48,12 +41,11 @@ public class Connection {
 		    		if(client != null) {
 		    			System.out.println("Client " + client.getInetAddress() + " connected with id " + numberOfClient);
 		    			clients[numberOfClient] = client;
-
 		    			new Thread(new SocketReader(players[numberOfClient], clients[numberOfClient], sw, map.getMap())).start();  
-		    	        //new Thread(new SocketWriter(clients[numberOfClient])).start();
 		    			numberOfClient++;
 		    		}
 		    	}
+		    	//fermeture des connexions ultérieurs
 		    	serverSocket.close();
 		    	//attente que tout les joueurs soient connectés
 		    	int nbPlayerReady = 0;
@@ -65,15 +57,18 @@ public class Connection {
 			    		}
 			    	}
 		    	}
-		    	//envoi des usernames aux clients
+		    	//envoi des usernames aux clients et retrait des joueurs déconnectés
 		    	for (int i= 0; i < 4; i++) {
 		    		sw.send("playerinfo:"+players[i].getUserName());
+		    		if(!players[i].isAlive()) {
+		    			sw.send("dead:"+players[i].getNumberOfPlayer());
+		    		}
 		    	}
-		    	//countdown
+		    	//timer de démarrage
 		    	StartGame startGame = new StartGame(sw);
 		    	startGame.start();
 		    	
-		    	//check for end game
+		    	//Gestion de la fin d'une partie
 		    	EndGame endGame = new EndGame(players, sw, serverSocket, clients);
 		    	endGame.start();
 		    	
@@ -85,7 +80,6 @@ public class Connection {
 		      e.printStackTrace();
 		      ServerRun = false;
 		    }
-		    System.out.println("fdqsffdsfdslafin");
 		}
 		
 		

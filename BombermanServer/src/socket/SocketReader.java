@@ -46,6 +46,8 @@ public class SocketReader implements Runnable{
 				}
 			}
 		} catch (IOException e) {
+			player.setAlive(false);
+			this.sw.send("dead:"+player.getNumberOfPlayer(), this.identifier);
 			System.err.println("client failed, disconnected");
 			//e.printStackTrace();
 		} finally {
@@ -57,7 +59,7 @@ public class SocketReader implements Runnable{
 					client = null;
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				
 			}
 		}
 	}

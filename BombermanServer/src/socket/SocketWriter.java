@@ -19,7 +19,7 @@ public class SocketWriter implements Runnable{
 					DataOutputStream dos = new DataOutputStream(client.getOutputStream());
 					dos.writeUTF(string);
 				} catch (Exception e) {
-					e.printStackTrace();
+					
 				}
 			}
 		}
@@ -31,7 +31,7 @@ public class SocketWriter implements Runnable{
 					DataOutputStream dos = new DataOutputStream(client.getOutputStream());
 					dos.writeUTF(string);
 				} catch (Exception e) {
-					e.printStackTrace();
+					
 				}
 		}
 	}
