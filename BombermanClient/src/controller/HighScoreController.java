@@ -122,8 +122,8 @@ public class HighScoreController {
     	Platform.runLater(new Runnable() {
 			@Override
 			public void run() { //player dead
-				Stage stage =  (Stage) VBox.getScene().getWindow();
-				stage.close();
+				//Stage stage =  (Stage) VBox.getScene().getWindow();
+			//	stage.close();
 				//retour au menu
 				menuDisplay.show();
 				//page d'erreur
