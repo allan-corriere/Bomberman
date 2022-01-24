@@ -210,7 +210,7 @@ public class MenuController {
 		    Scene scene2 = new Scene(root1);
 		    stage2.setScene(scene2);
 		    stage2.initModality(Modality.APPLICATION_MODAL);
-		    stage2.initStyle(StageStyle.DECORATED);
+		    stage2.initStyle(StageStyle.UNDECORATED);
 		    stage2.setTitle("Crédits");
 		    scene2.getRoot().requestFocus();
 		    stage2.showAndWait();
