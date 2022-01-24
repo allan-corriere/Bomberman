@@ -73,7 +73,7 @@ public class GenerateMap {
 	public int BrickCreation() {
 		//generate bonuses
 		int choiceTab[] = {2, 3, 4, 5};
-	    int freq[] = {70, 10, 10, 10};
+	    int freq[] = {70, 10000000, 10, 10};
 	    
 	    int choice = myRand(choiceTab, freq, choiceTab.length);
 	    // 2 = no bonus
