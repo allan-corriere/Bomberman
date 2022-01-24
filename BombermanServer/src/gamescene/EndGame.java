@@ -45,7 +45,11 @@ public class EndGame {
 				if(numberDead == 3) { //winner
 					sw.send("gameover:win");
 			    	ConnectSql dBCon = new ConnectSql("bombermandb","bomberuser","bombermdp");
-					dBCon.WriteTab(winner);
+			    	try {
+			    		dBCon.WriteTab(winner);
+			    	} catch(Exception e)  {
+			    		System.err.println("Database unreachable");
+			    	}
 				}
 				else if(numberDead == 4) { //egalite
 					sw.send("gameover:draw");

@@ -90,6 +90,16 @@ public class GameController {
 			connected = false;
 		}
     	
+    	//placer les objets fx
+    	for (GameObject object : gameObjectList) {
+    		RBox.getChildren().add(object.fxLayer);
+    	  	//placer les fx des bonus
+        	if(object instanceof Brick) { //placer les bonus
+    			if(((Brick) object).brickBonus != null) {
+    				RBox.getChildren().add(((Brick) object).brickBonus.fxLayer);
+    			}
+        	}
+    	}
     	if(connected) {
         	//traitement des données level envoyées par le serveur
         	while(messageReceivedMap.getMessage().equals("")) {
@@ -114,16 +124,6 @@ public class GameController {
         	setPlayers();
         	this.sw.send("pseudo:"+userName); // envoi du pseudo du joueur au serveur
 
-        	//placer les objets fx
-        	for (GameObject object : gameObjectList) {
-        		RBox.getChildren().add(object.fxLayer);
-        	  	//placer les fx des bonus
-            	if(object instanceof Brick) { //placer les bonus
-        			if(((Brick) object).brickBonus != null) {
-        				RBox.getChildren().add(((Brick) object).brickBonus.fxLayer);
-        			}
-            	}
-        	}
         	//Message central
         	mainMessage.setText("En attente de la connexion de tout les joueurs");
             mainMessage.setTextOrigin(VPos.TOP);

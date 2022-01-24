@@ -59,7 +59,7 @@ public class ConnectSql {
 	
 	
 	catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
+			
 	}
     // Handle any errors that may have occurred.
 	
