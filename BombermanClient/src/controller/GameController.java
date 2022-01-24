@@ -222,7 +222,6 @@ public class GameController {
     	this.player = new Player(gameTimer, sw);
     	gameObjectList.add(player);
 		int id = Integer.parseInt(messageReceivedId.getMessage().split(":")[1]);
-		System.out.println("Test lol "+id);
 		if(id==0) {
 			player.setPosition(50, 50);
 			enemys[0].setPosition((totalColumn*50)-100, 50);

@@ -89,6 +89,7 @@ public class MenuController {
 			    Stage stage2 = new Stage();
 			    stage2.initModality(Modality.APPLICATION_MODAL);
 		        stage2.initStyle(StageStyle.DECORATED);
+		        stage2.setResizable(false);
 		        // Create the Scene
 		        Scene scene = new Scene(root);
 		        // Set the Scene to the Stage
