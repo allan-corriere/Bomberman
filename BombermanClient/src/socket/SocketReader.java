@@ -284,7 +284,7 @@ public class SocketReader implements Runnable{
 			enemyCount +=1;
 		}
 		//main message
-		if(mainMessage.isVisible()) { //si message affiché = joueur mort
+		if(mainMessage.isVisible() && this.messageReceivedPlayStatus.getMessage().equals("start")) { //si message affiché = joueur mort
 			if(enemyCount-1 == 1) {
 				for(GameObject listenemy : gameObjectList) {
 					if(listenemy instanceof Enemy) {
