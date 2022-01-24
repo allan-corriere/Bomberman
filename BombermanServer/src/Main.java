@@ -21,8 +21,8 @@ public class Main {
 			System.out.println("New Server instance running");
 			Socket clients[] = new Socket[4];
 			int numberOfClient = 0;
-			
 			Player players[] = new Player[4];
+			StartGame startGame = new StartGame(players);
 
 			for (int i= 0; i < 4; i++) {
 				players[i] = new Player();
@@ -41,7 +41,7 @@ public class Main {
 		    		if(client != null) {
 		    			System.out.println("Client " + client.getInetAddress() + " connected with id " + numberOfClient);
 		    			clients[numberOfClient] = client;
-		    			new Thread(new SocketReader(players[numberOfClient], clients[numberOfClient], sw, map.getMap())).start();  
+		    			new Thread(new SocketReader(players[numberOfClient], clients[numberOfClient], sw, map.getMap(), startGame)).start();  
 		    			numberOfClient++;
 		    		}
 		    	}
@@ -66,8 +66,7 @@ public class Main {
 		    		}
 		    	}
 		    	//timer de démarrage
-		    	StartGame startGame = new StartGame(sw);
-		    	startGame.start();
+		    	startGame.start(sw);
 		    	
 		    	//Gestion de la fin d'une partie
 		    	EndGame endGame = new EndGame(players, sw, serverSocket, clients);

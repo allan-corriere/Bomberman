@@ -3,16 +3,18 @@ package gamescene;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import player.Player;
 import socket.SocketWriter;
 
 public class StartGame {
-	private SocketWriter sw;
+	private boolean currentlyPlaying =false;
+	private Player [] players;
 	
-	public StartGame(SocketWriter sw) {
-		this.sw = sw;
+	public StartGame(Player [] players) {
+		this.players = players;
 	}
 	
-	public void start() {
+	public void start(SocketWriter sw) {
 		Timer t = new Timer();
 		TimerTask t5 = new TimerTask() {
     		
@@ -54,6 +56,12 @@ public class StartGame {
 			@Override
 			public void run() {
 				sw.send("gamestart:0");
+				for(int i = 0; i < players.length; i++) {
+					if(!players[i].isAlive()) {
+						sw.send("dead:"+players[i].getNumberOfPlayer());
+					}
+				}
+				currentlyPlaying = true;
 			}
     	};
     	t.schedule(t5, 0);
@@ -63,4 +71,13 @@ public class StartGame {
     	t.schedule(t1, 4000);
     	t.schedule(t0, 5000);
 	}
+
+	public boolean isCurrentlyPlaying() {
+		return currentlyPlaying;
+	}
+
+	public void setCurrentlyPlaying(boolean currentlyPlaying) {
+		this.currentlyPlaying = currentlyPlaying;
+	}
+	
 }

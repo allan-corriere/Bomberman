@@ -112,8 +112,7 @@ public class GameController {
         	}
         	createMap();
         	setPlayers();
-        	this.sw.send("pseudo:"+userName); // envoi du pseudo du joueur au serveur
-        	
+       	
         	//placer les objets fx
         	for (GameObject object : gameObjectList) {
         		RBox.getChildren().add(object.fxLayer);
@@ -124,7 +123,6 @@ public class GameController {
         			}
             	}
         	}
-
         	//Message central
         	mainMessage.setText("En attente de la connexion de tout les joueurs");
             mainMessage.setTextOrigin(VPos.TOP);
@@ -132,6 +130,8 @@ public class GameController {
             RBox.getChildren().add(mainMessage);mainMessage.setTextAlignment(TextAlignment.CENTER);
             mainMessage.layoutXProperty().bind(RBox.widthProperty().subtract(mainMessage.prefWidth(-1)).divide(2));
             mainMessage.layoutYProperty().bind(RBox.heightProperty().subtract(mainMessage.prefHeight(-1)).divide(2));
+            
+        	this.sw.send("pseudo:"+userName); // envoi du pseudo du joueur au serveur (defini que le client est prêt)
     	}
     	else {
     		//tâche de retour au menu

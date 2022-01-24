@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import gamescene.StartGame;
 import player.Player;
 
 public class SocketReader implements Runnable{
@@ -11,14 +12,16 @@ public class SocketReader implements Runnable{
 	private Socket client;
 	private int identifier;
 	private SocketWriter sw;
+	private StartGame startGame;
 	
-	public SocketReader(Player player, Socket client, SocketWriter sw, String map) {
+	public SocketReader(Player player, Socket client, SocketWriter sw, String map, StartGame startGame) {
 		this.player = player;
 		this.client = client;
 		this.identifier = player.getNumberOfPlayer();
 		this.sw = sw;
 		this.sw.sendMap(map, client);
 		this.sw.sendIndex(player.getNumberOfPlayer(), client);
+		this.startGame = startGame;
 	}
 
 	@Override
@@ -48,8 +51,10 @@ public class SocketReader implements Runnable{
 			}
 		} catch (IOException e) {
 			player.setAlive(false);
-			this.sw.send("dead:"+player.getNumberOfPlayer(), this.identifier);
 			System.err.println("client failed, disconnected");
+			if(startGame.isCurrentlyPlaying()) {
+				this.sw.send("dead:"+player.getNumberOfPlayer(), this.identifier);
+			}
 			//e.printStackTrace();
 		} finally {
 			try {

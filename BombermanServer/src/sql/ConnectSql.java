@@ -71,7 +71,6 @@ public class ConnectSql {
 		
 		
 		catch (ClassNotFoundException | SQLException e) {
-				e.printStackTrace();
 		}
 	    // Handle any errors that may have occurred.
 		
@@ -82,7 +81,6 @@ public class ConnectSql {
 				st.close();
 			}
 			catch (SQLException e) {
-				e.printStackTrace();
 			}
 		}
 	}
