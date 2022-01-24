@@ -45,8 +45,7 @@ public class Main {
 		    			numberOfClient++;
 		    		}
 		    	}
-		    	//fermeture des connexions ultérieurs
-		    	serverSocket.close();
+		    	
 		    	//attente que tout les joueurs soient connectés
 		    	int nbPlayerReady = 0;
 		    	while(nbPlayerReady != 4) {
@@ -57,6 +56,8 @@ public class Main {
 			    		}
 			    	}
 		    	}
+		    	//fermeture des connexions ultérieurs
+		    	serverSocket.close();
 		    	//envoi des usernames aux clients et retrait des joueurs déconnectés
 		    	for (int i= 0; i < 4; i++) {
 		    		sw.send("playerinfo:"+players[i].getUserName());
