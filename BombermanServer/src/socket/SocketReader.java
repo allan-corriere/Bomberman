@@ -55,6 +55,9 @@ public class SocketReader implements Runnable{
 			if(startGame.isCurrentlyPlaying()) {
 				this.sw.send("dead:"+player.getNumberOfPlayer(), this.identifier);
 			}
+			if(player.getUserName() == null) {
+    			player.setUserName("notnull");
+    		}
 			//e.printStackTrace();
 		} finally {
 			try {

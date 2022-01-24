@@ -55,7 +55,7 @@ public class MenuController {
         
 	@FXML
 	private void controlMenu(KeyEvent event) {
-		System.out.println(event.getCode());
+		//System.out.println(event.getCode());
 	}
 	
 	private boolean verifIP(String ip) {
