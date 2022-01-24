@@ -127,7 +127,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 				public void run() {
 					boolean moveOk = false;
 					int inputToTake = 1;
-					while(!moveOk) {
+					while(!moveOk && isAlive()) {
 						moveOk = move(keyPressed.get(keyPressed.size() - inputToTake),RBox,gameObjectList);
 						inputToTake += 1;
 						if(inputToTake > keyPressed.size()) {
@@ -193,9 +193,10 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 			}
 		});
 		
-		
+		System.out.println("moove");
 		if (code.equals("up")){
 			for(int z =0; z < this.speed; z++) {
+				System.out.println("up");
 				if (this.getPosY()>0){
 					//check si un object ne bloque pas le passage
 					for (GameObject object : gameObjectList) {
@@ -268,6 +269,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		
 		if (code.equals("down")){
 			for(int z =0; z < this.speed; z++) {
+				System.out.println("down");
 				//check si un object ne bloque pas le passage
 				for (GameObject object : gameObjectList) {
 					if(System.identityHashCode(object) != System.identityHashCode(this)) {
@@ -340,6 +342,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		
 		if (code.equals("left")){
 			for(int z =0; z < this.speed; z++) {
+				System.out.println("left");
 				if (this.getPosX()>0) {
 					//check si un object ne bloque pas le passage
 					for (GameObject object : gameObjectList) {
@@ -418,6 +421,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		
 		if (code.equals("right")){
 			for(int z =0; z < this.speed; z++) {
+				System.out.println("right");
 				double prefWidth = ((Pane) this.fxLayer.getParent()).getPrefWidth();
 				if (prefWidth-this.getPosX()>this.fxLayer.getFitWidth()){
 					
