@@ -61,6 +61,7 @@ public class EndGame {
 						//fermeture des connexions avec les clients
 					    try {
 					    	serverSocket.close();
+					    	System.out.println("Game end");
 					    	System.out.println("server socket closed");
 					    	for(int i = 0; i < 4 ; i++) {
 					    		clients[i].close();

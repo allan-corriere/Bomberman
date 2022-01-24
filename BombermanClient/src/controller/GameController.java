@@ -132,6 +132,14 @@ public class GameController {
             mainMessage.layoutYProperty().bind(RBox.heightProperty().subtract(mainMessage.prefHeight(-1)).divide(2));
             
         	this.sw.send("pseudo:"+userName); // envoi du pseudo du joueur au serveur (defini que le client est prêt)
+        	int enemyCount = 0;
+        	for (GameObject object : gameObjectList) {
+				//nombre d'enemis en vie
+				if(object instanceof Enemy) {
+					enemyCount += 1;
+				}
+        	}
+        	System.out.println("enenemeifd"+enemyCount);
     	}
     	else {
     		//tâche de retour au menu

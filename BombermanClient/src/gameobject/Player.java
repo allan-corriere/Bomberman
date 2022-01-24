@@ -72,7 +72,7 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		fxLayer.setFitHeight(50.0);
 		fxLayer.setFitWidth(50.0);
 		this.sw = sw;
-		this.setSpeed(5);
+		this.setSpeed(1);
 		this.setMaxBomb(1);
 		this.setBombRadius(1);
 		this.alive = true;
@@ -117,7 +117,6 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 			dPressed = true;
 		}
 		int afterSize = keyPressed.size();
-		System.out.println("avant"+beforeSize+" apres"+afterSize);
 		//lancement du déplacement
 		if(beforeSize == 0 && afterSize ==1) {
 			moveTimer = new Timer();
@@ -146,32 +145,24 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		int beforeSize = keyPressed.size();
 		if (code==KeyCode.Z) {
 			if(zPressed) {
-				System.out.println(keyPressed.size());
 				keyPressed.remove("up");
-				System.out.println(keyPressed.size());
 			}
 			zPressed = false;
 		}else if (code==KeyCode.Q) {
 			if(qPressed) {
-				System.out.println(keyPressed.size());
 				keyPressed.remove("left");
-				System.out.println(keyPressed.size());
 			}
 			qPressed = false;
 		}
 		else if (code==KeyCode.S) {
 			if(sPressed) {
-				System.out.println(keyPressed.size());
 				keyPressed.remove("down");
-				System.out.println(keyPressed.size());
 			}
 			sPressed = false;
 		}
 		else if (code==KeyCode.D) {
 			if(dPressed) {
-				System.out.println(keyPressed.size());
 				keyPressed.remove("right");
-				System.out.println(keyPressed.size());
 			}
 			dPressed = false;
 		}
@@ -186,7 +177,15 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		double playerTop = this.getPosY()+0.1;
 		double playerBottom = this.getPosY()+49.99;
 		double playerLeft = this.getPosX()+0.1;
-		double playerRight = this.getPosX()+49.00;
+		double playerRight = this.getPosX()+49.99;
+		
+		if (code.equals("up") || code.equals("down")) {
+			playerLeft = this.getPosX()+10.1;
+			playerRight = this.getPosX()+39.99;
+		}else if(code.equals("left") || code.equals("right")) {
+			playerTop = this.getPosY()+10.1;
+			playerBottom = this.getPosY()+39.99;
+		}
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -195,262 +194,302 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 		});
 		
 		
-		if (code.equals("up"))
-		{
-			if (this.getPosY()>0)
-			{
-			//check si un object ne bloque pas le passage
-			for (GameObject object : gameObjectList) {
-				if(System.identityHashCode(object) != System.identityHashCode(this)) {
-					if(!(object instanceof Crossable)) {
-						double bottom = object.getPosY()+50.00;
-						double left = object.getPosX();
-						double right = object.getPosX()+50.00;
-						if(bottom >= (playerTop-this.getSpeed()) && bottom < playerTop && left < playerLeft && right >= playerLeft || bottom >= (playerTop-this.getSpeed()) && bottom < playerTop && left < playerRight && right >= playerRight) {
-							moveOk = false;
+		if (code.equals("up")){
+			for(int z =0; z < this.speed; z++) {
+				if (this.getPosY()>0){
+					//check si un object ne bloque pas le passage
+					for (GameObject object : gameObjectList) {
+						if(System.identityHashCode(object) != System.identityHashCode(this)) {
+							if(!(object instanceof Crossable)) {
+								double bottom = object.getPosY()+50.00;
+								double left = object.getPosX();
+								double right = object.getPosX()+50.00;
+								if(bottom >= (playerTop-5) && bottom < playerTop && left < playerLeft && right >= playerLeft || bottom >= (playerTop-5) && bottom < playerTop && left < playerRight && right >= playerRight) {
+									moveOk = false;
+								}
+							}
 						}
 					}
-				}
-			}
-			if(moveOk == true){
-				
-				this.setPosY(this.getPosY()-this.getSpeed());
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						fxLayer.toBack();   /// Garder les bombes visibles 
-					}
-				}); 
-
-				//Animations du personnage //////////////
-							
-				if (!(this.fxLayer.getImage().equals(back1)||this.fxLayer.getImage().equals(back2))){
+					if(moveOk == true){
+						//rectification position X
+						int deltaX = ((int) this.getPosX()) % 50;
+						int caseApprox = ((int) this.getPosX()) / 50;
+						if(deltaX !=0) {
+							if(deltaX <= 10) {
+								this.setPosX(caseApprox*50);
+							}else if(deltaX >= 40) {
+								this.setPosX(caseApprox*50+50);
+							}
+						}
+						//nouvelle position
+						this.setPosY(this.getPosY()-5);
 						
-						if (left_right == true ) {
-							this.fxLayer.setImage(back1);
-							left_right = false;
-						}
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() {
+								fxLayer.toBack();   /// Garder les bombes visibles 
+							}
+						}); 
+		
+						//Animations du personnage //////////////
+									
+						if (!(this.fxLayer.getImage().equals(back1)||this.fxLayer.getImage().equals(back2))){
+								
+								if (left_right == true ) {
+									this.fxLayer.setImage(back1);
+									left_right = false;
+								}
+								else {
+									this.fxLayer.setImage(back2);
+									left_right=true;
+								}
+							}
+						
 						else {
-							this.fxLayer.setImage(back2);
-							left_right=true;
-						}
-					}
+							if (countBack%3 == 0) {
 				
-				else {
-					if (countBack%3 == 0) {
-		
-						
-						if (this.fxLayer.getImage().equals(back2)){
-							this.fxLayer.setImage(back1);
-						}
-						
-						else if (this.fxLayer.getImage().equals(back1)){
-								this.fxLayer.setImage(back2);
-							}
-						}
-				}
-				countBack +=1 ;
-				}
-			
-			
-			//check for bonus
-			PlayerOnBonus(RBox, gameObjectList);
-			}
-		}
-		
-		if (code.equals("down"))
-		{
-			//check si un object ne bloque pas le passage
-			for (GameObject object : gameObjectList) {
-				if(System.identityHashCode(object) != System.identityHashCode(this)) {
-					if(!(object instanceof Crossable)) {
-						double top = object.getPosY();
-						double left = object.getPosX();
-						double right = object.getPosX()+50.00;
-						if(top <= (playerBottom+this.getSpeed()) && top > playerBottom && left < playerLeft && right >= playerLeft || top <= (playerBottom+this.getSpeed()) && top > playerBottom && left < playerRight && right >= playerRight) {
-							moveOk = false;
-						}
-					}
-				}
-			}
-
-		if(moveOk == true) {
-			this.setPosY(this.getPosY()+this.getSpeed());
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					fxLayer.toBack();   /// Garder les bombes visibles 
-				}
-			});
-			
-			
-			//Animations du personnage //////////////////
-						
-			if (!(this.fxLayer.getImage().equals(face1)||this.fxLayer.getImage().equals(face2))){
-					
-					if (left_right == true ) {
-						this.fxLayer.setImage(face1);
-						left_right = false;
-					}
-					else {
-						this.fxLayer.setImage(face2);
-						left_right=true;
-					}
-				}
-			
-			else {
-				if (countFace%3 == 0) {
-	
-					
-					if (this.fxLayer.getImage().equals(face2)){
-						this.fxLayer.setImage(face1);
-					}
-					
-					else if (this.fxLayer.getImage().equals(face1)){
-							this.fxLayer.setImage(face2);
-						}
-					}
-			}
-			countFace +=1 ; 
-			}
-		
-		
-		
-		//check for bonus
-		PlayerOnBonus(RBox, gameObjectList);
-		
-		}
-		
-		if (code.equals("left"))
-		{
-			
-			if (this.getPosX()>0) {
-				//check si un object ne bloque pas le passage
-				for (GameObject object : gameObjectList) {
-					if(System.identityHashCode(object) != System.identityHashCode(this)) {
-						if(!(object instanceof Crossable)) {
-							double right = object.getPosX()+50.00;
-							double top = object.getPosY();
-							double bottom = object.getPosY()+50.0;
-							if(right >= (playerLeft-this.getSpeed()) && right < playerLeft && top < playerTop && bottom >= playerTop || right >= (playerLeft-this.getSpeed()) && right < playerLeft && top < playerBottom && bottom >= playerBottom) {
-								moveOk = false;
-							}
-						}
-					}
-				}
-				if(moveOk == true) {
-					
-					this.setPosX(this.getPosX()-this.getSpeed());
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() { 
-							fxLayer.toBack();   /// Garder les bombes visibles 
-						}
-					});
-					
-
-					
-					//Animations du personnage ////////////////////
-					
-					if (!(this.fxLayer.getImage().equals(left1)||this.fxLayer.getImage().equals(left2))){
-							
-							if (left_right == true ) {
-								this.fxLayer.setImage(left1);
-								left_right = false;
-							}
-							else {
-								this.fxLayer.setImage(left2);
-								left_right=true;
-							}
-						}
-					
-					else {
-						if (countLeft%3 == 0) {
-			
-							
-							if (this.fxLayer.getImage().equals(left2)){
-								this.fxLayer.setImage(left1);
-							}
-							
-							else if (this.fxLayer.getImage().equals(left1)){
-									this.fxLayer.setImage(left2);
+								
+								if (this.fxLayer.getImage().equals(back2)){
+									this.fxLayer.setImage(back1);
 								}
-							}
-					}
-					countLeft +=1 ;
-					
-			
-	
+								
+								else if (this.fxLayer.getImage().equals(back1)){
+										this.fxLayer.setImage(back2);
+									}
+								}
+						}
+						countBack +=1 ;
+						}
+					//check for bonus
+					PlayerOnBonus(RBox, gameObjectList);
 				}
 			}
-			
-			//check for bonus
-			PlayerOnBonus(RBox, gameObjectList);
 		}
 		
-		if (code.equals("right"))
-		{
-			double prefWidth = ((Pane) this.fxLayer.getParent()).getPrefWidth();
-			if (prefWidth-this.getPosX()>this.fxLayer.getFitWidth()){
-				
+		if (code.equals("down")){
+			for(int z =0; z < this.speed; z++) {
 				//check si un object ne bloque pas le passage
 				for (GameObject object : gameObjectList) {
 					if(System.identityHashCode(object) != System.identityHashCode(this)) {
 						if(!(object instanceof Crossable)) {
-							
+							double top = object.getPosY();
 							double left = object.getPosX();
-							double top = object.getPosY();
-							double bottom = object.getPosY()+50.0;						
-							if(left <= (playerRight+this.getSpeed()) && left > playerRight && top < playerTop && bottom >= playerTop || left <= (playerRight+this.getSpeed()) && left > playerRight && top < playerBottom && bottom >= playerBottom) {
+							double right = object.getPosX()+50.00;
+							if(top <= (playerBottom+5) && top > playerBottom && left < playerLeft && right >= playerLeft || top <= (playerBottom+5) && top > playerBottom && left < playerRight && right >= playerRight) {
 								moveOk = false;
 							}
 						}
 					}
 				}
+	
 				if(moveOk == true) {
-					this.setPosX(this.getPosX()+this.getSpeed());
-					
+					//rectification position X
+					int deltaX = ((int) this.getPosX()) % 50;
+					int caseApprox = ((int) this.getPosX()) / 50;
+					if(deltaX !=0) {
+						if(deltaX <= 10) {
+							this.setPosX(caseApprox*50);
+						}else if(deltaX >= 40) {
+							this.setPosX(caseApprox*50+50);
+						}
+					}
+					//nouvelle position
+					this.setPosY(this.getPosY()+5);
+
 					Platform.runLater(new Runnable() {
 						@Override
-						public void run() { 
+						public void run() {
 							fxLayer.toBack();   /// Garder les bombes visibles 
 						}
 					});
 					
-					//Animations du personnage ////////////////::
 					
-					if (!(this.fxLayer.getImage().equals(right1)||this.fxLayer.getImage().equals(right2))){
+					//Animations du personnage //////////////////
+								
+					if (!(this.fxLayer.getImage().equals(face1)||this.fxLayer.getImage().equals(face2))){
 							
 							if (left_right == true ) {
-								this.fxLayer.setImage(right1);
+								this.fxLayer.setImage(face1);
 								left_right = false;
 							}
 							else {
-								this.fxLayer.setImage(right2);
+								this.fxLayer.setImage(face2);
 								left_right=true;
 							}
 						}
 					
 					else {
-						if (countRight%3 == 0) {
+						if (countFace%3 == 0) {
 			
 							
-							if (this.fxLayer.getImage().equals(right2)){
-								this.fxLayer.setImage(right1);
+							if (this.fxLayer.getImage().equals(face2)){
+								this.fxLayer.setImage(face1);
 							}
 							
-							else if (this.fxLayer.getImage().equals(right1)){
-									this.fxLayer.setImage(right2);
+							else if (this.fxLayer.getImage().equals(face1)){
+									this.fxLayer.setImage(face2);
 								}
 							}
 					}
-					countRight +=1 ;
+					countFace +=1 ; 
 				}
+				//check for bonus
+				PlayerOnBonus(RBox, gameObjectList);
 			}
-			
-			//check for bonus
-			PlayerOnBonus(RBox, gameObjectList);
-			
+		}
+		
+		if (code.equals("left")){
+			for(int z =0; z < this.speed; z++) {
+				if (this.getPosX()>0) {
+					//check si un object ne bloque pas le passage
+					for (GameObject object : gameObjectList) {
+						if(System.identityHashCode(object) != System.identityHashCode(this)) {
+							if(!(object instanceof Crossable)) {
+								double right = object.getPosX()+50.00;
+								double top = object.getPosY();
+								double bottom = object.getPosY()+50.0;
+								if(right >= (playerLeft-5) && right < playerLeft && top < playerTop && bottom >= playerTop || right >= (playerLeft-5) && right < playerLeft && top < playerBottom && bottom >= playerBottom) {
+									moveOk = false;
+								}
+							}
+						}
+					}
+					if(moveOk == true) {
+						//rectification position Y
+						int deltaY = ((int) this.getPosY()) % 50;
+						int caseApprox = ((int) this.getPosY()) / 50;
+						if(deltaY != 0) {
+							if(deltaY <= 10) {
+								this.setPosY(caseApprox*50);
+							}else if(deltaY >= 40) {
+								this.setPosY(caseApprox*50+50);
+							}
+						}
+						//nouvelle position
+						this.setPosX(this.getPosX()-5);
+						
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() { 
+								fxLayer.toBack();   /// Garder les bombes visibles 
+							}
+						});
+						
+	
+						
+						//Animations du personnage ////////////////////
+						
+						if (!(this.fxLayer.getImage().equals(left1)||this.fxLayer.getImage().equals(left2))){
+								
+								if (left_right == true ) {
+									this.fxLayer.setImage(left1);
+									left_right = false;
+								}
+								else {
+									this.fxLayer.setImage(left2);
+									left_right=true;
+								}
+							}
+						
+						else {
+							if (countLeft%3 == 0) {
+				
+								
+								if (this.fxLayer.getImage().equals(left2)){
+									this.fxLayer.setImage(left1);
+								}
+								
+								else if (this.fxLayer.getImage().equals(left1)){
+										this.fxLayer.setImage(left2);
+									}
+								}
+						}
+						countLeft +=1 ;
+						
+				
+		
+					}
+				}
+				
+				//check for bonus
+				PlayerOnBonus(RBox, gameObjectList);
+			}
+		}
+		
+		if (code.equals("right")){
+			for(int z =0; z < this.speed; z++) {
+				double prefWidth = ((Pane) this.fxLayer.getParent()).getPrefWidth();
+				if (prefWidth-this.getPosX()>this.fxLayer.getFitWidth()){
+					
+					//check si un object ne bloque pas le passage
+					for (GameObject object : gameObjectList) {
+						if(System.identityHashCode(object) != System.identityHashCode(this)) {
+							if(!(object instanceof Crossable)) {
+								
+								double left = object.getPosX();
+								double top = object.getPosY();
+								double bottom = object.getPosY()+50.0;						
+								if(left <= (playerRight+5) && left > playerRight && top < playerTop && bottom >= playerTop || left <= (playerRight+5) && left > playerRight && top < playerBottom && bottom >= playerBottom) {
+									moveOk = false;
+								}
+							}
+						}
+					}
+					if(moveOk == true) {
+						//rectification position Y
+						int deltaY = ((int) this.getPosY()) % 50;
+						int caseApprox = ((int) this.getPosY()) / 50;
+						if(deltaY != 0) {
+							if(deltaY <= 10) {
+								this.setPosY(caseApprox*50);
+							}else if(deltaY >= 40) {
+								this.setPosY(caseApprox*50+50);
+							}
+						}
+						//nouvelle position
+						this.setPosX(this.getPosX()+5);
+						
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() { 
+								fxLayer.toBack();   /// Garder les bombes visibles 
+							}
+						});
+						
+						//Animations du personnage ////////////////::
+						
+						if (!(this.fxLayer.getImage().equals(right1)||this.fxLayer.getImage().equals(right2))){
+								
+								if (left_right == true ) {
+									this.fxLayer.setImage(right1);
+									left_right = false;
+								}
+								else {
+									this.fxLayer.setImage(right2);
+									left_right=true;
+								}
+							}
+						
+						else {
+							if (countRight%3 == 0) {
+				
+								
+								if (this.fxLayer.getImage().equals(right2)){
+									this.fxLayer.setImage(right1);
+								}
+								
+								else if (this.fxLayer.getImage().equals(right1)){
+										this.fxLayer.setImage(right2);
+									}
+								}
+						}
+						countRight +=1 ;
+					}
+				}
+				
+				//check for bonus
+				PlayerOnBonus(RBox, gameObjectList);
+			}
 		}
 		if(moveOk) {
 			this.sendPositionToServer();
@@ -582,14 +621,14 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 			this.sendBonusToServer(selectedBonus.getPosX(), selectedBonus.getPosY());
 			//speed
 			if(selectedBonus instanceof PlayerSpeedBonus) {
-				speed += 5;
+				speed += 1;
 				TimerTask SpeedTask = new TimerTask()
 		    	{
 
 		    	    @Override
 		    	    public void run()
 		    	    {
-		    	    	speed -= 5;
+		    	    	speed -= 1;
 		    	    }
 		    	};
 				gameTimer.schedule(SpeedTask, 5000);

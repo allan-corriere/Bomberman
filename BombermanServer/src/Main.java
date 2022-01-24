@@ -18,6 +18,7 @@ public class Main {
 		boolean ServerRun = true;
 		while(ServerRun) {
 			final int port = 65432;
+			System.out.println("------------------------------");
 			System.out.println("New Server instance running");
 			Socket clients[] = new Socket[4];
 			int numberOfClient = 0;
@@ -45,7 +46,7 @@ public class Main {
 		    			numberOfClient++;
 		    		}
 		    	}
-		    	
+		    	System.out.println("all clients connected");
 		    	//attente que tout les joueurs soient connectés
 		    	int nbPlayerReady = 0;
 		    	while(nbPlayerReady != 4) {
@@ -58,6 +59,7 @@ public class Main {
 		    	}
 		    	//fermeture des connexions ultérieurs
 		    	serverSocket.close();
+		    	System.out.println("all clients ready");
 		    	//envoi des usernames aux clients et retrait des joueurs déconnectés
 		    	for (int i= 0; i < 4; i++) {
 		    		sw.send("playerinfo:"+players[i].getUserName());

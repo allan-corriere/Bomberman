@@ -62,6 +62,7 @@ public class StartGame {
 					}
 				}
 				currentlyPlaying = true;
+				System.out.println("Game Start");
 			}
     	};
     	t.schedule(t5, 0);
