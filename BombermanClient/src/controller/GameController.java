@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -91,13 +92,24 @@ public class GameController {
     	
     	if(connected) {
         	//traitement des données level envoyées par le serveur
-        	while(messageReceivedMap.getMessage() == "") {
+        	while(messageReceivedMap.getMessage().equals("")) {
+        		try {
+					TimeUnit.MILLISECONDS.sleep(1);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
         		continue;
         	}
-        	while(messageReceivedId.getMessage() == "") {
+        	while(messageReceivedId.getMessage().equals("")) {
+        		try {
+					TimeUnit.MILLISECONDS.sleep(1);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
         		continue;
         	}
-        	
         	createMap();
         	setPlayers();
         	this.sw.send("pseudo:"+userName); // envoi du pseudo du joueur au serveur

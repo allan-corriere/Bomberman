@@ -28,6 +28,7 @@ public class SocketReader implements Runnable{
 			while(true) {
 				dis = new DataInputStream(client.getInputStream());
 				String receive = dis.readUTF();
+				System.out.println(receive);
 				if(receive != null) {
 					//System.out.println(this.identifier+":"+receive);
 					if(receive.startsWith("move:")) {
