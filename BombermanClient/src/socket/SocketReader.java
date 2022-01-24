@@ -32,7 +32,7 @@ public class SocketReader implements Runnable{
 	private Text mainMessage;
 	private List<String> enemysUsername = new ArrayList<String>();
 	private GameObject lastEnemy;
-	private int enemyCount;
+	private int enemyCount= 0;
 
 	public SocketReader(Socket client, SocketWriter sw, List<GameObject> gameObjectList, MessageReceived messageReceivedMap, MessageReceived messageReceivedId, MessageReceived messageReceivedPlayStatus, Enemy [] enemys, Timer gameTimer, Pane RBox, Text mainMessage) {
 		this.client = client;

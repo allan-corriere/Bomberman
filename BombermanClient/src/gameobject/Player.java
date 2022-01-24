@@ -622,18 +622,18 @@ public class Player extends GameObject implements MovableObject, DestructableObj
 			this.sendBonusToServer(selectedBonus.getPosX(), selectedBonus.getPosY());
 			//speed
 			if(selectedBonus instanceof PlayerSpeedBonus) {
-				speed += 1;
-				TimerTask SpeedTask = new TimerTask()
-		    	{
-
-		    	    @Override
-		    	    public void run()
-		    	    {
-		    	    	speed -= 1;
-		    	    }
-		    	};
-				gameTimer.schedule(SpeedTask, 5000);
-				
+				if(speed < 3) {
+					speed += 1;
+					TimerTask SpeedTask = new TimerTask()
+			    	{
+			    	    @Override
+			    	    public void run()
+			    	    {
+			    	    	speed -= 1;
+			    	    }
+			    	};
+					gameTimer.schedule(SpeedTask, 5000);
+				}			
 			}
 			//bomb number
 			else if(selectedBonus instanceof BombNumberBonus) {

@@ -32,7 +32,7 @@ public class Bomb extends GameObject implements UnmovableObject {
 	
 	//attribute for message prompting
 	private Text mainMessage;
-	private int enemyCount;
+	private int enemyCount = 0;
 	private GameObject lastEnemy  = new GameObject();
 	private SocketWriter sw;
 
